@@ -1,0 +1,27 @@
+{
+    "name": "ciims-modules/dashboard",
+    "description": "A (mostly) client side iteration of the CiiMS Dashboard module, written in ember.js",
+    "license": "MIT",
+    "type" : "drupal-module",
+    "keywords": [
+        "ciims",
+        "dashboard",
+        "module",
+        "ember.json"
+    ],
+    "authors": [
+        {
+            "name": "Charles R. Portwood II",
+            "email": "charlesportwoodii@ethreal.net",
+            "homepage": "https://www.erianna.com",
+            "role": "Lead Developer"
+        }
+    ],
+    "support": {
+        "email": "charlesportwoodii@ethreal.net",
+        "issues": "https://github.com/charlesportwoodii/ciims-modules-dashboard-ember/issues",
+        "wiki" : "https://github.com/charlesportwoodii/ciims-modules-dashboard-ember/wiki/_pages",
+        "source" : "https://github.com/charlesportwoodii/ciims-modules-dashboard-ember"
+    },
+    "homepage": "https://www.ciims.org"
+}
