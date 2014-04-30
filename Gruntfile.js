@@ -12,9 +12,13 @@ module.exports = function(grunt) {
         'bower:install',
         'concat:css',
         'concat:js',
-        'cssmin:css',
-        'uglify:js'
+        'cssmin:css'
     ]);
+
+    grunt.registerTask('build', function() {
+        grunt.task.run('default');
+        grunt.task.run('uglify:js');
+    });
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -37,15 +41,18 @@ module.exports = function(grunt) {
             css: {
                 src: [
                     '<%= paths.css %>/*',
-                    '<%= paths.css %>/*/*.css',
+                    '<%= paths.lib %>/fontawesome/css/font-awesome.min.css',
+                    '<%= paths.lib %>/*/*.css',
                 ],
                 dest: '<%= paths.assets %>/dashboard.css'
             },
             js : {
                 src: [
-                    '<%= paths.js %>/*',
-                    '<%= paths.lib %>/*/*.js',
-                    '!<%= paths.lib %>/handlebars.js/*'
+                    '<%= paths.lib %>/handlebars/handlebars.js',
+                    '<%= paths.lib %>/ember/ember.js',
+                    '<%= paths.lib %>/ember-data/ember-data.js',
+                    '<%= paths.lib %>/pace/pace.min.js',
+                    '<%= paths.js %>/*'
                 ],
                 dest: '<%= paths.assets %>/dashboard.js'
             }
@@ -64,8 +71,8 @@ module.exports = function(grunt) {
             }
         },
         watch: {
-          files: ['<%= paths.ccss %>/*'],
-          tasks: ['concat', 'cssmin']
+          files: ['<%= paths.css %>/*', '<%= paths.js %>/*', '<%= paths.lib %>/*'],
+          tasks: ['default']
         },
     });
 };

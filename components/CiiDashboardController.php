@@ -66,8 +66,7 @@ class CiiDashboardController extends CiiController
 	{
 		return array(
 			array('allow',  // allow authenticated admins to perform any action
-				'users'=>array('@'),
-				'expression'=>'Users::model()->isDashboardUser()'
+				'users'=>array('@')
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),

@@ -3,6 +3,9 @@
   "dependencies": {
     "ember": "~1.5",
     "ember-data": "~1.0.0-beta.4",
-    "handlebars.js": "v1.3.0"
+    "handlebars.js": "v1.3.0",
+    "fontawesome": "v4.0.3",
+    "pure": "~0.4.2",
+    "pace": "v0.4.16"
   }
 }

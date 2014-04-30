@@ -1,14 +1,11 @@
-<html>
-<head>
-  <!-- bower:css -->
-  <!-- endbower -->
-</head>
-<body>
-  <!-- bower:js -->
-  <script src="bower_components/jquery/dist/jquery.js"></script>
-  <script src="bower_components/handlebars/handlebars.js"></script>
-  <script src="bower_components/ember/ember.js"></script>
-  <script src="bower_components/ember-data/ember-data.js"></script>
-  <!-- endbower -->
-</body>
+<!DOCTYPE html>
+<html lang="<?php echo Yii::app()->getLanguage(); ?>">
+    <head>
+        <?php Yii::app()->clientScript->registerCssFile($this->asset .'/'. (YII_DEBUG ? '/dashboard.css' : 'dashboard.min.css')); ?>
+        <?php Yii::app()->clientScript->registerScriptFile($this->asset .'/'. (YII_DEBUG ? '/dashboard.js' : 'dashboard.min.js')); ?>
+	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
+    </head>
+    <body>
+    	<?php echo $content; ?>
+    </body>
 </html>
