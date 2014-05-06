@@ -10,5 +10,7 @@
 		font-size: 12px;
 		width: 100px;
 		text-transform: uppercase;
+		width: 100px !important;
+		font-size: 12px !important;
 	}
 }

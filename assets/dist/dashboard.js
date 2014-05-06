@@ -1628,15 +1628,18 @@ var Settings = {
 					'X-Auth-Token': ciims.token
 				},
 				beforeSend: function() {
-					$("#nav-icon").removeClass("fa-ellipsis-v")
-								  .addClass("fa-spinner")
-								  .addClass("fa-spin");
+					$("#nav-icon").removeClass("fa-ellipsis-v");
+
+					if ($("#nav-icon").find("span").length == 0)
+					{
+						var element = $("<span>").addClass("fa fa-spinner fa-spin active");
+						$("#nav-icon").append($(element));
+					}
 				},
 				complete: function() {
 					setTimeout(function() {
-						$("#nav-icon").removeClass("fa-spinner")
-								  	  .removeClass("fa-spin")
-								  	  .addClass("fa-ellipsis-v");
+						$("#nav-icon").addClass("fa-ellipsis-v");
+						$("#nav-icon").find("span").remove(); 
 					}, 1000);
 				}
 			});

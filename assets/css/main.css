@@ -32,10 +32,17 @@ main div#main {
 	box-shadow: rgba(0,0,0,.1) 0 0 5px;
 	margin: 20px;
 	margin-top: 7px;
-	width: 62%;
+	width: 97%;
 	overflow: hidden;
 }
 
 main div#main .content {
 	padding: 10px 20px;
+}
+
+main .pure-form div#main label {
+	font-size: 14px;
+	color: #999;
+	font-weight: bold;
+	margin-bottom: 10px;
 }
