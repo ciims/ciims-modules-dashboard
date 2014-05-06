@@ -1,0 +1,14 @@
+@media only screen {
+	.switch-candy a {
+		background-color: #f67d42 !important;
+	}
+
+	.switch-light {
+		margin: 0px 2px;
+		margin-bottom: 10px;
+		margin-top: -2px;
+		font-size: 12px;
+		width: 100px;
+		text-transform: uppercase;
+	}
+}

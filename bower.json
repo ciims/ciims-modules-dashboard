@@ -1,11 +1,12 @@
 {
   "name": "ciims-modules-dashboard-ember",
   "dependencies": {
-    "ember": "~1.5",
-    "ember-data": "~1.0.0-beta.4",
-    "handlebars.js": "v1.3.0",
     "fontawesome": "v4.0.3",
     "pure": "~0.4.2",
-    "pace": "v0.4.16"
+    "pace": "v0.4.16",
+    "highlight.js": "https://github.com/components/highlightjs.git#8.0.0",
+    "shapeshift": "https://github.com/McPants/jquery.shapeshift.git#2.0.0",
+    "nanoscroller": "0.8.0",
+    "css-toggle-switch": "~2.1.5"
   }
 }
