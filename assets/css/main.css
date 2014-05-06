@@ -1,1 +1,41 @@
-* {}
+html, body {
+	height: 100%;
+	min-height: 100%;
+	background-color: #fbfbfb;
+	width:100%;
+	font-family: 'Open Sans', sans-serif;
+	overflow-y: hidden;
+}
+
+section#body {
+	display: table;
+	table-layout: fixed;
+	border-collapse: collapse;
+	height: 100%;
+	min-height: 100%;
+	width:100%;
+}
+
+div.tc-main {
+	display:table-cell;
+	width: 100%;
+}
+
+main {
+	max-height: 92%;
+	height: 92%;
+}
+
+main div#main {
+	background: #fff;
+	border: 1px solid #ebeff6;
+	box-shadow: rgba(0,0,0,.1) 0 0 5px;
+	margin: 20px;
+	margin-top: 7px;
+	width: 62%;
+	overflow: hidden;
+}
+
+main div#main .content {
+	padding: 10px 20px;
+}

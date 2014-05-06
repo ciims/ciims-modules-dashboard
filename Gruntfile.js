@@ -5,28 +5,29 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-bower-task');
 
     // Register the tasks we want to run
     grunt.registerTask('default', [
         'bower:install',
+        'copy:fontawesome',
+        'copy:nanoscrollermap',
         'concat:css',
         'concat:js',
         'cssmin:css'
+        //'uglify:js'
     ]);
-
-    grunt.registerTask('build', function() {
-        grunt.task.run('default');
-        grunt.task.run('uglify:js');
-    });
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         paths: {
             assets: 'assets',
+            bower: 'bower_components',
             lib: '<%= paths.assets %>/lib',
             css : '<%= paths.assets %>/css',
-            js: '<%= paths.assets %>/js'
+            js: '<%= paths.assets %>/js',
+            dist: '<%= paths.assets %>/dist',
         },
 
         bower: {
@@ -37,36 +38,54 @@ module.exports = function(grunt) {
           }
         },
 
+        copy: {
+            fontawesome: {
+                expand: true,
+                flatten: true,
+                src: "<%= paths.bower %>/nanoscroller/bin/javascripts/jquery.nanoscroller.js.map",
+                dest: "<%= paths.dist %>/"
+            },
+            nanoscrollermap: {
+                 expand: true,
+                flatten: true,
+                src: "<%= paths.assets %>/lib/fontawesome/fonts/**",
+                dest: "<%= paths.assets %>/fonts/"
+            }
+        },
+
         concat: {
             css: {
                 src: [
                     '<%= paths.css %>/*',
                     '<%= paths.lib %>/fontawesome/css/font-awesome.min.css',
-                    '<%= paths.lib %>/*/*.css',
+                    '<%= paths.lib %>/highlight.js/default.css',
+                    '<%= paths.lib %>/nanoscroller/nanoscrollers.css',
+                    '<%= paths.lib %>/*/*.css'
                 ],
-                dest: '<%= paths.assets %>/dashboard.css'
+                dest: '<%= paths.dist %>/dashboard.css'
             },
             js : {
                 src: [
-                    '<%= paths.lib %>/handlebars/handlebars.js',
-                    '<%= paths.lib %>/ember/ember.js',
-                    '<%= paths.lib %>/ember-data/ember-data.js',
                     '<%= paths.lib %>/pace/pace.min.js',
+                    '<%= paths.lib %>/highlight.js/highlight.min.js',
+                    '<%= paths.lib %>/pace/pace.min.js',
+                    '<%= paths.lib %>/shapeshift/core/jquery.shapeshift.min.js',
+                    '<%= paths.lib %>/nanoscroller/jquery.nanoscroller.js',
                     '<%= paths.js %>/*'
                 ],
-                dest: '<%= paths.assets %>/dashboard.js'
+                dest: '<%= paths.dist %>/dashboard.js'
             }
         },
         cssmin : {
             css:{
-                src: '<%= paths.assets %>/dashboard.css',
-                dest: '<%= paths.assets %>/dashboard.min.css'
+                src: '<%= paths.dist %>/dashboard.css',
+                dest: '<%= paths.dist %>/dashboard.min.css'
             }
         },
         uglify: {
             js: {
                 files: {
-                    '<%= paths.assets %>/dashboard.min.js' : ['<%= paths.assets %>/dashboard.js']
+                    '<%= paths.dist %>/dashboard.min.js' : ['<%= paths.dist %>/dashboard.js']
                 }
             }
         },

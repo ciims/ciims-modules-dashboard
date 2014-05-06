@@ -25,6 +25,7 @@ class CiiDashboardController extends CiiController
 		if (!Yii::app()->getRequest()->isSecureConnection && Cii::getConfig('forceSecureSSL', false))
             $this->redirect('https://' . Yii::app()->getRequest()->serverName . Yii::app()->getRequest()->requestUri);
 
+        Yii::app()->setTheme(NULL);
         return parent::beforeAction($action);
 	}
 
@@ -79,5 +80,5 @@ class CiiDashboardController extends CiiController
 	 * @var string the default layout for the controller view. Defaults to '//layouts/column1',
 	 * meaning using a single column layout. See 'protected/views/layouts/column1.php'.
 	 */
-	public $layout='main';
+	public $layout='default';
 }

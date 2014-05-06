@@ -11,6 +11,8 @@ class DashboardModule extends CWebModule
 			'dashboard.components.*',
 		));
 
+        Yii::app()->log->routes[0]->enabled = false; 
+        
 		Yii::app()->setComponents(array(
             'errorHandler' => array(
             	'errorAction'  => 'dashboard/default/error',
