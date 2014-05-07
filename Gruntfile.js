@@ -56,11 +56,9 @@ module.exports = function(grunt) {
         concat: {
             css: {
                 src: [
-                    '<%= paths.css %>/*',
                     '<%= paths.lib %>/fontawesome/css/font-awesome.min.css',
-                    '<%= paths.lib %>/highlight.js/default.css',
-                    '<%= paths.lib %>/nanoscroller/nanoscrollers.css',
-                    '<%= paths.lib %>/*/*.css'
+                    '<%= paths.lib %>/*/*.css',
+                    '<%= paths.css %>/*',
                 ],
                 dest: '<%= paths.dist %>/dashboard.css'
             },

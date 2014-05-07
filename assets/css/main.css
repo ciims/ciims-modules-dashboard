@@ -36,8 +36,8 @@ main div#main {
 	overflow: hidden;
 }
 
-main div#main .content {
-	padding: 10px 20px;
+main div#main .nano-content fieldset {
+	margin: 10px 20px;
 }
 
 main .pure-form div#main label {

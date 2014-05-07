@@ -42,6 +42,35 @@
     font-size: 125%;
 }
 
+.pure-button-success,
+.button-error,
+.button-warning,
+.button-secondary {
+    color: white;
+    border-radius: 4px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.pure-button-success {
+    background: rgb(28, 184, 65); /* this is a green */
+    color:#fff;
+}
+
+.pure-button-error {
+    background: rgb(202, 60, 60); /* this is a maroon */
+    color:#fff;
+}
+
+.pure-button-warning {
+    background: rgb(223, 117, 20); /* this is an orange */
+    color:#fff;
+}
+
+.pure-button-secondary {
+    background: rgb(66, 184, 221); /* this is a light blue */
+    color:#fff;
+}
+
 /** http://zurb.com/playground/radioactive-buttons MIT License **/
 @-webkit-keyframes greenPulse {
   from { background-color: #749a02; -webkit-box-shadow: 0 0 9px #333; }
