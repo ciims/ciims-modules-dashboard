@@ -2,17 +2,37 @@
 
 class UsersController extends CiiDashboardController
 {
+	/**
+	 * Tells Yii to render the settings layout
+	 * @var string $layout
+	 */
 	public $layout = 'settings';
 
+	/**
+     * Specifies the access control rules.
+     * @return array
+     */
+    public function accessRules()
+    {   
+        return array(
+            array('allow',
+            	'actions' => array('index'),
+            	'users' => array('@'),
+            	'expression' => 'UserRoles::model()->hasPermission("manage", Yii::app()->user->role)'
+            ),
+            array('deny') 
+        );  
+    }
+
+    /**
+     * Renders the index view
+     */
 	public function actionIndex()
 	{
-		$model=new Users('search');
-		$model->unsetAttributes();
-		if(isset($_GET['Users']))
-			$model->attributes=$_GET['Users'];
-
-		$model->pageSize = 25;
-
-		$this->render('index', array('model' => $model));
+		$this->render('index', array(
+			'inviteform' 	=> new InvitationForm,
+			'registerform' 	=> new RegisterForm,
+            'user'          => new Users
+		));
 	}
 }

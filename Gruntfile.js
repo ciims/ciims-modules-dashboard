@@ -27,7 +27,7 @@ module.exports = function(grunt) {
             lib: '<%= paths.assets %>/lib',
             css : '<%= paths.assets %>/css',
             js: '<%= paths.assets %>/js',
-            dist: '<%= paths.assets %>/dist',
+            dist: '<%= paths.assets %>/dist'
         },
 
         bower: {
@@ -46,7 +46,7 @@ module.exports = function(grunt) {
                 dest: "<%= paths.dist %>/"
             },
             nanoscrollermap: {
-                 expand: true,
+                expand: true,
                 flatten: true,
                 src: "<%= paths.assets %>/lib/fontawesome/fonts/**",
                 dest: "<%= paths.assets %>/fonts/"
@@ -69,6 +69,7 @@ module.exports = function(grunt) {
                     '<%= paths.lib %>/pace/pace.min.js',
                     '<%= paths.lib %>/shapeshift/core/jquery.shapeshift.min.js',
                     '<%= paths.lib %>/nanoscroller/jquery.nanoscroller.js',
+                    '<%= paths.bower %>/reMarked/reMarked.js',
                     '<%= paths.js %>/*'
                 ],
                 dest: '<%= paths.dist %>/dashboard.js'

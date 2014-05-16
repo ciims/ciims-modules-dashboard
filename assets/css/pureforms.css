@@ -7,19 +7,17 @@
 .pure-form input.success {
     border-color: #3c763d !important;
     -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
 }
 
 .pure-form input.warning {
     border-color: #66512c !important;
     -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #c0a16b;
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #c0a16b;
 }
 
-.pure-form input.error {
+.pure-form input.error,
+.pure-form select.error {
     border-color: #843534 !important;
     -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px;
 }
 
 .pure-form button {

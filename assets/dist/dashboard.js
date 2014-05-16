@@ -922,6 +922,696 @@
 
 //# sourceMappingURL=jquery.nanoscroller.js.map
 
+/**
+* Copyright (c) 2013, Leon Sorokin
+* All rights reserved. (MIT Licensed)
+*
+* reMarked.js - HTML > markdown
+*/
+
+reMarked = function(opts) {
+
+	var links = [];
+	var cfg = {
+		link_list:	false,			// render links as references, create link list as appendix
+	//  link_near:					// cite links immediately after blocks
+		h1_setext:	true,			// underline h1 headers
+		h2_setext:	true,			// underline h2 headers
+		h_atx_suf:	false,			// header suffixes (###)
+	//	h_compact:	true,			// compact headers (except h1)
+		gfm_code:	false,			// gfm code blocks (```)
+		li_bullet:	"*-+"[0],		// list item bullet style
+	//	list_indnt:					// indent top-level lists
+		hr_char:	"-_*"[0],		// hr style
+		indnt_str:	["    ","\t","  "][0],	// indentation string
+		bold_char:	"*_"[0],		// char used for strong
+		emph_char:	"*_"[1],		// char used for em
+		gfm_del:	true,			// ~~strikeout~~ for <del>strikeout</del>
+		gfm_tbls:	true,			// markdown-extra tables
+		tbl_edges:	false,			// show side edges on tables
+		hash_lnks:	false,			// anchors w/hash hrefs as links
+		br_only:	false,			// avoid using "  " as line break indicator
+		col_pre:	"col ",			// column prefix to use when creating missing headers for tables
+		nbsp_spc:	false,			// convert &nbsp; entities in html to regular spaces
+		span_tags:	true,			// output spans (ambiguous) using html tags
+		div_tags:	true,			// output divs (ambiguous) using html tags
+	//	comp_style: false,			// use getComputedStyle instead of hardcoded tag list to discern block/inline
+		unsup_tags: {				// handling of unsupported tags, defined in terms of desired output style. if not listed, output = outerHTML
+			// no output
+			ignore: "script style noscript",
+			// eg: "<tag>some content</tag>"
+			inline: "span sup sub i u b center big",
+			// eg: "\n<tag>\n\tsome content\n</tag>"
+		//	block1: "",
+			// eg: "\n\n<tag>\n\tsome content\n</tag>"
+			block2: "div form fieldset dl header footer address article aside figure hgroup section",
+			// eg: "\n<tag>some content</tag>"
+			block1c: "dt dd caption legend figcaption output",
+			// eg: "\n\n<tag>some content</tag>"
+			block2c: "canvas audio video iframe"
+		},
+		tag_remap: {				// remap of variants or deprecated tags to internal classes
+			"i": "em",
+			"b": "strong"
+		}
+	};
+
+	// detect and tweak some stuff for IE 7 & 8
+	// http://www.pinlady.net/PluginDetect/IE/
+	var isIE = eval("/*@cc_on!@*/!1"),
+		docMode = document.documentMode,
+		ieLt9 = isIE && (!docMode || docMode < 9),
+		textContProp = ieLt9 ? "innerText" : "textContent";
+
+	extend(cfg, opts);
+
+	function extend(a, b) {
+		if (!b) return a;
+		for (var i in a) {
+			if (typeOf(b[i]) == "Object")
+				extend(a[i], b[i]);
+			else if (typeof b[i] !== "undefined")
+				a[i] = b[i];
+		}
+	}
+
+	function typeOf(val) {
+		return Object.prototype.toString.call(val).slice(8,-1);
+	}
+
+	function rep(str, num) {
+		var s = "";
+		while (num-- > 0)
+			s += str;
+		return s;
+	}
+
+	function trim12(str) {
+		var	str = str.replace(/^\s\s*/, ''),
+			ws = /\s/,
+			i = str.length;
+		while (ws.test(str.charAt(--i)));
+		return str.slice(0, i + 1);
+	}
+
+	function lpad(targ, padStr, len) {
+		return rep(padStr, len - targ.length) + targ;
+	}
+
+	function rpad(targ, padStr, len) {
+		return targ + rep(padStr, len - targ.length);
+	}
+
+	function otag(tag, e) {
+		if (!tag) return "";
+
+		var buf = "<" + tag;
+
+		for (var attr, i = 0; i < e.attributes.length; i++) {
+			attr = e.attributes.item(i);
+			buf += " " + attr.nodeName + '="' + attr.nodeValue + '"';
+		}
+
+		return buf + ">";
+	}
+
+	function ctag(tag) {
+		if (!tag) return "";
+		return "</" + tag + ">";
+	}
+
+	function pfxLines(txt, pfx)	{
+		return txt.replace(/^/gm, pfx);
+	}
+
+	function nodeName(e) {
+		return (e.nodeName == "#text" ? "txt" : e.nodeName).toLowerCase();
+	}
+
+	function wrap(str, opts) {
+		var pre, suf;
+
+		if (opts instanceof Array) {
+			pre = opts[0];
+			suf = opts[1];
+		}
+		else
+			pre = suf = opts;
+
+		pre = pre instanceof Function ? pre.call(this, str) : pre;
+		suf = suf instanceof Function ? suf.call(this, str) : suf;
+
+		return pre + str + suf;
+	}
+
+	// http://stackoverflow.com/a/3819589/973988
+	function outerHTML(node) {
+		// if IE, Chrome take the internal method otherwise build one
+		return node.outerHTML || (
+		  function(n){
+			  var div = document.createElement('div'), h;
+			  div.appendChild( n.cloneNode(true) );
+			  h = div.innerHTML;
+			  div = null;
+			  return h;
+		  })(node);
+	}
+
+	this.render = function(ctr) {
+		links = [];
+
+		if (typeof ctr == "string") {
+			var htmlstr = ctr;
+			ctr = document.createElement("div");
+			ctr.innerHTML = htmlstr;
+		}
+		var s = new lib.tag(ctr, null, 0);
+		var re = s.rend().replace(/^[\t ]+\n/gm, "\n");
+		if (cfg.link_list && links.length > 0) {
+			// hack
+			re += "\n\n";
+			var maxlen = 0;
+			// get longest link href with title, TODO: use getAttribute?
+			for (var y = 0; y < links.length; y++) {
+				if (!links[y].e.title) continue;
+				var len = links[y].e.href.length;
+				if (len && len > maxlen)
+					maxlen = len;
+			}
+
+			for (var k = 0; k < links.length; k++) {
+				var title = links[k].e.title ? rep(" ", (maxlen + 2) - links[k].e.href.length) + '"' + links[k].e.title + '"' : "";
+				re += "  [" + (+k+1) + "]: " + (nodeName(links[k].e) == "a" ? links[k].e.href : links[k].e.src) + title + "\n";
+			}
+		}
+
+		return re.replace(/^[\t ]+\n/gm, "\n");
+	};
+
+	var lib = {};
+
+	lib.tag = klass({
+		wrap: "",
+		lnPfx: "",		// only block
+		lnInd: 0,		// only block
+		init: function(e, p, i)
+		{
+			this.e = e;
+			this.p = p;
+			this.i = i;
+			this.c = [];
+			this.tag = nodeName(e);
+
+			this.initK();
+		},
+
+		initK: function()
+		{
+			var i;
+			if (this.e.hasChildNodes()) {
+				// inline elems allowing adjacent whitespace text nodes to be rendered
+				var inlRe = cfg.unsup_tags.inline, n, name;
+
+				// if no thead exists, detect header rows or make fake cols
+				if (nodeName(this.e) == "table") {
+					if (this.e.hasChildNodes() && !this.e.tHead) {
+						var thead = document.createElement("thead");
+
+						var tbody0 = this.e.tBodies[0],
+							row0 = tbody0.rows[0],
+							cell0 = row0.cells[0];
+
+						if (nodeName(cell0) == "th")
+							thead.appendChild(row0);
+						else {
+							var hcell,
+								i = 0,
+								len = row0.cells.length,
+								hrow = thead.insertRow();
+
+							while (i++ < len) {
+								hcell = document.createElement("th");
+								hcell[textContProp] = cfg.col_pre + i;
+								hrow.appendChild(hcell);
+							}
+						}
+
+						this.e.insertBefore(thead, tbody0);
+					}
+				}
+
+				for (i in this.e.childNodes) {
+					if (!/\d+/.test(i)) continue;
+
+					n = this.e.childNodes[i];
+					name = nodeName(n);
+
+					// remap of variants
+					if (name in cfg.tag_remap)
+						name = cfg.tag_remap[name];
+
+					// ignored tags
+					if (cfg.unsup_tags.ignore.test(name))
+						continue;
+
+					// empty whitespace handling
+					if (name == "txt" && !nodeName(this.e).match(inlRe) && /^\s+$/.test(n[textContProp])) {
+						// ignore if first or last child (trim)
+						if (i == 0 || i == this.e.childNodes.length - 1)
+							continue;
+
+						// only ouput when has an adjacent inline elem
+						var prev = this.e.childNodes[i-1],
+							next = this.e.childNodes[i+1];
+						if (prev && !nodeName(prev).match(inlRe) || next && !nodeName(next).match(inlRe))
+							continue;
+					}
+
+					var wrap = null;
+
+					if (!lib[name]) {
+						var unsup = cfg.unsup_tags;
+
+						if (unsup.inline.test(name)) {
+							if (name == "span" && !cfg.span_tags)
+								name = "inl";
+							else
+								name = "tinl";
+						}
+						else if (unsup.block2.test(name)) {
+							if (name == "div" && !cfg.div_tags)
+								name = "blk";
+							else
+								name = "tblk";
+						}
+						else if (unsup.block1c.test(name))
+							name = "ctblk";
+						else if (unsup.block2c.test(name)) {
+							name = "ctblk";
+							wrap = ["\n\n", ""];
+						}
+						else
+							name = "rawhtml";
+					}
+
+					var node = new lib[name](n, this, this.c.length);
+
+					if (wrap)
+						node.wrap = wrap;
+
+					if (node instanceof lib.a && n.href || node instanceof lib.img) {
+						node.lnkid = links.length;
+						links.push(node);
+					}
+
+					this.c.push(node);
+				}
+			}
+		},
+
+		rend: function()
+		{
+			return this.rendK().replace(/\n{3,}/gm, "\n\n");		// can screw up pre and code :(
+		},
+
+		rendK: function()
+		{
+			var n, buf = "";
+			for (var i = 0; i < this.c.length; i++) {
+				n = this.c[i];
+				buf += (n.bef || "") + n.rend() + (n.aft || "");
+			}
+			return buf.replace(/^\n+|\n+$/, "");
+		}
+	});
+
+	lib.blk = lib.tag.extend({
+		wrap: ["\n\n", ""],
+		wrapK: null,
+		tagr: false,
+		lnInd: null,
+		init: function(e, p ,i) {
+			this.supr(e,p,i);
+
+			// kids indented
+			if (this.lnInd === null) {
+				if (this.p && this.tagr && this.c[0] instanceof lib.blk)
+					this.lnInd = 4;
+				else
+					this.lnInd = 0;
+			}
+
+			// kids wrapped?
+			if (this.wrapK === null) {
+				if (this.tagr && this.c[0] instanceof lib.blk)
+					this.wrapK = "\n";
+				else
+					this.wrapK = "";
+			}
+		},
+
+		rend: function()
+		{
+			return wrap.call(this, (this.tagr ? otag(this.tag, this.e) : "") + wrap.call(this, pfxLines(pfxLines(this.rendK(), this.lnPfx), rep(" ", this.lnInd)), this.wrapK) + (this.tagr ? ctag(this.tag) : ""), this.wrap);
+		},
+
+		rendK: function()
+		{
+			var kids = this.supr();
+			// remove min uniform leading spaces from block children. marked.js's list outdent algo sometimes leaves these
+			if (this.p instanceof lib.li) {
+				var repl = null, spcs = kids.match(/^[\t ]+/gm);
+				if (!spcs) return kids;
+				for (var i = 0; i < spcs.length; i++) {
+					if (repl === null || spcs[i][0].length < repl.length)
+						repl = spcs[i][0];
+				}
+				return kids.replace(new RegExp("^" + repl), "");
+			}
+			return kids;
+		}
+	});
+
+	lib.tblk = lib.blk.extend({tagr: true});
+
+	lib.cblk = lib.blk.extend({wrap: ["\n", ""]});
+
+		lib.ctblk = lib.cblk.extend({tagr: true});
+
+	lib.inl = lib.tag.extend({
+		rend: function()
+		{
+			var kids = this.rendK(),
+				parts = kids.match(/^((?: |\t|&nbsp;)*)(.*?)((?: |\t|&nbsp;)*)$/) || [kids, "", kids, ""];
+
+			return parts[1] + wrap.call(this, parts[2], this.wrap) + parts[3];
+		}
+	});
+
+		lib.tinl = lib.inl.extend({
+			tagr: true,
+			rend: function()
+			{
+				return otag(this.tag, this.e) + wrap.call(this, this.rendK(), this.wrap) + ctag(this.tag);
+			}
+		});
+
+		lib.p = lib.blk.extend({
+			rendK: function() {
+				return this.supr().replace(/^\s+/gm, "");
+			}
+		});
+
+		lib.list = lib.blk.extend({
+			expn: false,
+			wrap: [function(){return this.p instanceof lib.li ? "\n" : "\n\n";}, ""]
+		});
+
+		lib.ul = lib.list.extend({});
+
+		lib.ol = lib.list.extend({});
+
+		lib.li = lib.cblk.extend({
+			wrap: ["\n", function(kids) {
+				return this.p.expn || kids.match(/\n{2}/gm) ? "\n" : "";			// || this.kids.match(\n)
+			}],
+			wrapK: [function() {
+				return this.p.tag == "ul" ? cfg.li_bullet + " " : (this.i + 1) + ".  ";
+			}, ""],
+			rendK: function() {
+				return this.supr().replace(/\n([^\n])/gm, "\n" + cfg.indnt_str + "$1");
+			}
+		});
+
+		lib.hr = lib.blk.extend({
+			wrap: ["\n\n", rep(cfg.hr_char, 3)]
+		});
+
+		lib.h = lib.blk.extend({});
+
+		lib.h_setext = lib.h.extend({});
+
+			cfg.h1_setext && (lib.h1 = lib.h_setext.extend({
+				wrapK: ["", function(kids) {
+					return "\n" + rep("=", kids.length);
+				}]
+			}));
+
+			cfg.h2_setext && (lib.h2 = lib.h_setext.extend({
+				wrapK: ["", function(kids) {
+					return "\n" + rep("-", kids.length);
+				}]
+			}));
+
+		lib.h_atx = lib.h.extend({
+			wrapK: [
+				function(kids) {
+					return rep("#", this.tag[1]) + " ";
+				},
+				function(kids) {
+					return cfg.h_atx_suf ? " " + rep("#", this.tag[1]) : "";
+				}
+			]
+		});
+			!cfg.h1_setext && (lib.h1 = lib.h_atx.extend({}));
+
+			!cfg.h2_setext && (lib.h2 = lib.h_atx.extend({}));
+
+			lib.h3 = lib.h_atx.extend({});
+
+			lib.h4 = lib.h_atx.extend({});
+
+			lib.h5 = lib.h_atx.extend({});
+
+			lib.h6 = lib.h_atx.extend({});
+
+		lib.a = lib.inl.extend({
+			lnkid: null,
+			rend: function() {
+				var kids = this.rendK(),
+					href = this.e.getAttribute("href"),
+					title = this.e.title ? ' "' + this.e.title + '"' : "";
+
+				if (!href || href == kids || href[0] == "#" && !cfg.hash_lnks)
+					return kids;
+
+				if (cfg.link_list)
+					return "[" + kids + "] [" + (this.lnkid + 1) + "]";
+
+				return "[" + kids + "](" + href + title + ")";
+			}
+		});
+
+		// almost identical to links, maybe merge
+		lib.img = lib.inl.extend({
+			lnkid: null,
+			rend: function() {
+				var kids = this.e.alt,
+					src = this.e.getAttribute("src");
+
+				if (cfg.link_list)
+					return "![" + kids + "] [" + (this.lnkid + 1) + "]";
+
+				var title = this.e.title ? ' "'+ this.e.title + '"' : "";
+
+				return "![" + kids + "](" + src + title + ")";
+			}
+		});
+
+
+		lib.em = lib.inl.extend({wrap: cfg.emph_char});
+
+		lib.del = cfg.gfm_del ? lib.inl.extend({wrap: "~~"}) : lib.tinl.extend();
+
+		lib.br = lib.inl.extend({
+			wrap: ["", function() {
+				var end = cfg.br_only ? "<br>" : "  ";
+				// br in headers output as html
+				return this.p instanceof lib.h ? "<br>" : end + "\n";
+			}]
+		});
+
+		lib.strong = lib.inl.extend({wrap: rep(cfg.bold_char, 2)});
+
+		lib.blockquote = lib.blk.extend({
+			lnPfx: "> ",
+			rend: function() {
+				return this.supr().replace(/>[ \t]$/gm, ">");
+			}
+		});
+
+		// can render with or without tags
+		lib.pre = lib.blk.extend({
+			tagr: true,
+			wrapK: "\n",
+			lnInd: 0
+		});
+
+		// can morph into inline based on context
+		lib.code = lib.blk.extend({
+			tagr: false,
+			wrap: "",
+			wrapK: function(kids) {
+				return kids.indexOf("`") !== -1 ? "``" : "`";	// esc double backticks
+			},
+			lnInd: 0,
+			init: function(e, p, i) {
+				this.supr(e, p, i);
+
+				if (this.p instanceof lib.pre) {
+					this.p.tagr = false;
+
+					if (cfg.gfm_code) {
+						var cls = this.e.getAttribute("class");
+						cls = (cls || "").split(" ")[0];
+
+						if (cls.indexOf("lang-") === 0)			// marked uses "lang-" prefix now
+							cls = cls.substr(5);
+
+						this.wrapK = ["```" + cls + "\n", "\n```"];
+					}
+					else {
+						this.wrapK = "";
+						this.p.lnInd = 4;
+					}
+				}
+			}
+		});
+
+		lib.table = cfg.gfm_tbls ? lib.blk.extend({
+			cols: [],
+			init: function(e, p, i) {
+				this.supr(e, p, i);
+				this.cols = [];
+			},
+			rend: function() {
+				// run prep on all cells to get max col widths
+				for (var tsec = 0; tsec < this.c.length; tsec++)
+					for (var row = 0; row < this.c[tsec].c.length; row++)
+						for (var cell = 0; cell < this.c[tsec].c[row].c.length; cell++)
+							this.c[tsec].c[row].c[cell].prep();
+
+				return this.supr();
+			}
+		}) : lib.tblk.extend();
+
+		lib.thead = cfg.gfm_tbls ? lib.cblk.extend({
+			wrap: ["\n", function(kids) {
+				var buf = "";
+				for (var i = 0; i < this.p.cols.length; i++) {
+					var col = this.p.cols[i],
+						al = col.a[0] == "c" ? ":" : " ",
+						ar = col.a[0] == "r" || col.a[0] == "c" ? ":" : " ";
+
+					buf += (i == 0 && cfg.tbl_edges ? "|" : "") + al + rep("-", col.w) + ar + (i < this.p.cols.length-1 || cfg.tbl_edges ? "|" : "");
+				}
+				return "\n" + trim12(buf);
+			}]
+		}) : lib.ctblk.extend();
+
+		lib.tbody = cfg.gfm_tbls ? lib.cblk.extend() : lib.ctblk.extend();
+
+		lib.tfoot = cfg.gfm_tbls ? lib.cblk.extend() : lib.ctblk.extend();
+
+		lib.tr = cfg.gfm_tbls ? lib.cblk.extend({
+			wrapK: [cfg.tbl_edges ? "| " : "", cfg.tbl_edges ? " |" : ""]
+		}) : lib.ctblk.extend();
+
+		lib.th = cfg.gfm_tbls ? lib.inl.extend({
+			guts: null,
+			// TODO: DRY?
+			wrap: [function() {
+				var col = this.p.p.p.cols[this.i],
+					spc = this.i == 0 ? "" : " ",
+					pad, fill = col.w - this.guts.length;
+
+				switch (col.a[0]) {
+					case "r": pad = rep(" ", fill); break;
+					case "c": pad = rep(" ", Math.floor(fill/2)); break;
+					default:  pad = "";
+				}
+
+				return spc + pad;
+			}, function() {
+				var col = this.p.p.p.cols[this.i],
+					edg = this.i == this.p.c.length - 1 ? "" : " |",
+					pad, fill = col.w - this.guts.length;
+
+				switch (col.a[0]) {
+					case "r": pad = ""; break;
+					case "c": pad = rep(" ", Math.ceil(fill/2)); break;
+					default:  pad = rep(" ", fill);
+				}
+
+				return pad + edg;
+			}],
+			prep: function() {
+				this.guts = this.rendK();					// pre-render
+				this.rendK = function() {return this.guts};
+
+				var cols = this.p.p.p.cols;
+				if (!cols[this.i])
+					cols[this.i] = {w: null, a: ""};		// width and alignment
+				var col = cols[this.i];
+				col.w = Math.max(col.w || 0, this.guts.length);
+
+				var align = this.e.align || this.e.style.textAlign;
+				if (align)
+					col.a = align;
+			}
+		}) : lib.ctblk.extend();
+
+			lib.td = lib.th.extend();
+
+		lib.txt = lib.inl.extend({
+			initK: function()
+			{
+				this.c = this.e.textContent.split(/^/gm);
+			},
+			rendK: function()
+			{
+				var kids = this.c.join("").replace(/\r/gm, "");
+
+				// this is strange, cause inside of code, inline should not be processed, but is?
+				if (!(this.p instanceof lib.code || this.p instanceof lib.pre)) {
+					kids = kids
+					.replace(/^\s*([#*])/gm, function(match, $1) {
+						return match.replace($1, "\\" + $1);
+					});
+				}
+
+				if (this.i == 0)
+					kids = kids.replace(/^\n+/, "");
+				if (this.i == this.p.c.length - 1)
+					kids = kids.replace(/\n+$/, "");
+
+				return kids.replace(/\u00a0/gm, cfg.nbsp_spc ? " " : "&nbsp;");
+			}
+		});
+
+		lib.rawhtml = lib.blk.extend({
+			initK: function()
+			{
+				this.guts = outerHTML(this.e);
+			},
+			rendK: function()
+			{
+				return this.guts;
+			}
+		});
+
+		// compile regexes
+		for (var i in cfg.unsup_tags)
+			cfg.unsup_tags[i] = new RegExp("^(?:" + (i == "inline" ? "a|em|strong|img|code|del|" : "") + cfg.unsup_tags[i].replace(/\s/g, "|") + ")$");
+};
+
+/*!
+  * klass: a classical JS OOP façade
+  * https://github.com/ded/klass
+  * License MIT (c) Dustin Diaz 2014
+  */
+!function(e,t,n){typeof define=="function"?define(n):typeof module!="undefined"?module.exports=n():t[e]=n()}("klass",this,function(){function i(e){return a.call(s(e)?e:function(){},e,1)}function s(e){return typeof e===t}function o(e,t,n){return function(){var i=this.supr;this.supr=n[r][e];var s={}.fabricatedUndefined,o=s;try{o=t.apply(this,arguments)}finally{this.supr=i}return o}}function u(e,t,i){for(var u in t)t.hasOwnProperty(u)&&(e[u]=s(t[u])&&s(i[r][u])&&n.test(t[u])?o(u,t[u],i):t[u])}function a(e,t){function n(){}function c(){this.init?this.init.apply(this,arguments):(t||a&&i.apply(this,arguments),f.apply(this,arguments))}n[r]=this[r];var i=this,o=new n,a=s(e),f=a?e:this,l=a?{}:e;return c.methods=function(e){return u(o,e,i),c[r]=o,this},c.methods.call(c,l).prototype.constructor=c,c.extend=arguments.callee,c[r].implement=c.statics=function(e,t){return e=typeof e=="string"?function(){var n={};return n[e]=t,n}():e,u(this,e,i),this},c}var e=this,t="function",n=/xyz/.test(function(){xyz})?/\bsupr\b/:/.*/,r="prototype";return i})
+
 /*
 Copyright (c) 2010 Ryan Schuft (ryan.schuft@gmail.com)
 
@@ -1686,54 +2376,358 @@ var Settings = {
 };
 var Users = {
 
+	/**
+	 * CiiMS data from localStorage
+	 */
 	ciims : {},
 
+	/**
+	 * The current page
+	 */
 	page : 1,
 
+	/**
+	 * Search query, if any
+	 */
+	query : null,
+
+	/**
+	 * Users that we have currently loaded
+	 * Ajax response should store their information here to prevent having to fire off an Ajax
+	 * Request to display the data
+	 */
+	users : [],
+
+	/**
+	 * Search timeout
+	 */
+	searchTimeout : null,
+
+	/**
+	 * Bootstrap endpoint
+	 */
 	registerUsers : function() {
+		// Populate the api credentials
 		this.ciims = $.parseJSON(localStorage.getItem('ciims'));
 
-		this.list();
+		// Load the initial user list
+		this.list(false, this.query, this.page);
+
+		// Bind the search form functionality
 		this.bindSearch();
+
+		// Bind the invitation form ajax callbacks
+		this.bindInvite();
+
+		// Bind the registration form ajax callbacks
+		this.bindRegister();
+
+		$("#NewUserButton").click(function() {
+			$("#register_form, #invite_form").show();
+			$("#user_edit").hide();
+		});
 	},
 
-	bindSearch : function() {
+	/**
+	 * Bind the registration form
+	 */
+	bindRegister : function() {
+		var self = this;
 
+		$("#RegistrationForm_Submit").click(function() {
+			return $("#registration-form").submit();
+		});
+
+		$("#registration-form").submit(function(e) {
+			$.ajax({
+				url: window.location.origin + '/api/user',
+				type: 'POST',
+				headers: {
+					'X-Auth-Email': self.ciims.email,
+					'X-Auth-Token': self.ciims.token
+				},
+				data: {
+					'email': $("#RegisterForm_email").val(),
+					'password': $("#RegisterForm_password").val(),
+					'password_repeat': $("#RegisterForm_password_repeat").val(),
+					'displayName' : $("#RegisterForm_displayName").val(),
+				},
+				beforeSend: function() {
+					$("#registration-form :input").removeClass("error");
+					$("#registration-form").find(".alert").remove();
+					self.ajaxBeforeSend();
+				},
+				error: function(data) {
+					var json = $.parseJSON(data.responseText),
+						message = json.message,
+						alert = $("<div>").addClass("alert alert-error");
+
+
+					$.each(json.response, function(k, v) { 
+						$("#RegisterForm_" + k).addClass("error");
+						alert.append($("<p>").text(v));
+					});
+
+					$("#registration-form").prepend($(alert));
+				},
+				success: function(data, textStatus, jqXHR) {
+					// Clear the field
+					$("#registration-form :input").not("#RegistrationForm_Submit").val('');
+					self.renderLi(data.response, $(".paginated_results ul"), true);
+
+					self.ajaxSuccess(data.success);
+				},
+				completed: self.ajaxCompleted()
+			});
+
+			return false;
+		});
+	},
+
+	/**
+	 * Ajax Before send parent
+	 */
+	ajaxBeforeSend: function() {
+		$("#nav-icon").removeClass("fa-ellipsis-v");
+
+		if ($("#nav-icon").find("span").length == 0)
+		{
+			var element = $("<span>").addClass("fa fa-spinner fa-spin active");
+			$("#nav-icon").append($(element));
+		}
+
+		// Remove all the previous success messages
+		$(".alert-show").remove();
+	},
+
+	/**
+	 * Ajax completed callback
+	 */
+	ajaxCompleted: function() {
+		setTimeout(function() {
+			$("#nav-icon").addClass("fa-ellipsis-v");
+			$("#nav-icon").find("span").remove(); 
+		}, 1000);
+	},
+
+	/**
+	 * Ajax success callback
+	 */
+	ajaxSuccess: function(message) {
+
+		var self = this,
+			alert = $("<section>").addClass("settings_container alert-show"),
+			fieldset = $("<fieldset>"),
+			divOverflow = $("<div>"),
+			div = $("<div>").addClass("alert alert-success").css("width", "auto").css("margin-bottom", "0px").text(message);
+
+		$(divOverflow).append($(div));
+		$(fieldset).append($(divOverflow));
+		$(alert).append($(fieldset));
+
+		if (message != null)
+		{
+			$("main .paginated_results").after(alert);
+
+			// Automatically hide the alert after 5s
+			setTimeout(function() {
+				$(".alert-show").remove();
+			}, 5000);
+		}
+
+		// Bind behaviors
+		self.clickBehavior();
+		self.nanoscroller();
+	},
+
+	/**
+	 * Binds the invitation data to the model
+	 */
+	bindInvite : function() {
+		var self = this;
+
+		$("#InvitationForm_Submit").click(function() {
+			return $("#invitation-form").submit();
+		});
+
+		$("#invitation-form").submit(function(e) {
+			$.ajax({
+				url: window.location.origin + '/api/user/invite',
+				type: 'POST',
+				headers: {
+					'X-Auth-Email': self.ciims.email,
+					'X-Auth-Token': self.ciims.token
+				},
+				data: {
+					'email': $("#InvitationForm_email").val()
+				},
+				beforeSend: function() {
+					$("#InvitationForm_email").removeClass("error");
+					$("#invitation-form").find(".alert").remove();
+					self.ajaxBeforeSend();
+				},
+				error: function(data) {
+					$("#InvitationForm_email").addClass("error");
+					var alert = $("<div>").addClass("alert alert-error").text($.parseJSON(data.responseText).response.email[0]);
+					$("#invitation-form").prepend($(alert));
+				},
+				success: function(data, textStatus, jqXHR) {
+					// Clear the field
+					$("#InvitationForm_email").val('');
+					self.renderLi(data.response, $(".paginated_results ul"), true);
+
+					self.ajaxSuccess(data.message);
+				},
+				completed: self.ajaxCompleted()
+			});
+
+			return false;
+		});
+	},
+
+	/**
+	 * Renders an LI element
+	 * @param object data
+	 * @param DOM ul
+	 * @param boolean prepend
+	 */
+	renderLi: function(data, ul, prepend) {
+		this.users[data.id] = data;
+		if (prepend == undefined)
+			prepend = false;
+
+		var li = $("<li>").attr('userId', data.id),
+			info = $("<div>");
+
+		// Build the info object
+		$(info).addClass("user-info");
+		$(info).append($("<h6>").text(data.name));
+		$(info).append($("<span>").text(data.email)).attr('title', data.email);
+		$(info).append($("<span>").text(data.displayName));
+
+		// Build the list element
+		$(li).addClass(data.role.name);
+		$(li).append($("<img>").addClass("user-image").attr("src", "https://www.gravatar.com/avatar/" + md5(data.email) + "?s=40"));
+		$(li).append($(info));
+		
+		// Append it to the list
+		if (prepend)
+			$(ul).prepend($(li));
+		else
+			$(ul).append($(li));
+
+	},
+
+	/**
+	 * Binds search functionality to the list view
+	 */
+	bindSearch : function() {
+		// When the search field changes
+		var self = this;
+		$("#search").keyup(function() {
+			// Set a timeout to perform the search
+			clearTimeout(self.searchTimeout);
+			self.searchTimeout = setTimeout(function() {
+				self.query = $("#search").val();
+				self.list(true, self.query, 1);
+			}, 500);
+		});
 	},
 
 	/**
 	 * Rebinds the click behavior to the appropriate elements
 	 */
 	clickBehavior : function() {
-		// Unbind the existing click behaviors
+		var self = this;
 		$(".paginated_results ul li").unbind("click");
-
-		// Rebind it
 		$(".paginated_results ul li").click(function() {
-			// Remove the active state from all elements
+
+			// Remove the active class from the other attributes
 			$(".paginated_results ul li").removeClass("active");
 
+			$("#invite_form, #register_form").hide();
+
+			self.populate(Users.users[$(this).attr('userId')]);
+
 			$(this).addClass("active");
+
+			$("#UserForm_Submit").unbind("click");
+			$("#UserForm_Submit").click(function(e) {
+				e.preventDefault();
+				
+				var data = {};
+
+				// Select all form elements, except for the button
+				$("#user-form :input[type!='button']").each(function() {
+					var val = $(this).val(),
+						name = $(this).attr('name').replace("Users[", "").replace("]", "");
+
+					data[name] = val;
+				});
+
+				$.ajax({
+					url: window.location.origin + '/api/user/index/id/' + $("#Users_id").val(),
+					type: 'POST',
+					headers: {
+						'X-Auth-Email': self.ciims.email,
+						'X-Auth-Token': self.ciims.token
+					},
+					data: data,
+					beforeSend: function() {
+						$("#user-form :input[type!='button']").removeClass("error");
+						$("#user-form").find(".alert").remove();
+						self.ajaxBeforeSend();
+					},
+					error: function(data) {
+						var json = $.parseJSON(data.responseText),
+							message = json.message,
+							alert = $("<div>").addClass("alert alert-error");
+
+						$.each(json.response, function(k, v) { 
+							$("#Users_" + k).addClass("error");
+							alert.append($("<p>").text(v));
+						});
+
+						$("#user-form").prepend($(alert));
+					},
+					success: function(data, textStatus, jqXHR) {
+						self.ajaxSuccess(data.message);
+
+						// Update the information we have on record
+						self.users[data.response.id] = data.response;
+
+						// Reutilize the click to transition the view
+						$("#NewUserButton").click();
+					},
+					completed: self.ajaxCompleted()
+				});
+
+				return false;
+			});
 		});
 	},
 
 	/**
+	 * Populates the user-form with the data provided from Users.users[]
+	 * @param object data
+	 */
+	populate : function(data) {
+		$.each(data, function(k, v) {
+			$("#user-form :input#Users_"+k).val(v);
+		});
+		$("#user_edit").show();
+	},
+
+	/**
 	 * Performs an AJAX GET query to load the available users
+	 * @param boolean clear
+	 * @param string query
+	 * @param int page
 	 */
 	list : function(clear, query, page) {
-
-		if (query == undefined)
-			query = "";
-
-		if (page == undefined)
-			page = 1;
-
-		if (clear == undefined)
-			clear = false;
-
 		var self = this;
 		$.ajax({
-			url: window.location.origin + '/api/user?page=' + page,
+			url: window.location.origin + '/api/user?page=' + page + (query == null ? '' : '&Users[displayName]='+query),
 			type: 'GET',
 			headers: {
 				'X-Auth-Email': self.ciims.email,
@@ -1742,33 +2736,28 @@ var Users = {
 			beforeSend: function() {
 				// Clear the results on before send, if requested
 				if (clear)
-					$(".paginated_results ul").empty()
+					$(".paginated_results ul").empty();
+
+				self.page = page;
+
+				self.ajaxBeforeSend();
+			},
+			error: function(data) {
+				var json = $.parseJSON(data.responseText);
+
+				// unbind the scrolling event to prevent unecessary requests to the API
+				if (json.status == 404)
+					$(".paginated_results .nano .nano-content").unbind("scroll");
 			},
 			success: function(data, textStatus, jqXHR) {
-				this.page++;
 				var ul = $(".paginated_results ul");
 				$(data.response).each(function() {
-					var li = $("<li>"),
-						info = $("<div>");
-
-					// Build the info object
-					$(info).addClass("user-info");
-					$(info).append($("<h6>").text(this.name));
-					$(info).append($("<span>").text(this.email));
-					$(info).append($("<span>").text(this.displayName));
-
-					// Build the list element
-					$(li).addClass(this.role.name);
-					$(li).append($("<img>").addClass("user-image").attr("src", "https://www.gravatar.com/avatar/" + md5(this.email) + "?s=40"));
-					$(li).append($(info));
-					
-					// Append it to the list
-					$(ul).append($(li));
+					self.renderLi(this, ul);
 				});
 
-				Users.clickBehavior();
-				self.nanoscroller();
-			}
+				self.ajaxSuccess(null);
+			},
+			completed: self.ajaxCompleted()
 		});
 	},
 
@@ -1777,7 +2766,16 @@ var Users = {
 	 * @return nanoScroller
 	 */
 	nanoscroller : function() {
-		$(".nano").nanoScroller({ destroy: true });
-		return $(".nano").nanoScroller({ iOSNativeScrolling: true }); 
+		// Froce nanoscroller to rebuild itself
+		var self = this;
+		$(".paginated_results .nano").nanoScroller({ destroy: true });
+		$(".paginated_results .nano").nanoScroller({ iOSNativeScrolling: true }); 
+
+		// Rebind the scrollend behavior
+		$(".paginated_results .nano .nano-content").unbind("scroll");
+		$(".paginated_results .nano .nano-content").bind("scroll", function(e) {
+			if($(this).scrollTop() + $(this).innerHeight() >= this.scrollHeight - 1)
+		    	self.list(false, self.query, ++self.page);
+		});
 	},
 };
