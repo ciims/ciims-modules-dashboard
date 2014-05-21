@@ -1,4 +1,6 @@
-.pure-form input {
+.pure-form input,
+.pure-form select,
+.pure-form textarea {
     padding: 8px !important;
     margin-bottom: 10px !important;
     font-size: 12px !important;

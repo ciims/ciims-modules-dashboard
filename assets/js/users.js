@@ -49,6 +49,7 @@ var Users = {
 		$("#NewUserButton").click(function() {
 			$("#register_form, #invite_form").show();
 			$("#user_edit").hide();
+			$(".paginated_results ul li").removeClass("active");
 		});
 	},
 

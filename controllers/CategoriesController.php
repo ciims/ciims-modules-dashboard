@@ -30,7 +30,7 @@ class CategoriesController extends CiiDashboardController
 	public function actionIndex()
 	{
 		$this->render('index', array(
-            'category'          => new Categories
+            'category' => new Categories
 		));
 	}
 }

@@ -91,6 +91,8 @@
 				<?php echo $form->textField($user, 'lastName', array('class' => 'pure-u-1', 'placeholder' => $user->getAttributeLabel('lastName') )); ?>
 				<?php echo $form->dropDownList($user, 'user_role', CHtml::listData(UserRoles::model()->findAll(), 'id', 'name'), array('class' => 'pure-u-1')); ?>
 
+				<?php echo $form->textArea($user, 'about', array('class' => 'pure-u-1', 'rows' => 10, 'placeholder' => $user->getAttributeLabel('about') )); ?>
+
 				<hr />
 
 				<div class="metadata"></div>
@@ -101,4 +103,4 @@
 	</div>
 </section>
 
-<?php Yii::app()->clientScript->registerScript('nanoscroller', 'Users.registerUsers();'); ?>
+<?php Yii::app()->clientScript->registerScript('users', 'Users.registerUsers();'); ?>
