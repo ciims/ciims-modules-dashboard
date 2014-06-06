@@ -2562,6 +2562,11 @@ main .pure-form div#main label {
 .nano > .nano-pane {
 	width: 6px !important;
 }
+
+.nano {
+	height: 96% !important;
+	max-height: 96% !important;
+}
 section#main-navigation {
 	background-color: #2d2d2d;
 	width: 50px;
@@ -2958,6 +2963,13 @@ section.settings_container hr {
 	border: 0;
 	border-top: 1px solid #ccc;
 	margin: 1em 0;
+}
+
+#testEmailSettings {
+	display: block;
+	position: absolute;
+	top: 68px;
+	right: 28px;
 }
 section.paginated_results {
 	background-color: #fff;

@@ -21,7 +21,7 @@ class SettingsController extends CiiDashboardController
 	 */
 	public function actionEmail()
 	{
-		$this->render('settings', array(
+		$this->render('email', array(
 			'model' => new EmailSettings
 		));
 	}

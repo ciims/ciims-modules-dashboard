@@ -2697,6 +2697,61 @@ var Settings = {
 	},
 
 	/**
+	 * Tests email connection settings
+	 */
+	testEmailSettings : function() {
+		$("a#testEmailSettings").click(function(e) {
+			e.preventDefault();
+			// Self
+			var self = this,
+				ciims = $.parseJSON(localStorage.getItem('ciims'));
+
+			$.ajax({
+				url: Settings.getRoute() + "test",
+				type: 'GET',
+				headers: {
+					'X-Auth-Email': ciims.email,
+					'X-Auth-Token': ciims.token
+				},
+				beforeSend: function() {
+					$("#nav-icon").removeClass("fa-ellipsis-v");
+
+					if ($("#nav-icon").find("span").length == 0)
+					{
+						var element = $("<span>").addClass("fa fa-spinner fa-spin active");
+						$("#nav-icon").append($(element));
+					}
+
+					$("legend").parent().find(".alert").remove();
+				},
+				error: function(data) {
+					var json = $.parseJSON(data.responseText),
+						message = json.message,
+						alert = $("<div>").addClass("alert alert-error");
+
+					alert.html(message);
+					$("legend").after($(alert));
+				},
+				success: function(json, textStatus, jqXHR) {
+					var message = json.message,
+						alert = $("<div>").addClass("alert alert-success");
+
+					alert.html(message);
+					$("legend").after($(alert));
+				},
+				complete: function() {
+					setTimeout(function() {
+						$("#nav-icon").addClass("fa-ellipsis-v");
+						$("#nav-icon").find("span").remove(); 
+					}, 1000);
+				}
+			});
+
+			return false;
+		});
+	},
+
+	/**
 	 * Change event tracking
 	 */
 	inputChange : function() {
