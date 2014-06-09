@@ -1612,6 +1612,158 @@ reMarked = function(opts) {
   */
 !function(e,t,n){typeof define=="function"?define(n):typeof module!="undefined"?module.exports=n():t[e]=n()}("klass",this,function(){function i(e){return a.call(s(e)?e:function(){},e,1)}function s(e){return typeof e===t}function o(e,t,n){return function(){var i=this.supr;this.supr=n[r][e];var s={}.fabricatedUndefined,o=s;try{o=t.apply(this,arguments)}finally{this.supr=i}return o}}function u(e,t,i){for(var u in t)t.hasOwnProperty(u)&&(e[u]=s(t[u])&&s(i[r][u])&&n.test(t[u])?o(u,t[u],i):t[u])}function a(e,t){function n(){}function c(){this.init?this.init.apply(this,arguments):(t||a&&i.apply(this,arguments),f.apply(this,arguments))}n[r]=this[r];var i=this,o=new n,a=s(e),f=a?e:this,l=a?{}:e;return c.methods=function(e){return u(o,e,i),c[r]=o,this},c.methods.call(c,l).prototype.constructor=c,c.extend=arguments.callee,c[r].implement=c.statics=function(e,t){return e=typeof e=="string"?function(){var n={};return n[e]=t,n}():e,u(this,e,i),this},c}var e=this,t="function",n=/xyz/.test(function(){xyz})?/\bsupr\b/:/.*/,r="prototype";return i})
 
+var Analytics = {
+
+	/**
+	 * CiiMS's data information
+	 * @var array ciims
+	 */
+	ciims : {},
+
+	/**
+	 * The change timeout
+	 * @var timeout changeTimeout
+	 */
+	changeTimeout : null,
+
+	/**
+	 * Init bootstrap method
+	 */
+	init : function() {
+
+		this.ciims = $.parseJSON(localStorage.getItem('ciims'));
+
+		this.nanoscroller();
+
+		this.centerAlignImages();
+
+		this.providerClickBehavior();
+
+		this.changeBehavior();
+	},
+
+	/**
+	 * Provider click behavior
+	 */
+	providerClickBehavior: function() {
+		var self = this;
+
+		$(".provider").click(function(e) {
+			e.preventDefault();
+			$(".provider").removeClass("active");
+			$(this).addClass("active");
+
+			var name = $(this).attr("data-attr-name");
+			$(".options-panel").hide();
+			$(".options-panel."+name).show();
+
+			self.nanoscroller();
+		})
+	},
+
+	/**
+	 * Tricky Js to actually center align images
+	 */
+	centerAlignImages: function() {
+		setTimeout(function() {
+			console.log("call");
+			$(".providers img").each(function() {
+				var height = $(this).height(),
+					top = (50 - ( height / 2 ));
+			    $(this).css("padding-top", top);
+			});
+		}, 500);
+	},
+
+	/**
+	 * Ajax Before send parent
+	 */
+	ajaxBeforeSend: function() {
+		$("#nav-icon").removeClass("fa-ellipsis-v");
+
+		if ($("#nav-icon").find("span").length == 0)
+		{
+			var element = $("<span>").addClass("fa fa-spinner fa-spin active");
+			$("#nav-icon").append($(element));
+		}
+
+		// Remove all the previous success messages
+		$(".alert-show").remove();
+	},
+
+	/**
+	 * Ajax completed callback
+	 */
+	ajaxCompleted: function() {
+		setTimeout(function() {
+			$("#nav-icon").addClass("fa-ellipsis-v");
+			$("#nav-icon").find("span").remove(); 
+		}, 500);
+	},
+
+	/**
+	 * Ajax success callback
+	 */
+	ajaxSuccess: function(message) {
+		var self = this;
+		self.nanoscroller();
+	},
+
+	/**
+	 * Handles triggering the ajax change request.
+	 */
+	changeBehavior : function() {
+		var self = this;
+		$("input").change(function() {
+			clearTimeout(self.changeTimeout);
+			self.changeTimeout = setTimeout(function() {
+				self.submitAjaxChangeRequest();
+			}, 250);			
+		});
+
+		$("input").keyup(function() {
+			clearTimeout(self.changeTimeout);
+			self.changeTimeout = setTimeout(function() {
+				self.submitAjaxChangeRequest();
+			}, 250);			
+		});
+	},
+
+	/**
+	 * Submits an ajax change request
+	 */
+	submitAjaxChangeRequest : function() {
+		console.log("change event submitted");
+
+		var self = this,
+			data = $("form").serialize();
+
+		$.ajax({
+				url: window.location.origin + '/api/setting/analytics',
+				type: 'POST',
+				headers: {
+					'X-Auth-Email': self.ciims.email,
+					'X-Auth-Token': self.ciims.token
+				},
+				data: data,
+				beforeSend: function() {
+					self.ajaxBeforeSend();
+				},
+				success: function(data, textStatus, jqXHR) {
+					self.ajaxSuccess(data.success);
+				},
+				completed: self.ajaxCompleted()
+			});
+	},
+
+	/**
+	 * Triggers the nanoscroller
+	 * @return nanoScroller
+	 */
+	nanoscroller : function() {
+		return $(".nano").nanoScroller({ iOSNativeScrolling: true }); 
+	},
+};
 // Array Remove - By John Resig (MIT Licensed)
 Array.prototype.remove = function(from, to) {
   var rest = this.slice((to || from) + 1 || this.length);

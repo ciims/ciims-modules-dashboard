@@ -43,7 +43,7 @@ class SettingsController extends CiiDashboardController
 	 */
 	public function actionAnalytics()
 	{
-		$this->render('settings', array(
+		$this->render('/analytics/form', array(
 			'model' => new AnalyticsSettings
 		));
 	}

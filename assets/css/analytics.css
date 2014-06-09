@@ -1,0 +1,69 @@
+section#analytics {
+	width: 70%;
+	float: left;
+}
+
+section#analytics ul.providers {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+section#analytics ul li.provider  {
+	width:33%;
+	border: 1px solid #eee;
+	max-height: 100px;
+	min-height: 100px;
+	float:left;
+	transition: all .2s ease-in-out;
+}
+
+section#analytics ul li.provider.active {
+	background: #eee;
+	transition: all .2s ease-in-out;
+}
+
+section#analytics ul.providers li.provider  div.provider-inner {
+	width:100%;
+	max-height: 100px;
+	min-height: 100px;
+	min-width: 100%;
+}
+
+section#analytics ul li.provider   img {
+	width: 33%;
+	margin: 0 auto;
+	text-align: center;
+	vertical-align: middle;
+	display: block;
+}
+
+section#analytics ul li.provider div.provider-inner.disabled {
+	border-left: 3px solid rgb(202, 60, 60);
+}
+
+section#analytics ul li.provider div.provider-inner.enabled {
+	border-left: 3px solid rgb(28, 184, 65);
+}
+
+section#analytics-sidebar {
+	width: 28%;
+	float:left;
+	background-color: none;
+	box-shadow: none;
+	margin: 0;
+	padding: 0;
+}
+
+section#analytics-sidebar .options-panel {
+	display:none;
+}
+
+section#analytics-sidebar legend {
+	margin-bottom: 15px;
+}
+
+section#analytics-sidebar label {
+	margin-left: 0;
+	width: 80px;
+}
