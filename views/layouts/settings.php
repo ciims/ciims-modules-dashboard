@@ -53,12 +53,6 @@
 				),
 				*/
 				array(
-					'url' => $this->createUrl('/dashboard/settings/system'),
-					'label' => CHtml::tag('span', array(), Yii::t('Dashboard.views', 'System Settings')),
-					'linkOptions' => array('class' => 'fa fa-cloud', 'title' => Yii::t('Dashboard.views', 'System Settings')),
-					'active' => ($this->id == 'settings' && $this->action->id == 'system' ? true : false)
-				),
-				array(
 					'url' => $this->createUrl('/dashboard/settings/theme'), 
 					'label' => CHtml::tag('span', array(), Yii::t('Dashboard.views', 'Active Theme Settings')),
 					'linkOptions' => array('class' => 'fa fa-desktop', 'title' => Yii::t('Dashboard.views', 'Active Theme Settings')),

@@ -41,7 +41,7 @@ section.settings_container hr {
 	margin: 1em 0;
 }
 
-#testEmailSettings {
+#testEmailSettings, #flush_cache {
 	display: block;
 	position: absolute;
 	top: 68px;

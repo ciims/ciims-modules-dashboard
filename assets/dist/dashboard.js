@@ -2848,6 +2848,43 @@ var Settings = {
 		this.inputChange();
 	},
 
+	flushCache : function() {
+		$("#flush_cache").click(function(e) {
+			e.preventDefault();
+			// Self
+			var self = this,
+				ciims = $.parseJSON(localStorage.getItem('ciims'));
+
+			$.ajax({
+				url: Settings.getRoute() + "/flushcache",
+				type: 'GET',
+				headers: {
+					'X-Auth-Email': ciims.email,
+					'X-Auth-Token': ciims.token
+				},
+				beforeSend: function() {
+					$("#nav-icon").removeClass("fa-ellipsis-v");
+
+					if ($("#nav-icon").find("span").length == 0)
+					{
+						var element = $("<span>").addClass("fa fa-spinner fa-spin active");
+						$("#nav-icon").append($(element));
+					}
+
+					$("legend").parent().find(".alert").remove();
+				},
+				complete: function() {
+					setTimeout(function() {
+						$("#nav-icon").addClass("fa-ellipsis-v");
+						$("#nav-icon").find("span").remove(); 
+					}, 1000);
+				}
+			});
+
+			return false;
+		});
+	},
+
 	/**
 	 * Tests email connection settings
 	 */
@@ -2955,6 +2992,10 @@ var Settings = {
 		}, 500);
 	},
 	
+	/**
+	 * Retrieves the appropriate route
+	 * @return string
+	 */
 	getRoute : function() {
 		var origin 		= window.location.origin,
 			uri 		= window.location.pathname,
