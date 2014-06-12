@@ -1,12 +1,12 @@
 {
     "name": "ciims-modules/dashboard",
-    "description": "A (mostly) client side iteration of the CiiMS Dashboard module"
+    "description": "A Hybrid Dashboard that is is optimized for performance, and that takes fulla dvantage of the CiiMS API.",
     "license": "MIT",
-    "type" : "drupal-module",
+    "type": "drupal-module",
     "keywords": [
         "ciims",
         "dashboard",
-        "module",
+        "module"
     ],
     "authors": [
         {
@@ -19,8 +19,8 @@
     "support": {
         "email": "charlesportwoodii@ethreal.net",
         "issues": "https://github.com/charlesportwoodii/ciims-modules-dashboard2/issues",
-        "wiki" : "https://github.com/charlesportwoodii/ciims-modules-dashboard2/wiki/_pages",
-        "source" : "https://github.com/charlesportwoodii/ciims-modules-dashboard2"
+        "wiki": "https://github.com/charlesportwoodii/ciims-modules-dashboard2/wiki/_pages",
+        "source": "https://github.com/charlesportwoodii/ciims-modules-dashboard2"
     },
     "homepage": "https://www.ciims.org"
 }

@@ -54,7 +54,7 @@ class SettingsController extends CiiDashboardController
 	 */
 	public function actionAppearance()
 	{
-		$this->render('settings', array(
+		$this->render('theme', array(
 			'model' => new ThemeSettings
 		));
 	}
@@ -81,21 +81,5 @@ class SettingsController extends CiiDashboardController
 		$this->render('settings', array(
 			'model' => $model
 		));
-	}
-
-	/**
-	 * Plugin Management 
-	 */
-	public function actionPlugins()
-	{
-		throw new CHttpException(400,  Yii::t('Dashboard.main', 'Plugins are not yet supported'));
-	}
-	
-	/**
-	 * System Management
-	 */
-	public function actionSystem()
-	{
-		$this->render('system');
 	}
 }

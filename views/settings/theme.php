@@ -1,0 +1,1 @@
+<?php Cii::debug($model->getThemes()); ?>
