@@ -4515,6 +4515,11 @@ section#installed-themes .theme-details-container span.updating {
 	display: none;
 }
 
+section#installed-themes .theme-details-container span.activetheme,
+section#installed-themes .theme-details-container span.usetheme {
+	margin-right: 10px;
+}
+
 section#installed-themes .theme-details-container .sub-details .version {
 	float: right;
 	position: relative;
@@ -4525,7 +4530,8 @@ section#installed-themes .theme-details-container .sub-details .version {
 
 section#installed-themes .theme-details-container .theme-details {
 	width: 100%;
-	margin-top: -50px;
+	position: relative;
+	top: -60px;
 }
 
 section#installed-themes .theme-details-container .readmore-js-toggle {

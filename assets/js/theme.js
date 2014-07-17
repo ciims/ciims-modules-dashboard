@@ -19,6 +19,7 @@ var Theme = {
 
 		this.checkforUpdates();
 		this.update();
+		this.changeTheme();
 	},
 
 	/**
@@ -54,6 +55,9 @@ var Theme = {
 		});
 	},
 
+	/**
+	 * Attempts to apply an update to the theme
+	 */
 	update : function() {
 		var self = this;
 		$(".update-available").click(function() {
@@ -74,6 +78,30 @@ var Theme = {
 				error : function() {
 					$(btn).hide();
 					$(btn).parent().find('.updatefailed').show();
+				}
+			});
+		});
+	},
+
+	changeTheme : function() {
+		var self = this;
+		$(".usetheme").click(function() {
+			var name = $(this).attr('data-attr-name');
+			var btn = this;
+
+			$.ajax({
+				url: window.location.origin + '/api/theme/changetheme/name/'+name,
+				type: 'GET',
+				headers: {
+					'X-Auth-Email': self.ciims.email,
+					'X-Auth-Token': self.ciims.token
+				},
+				success : function(data) {
+					var activeTheme = $(".activetheme").clone();
+					$(".activetheme").hide();
+
+					$(btn).hide();
+					$(btn).after($(activeTheme));
 				}
 			});
 		});

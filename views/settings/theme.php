@@ -26,6 +26,17 @@
 										<span class="updatefailed pure-button pure-button-xsmall pure-button-error-pulse">
 											<?php echo Yii::t('Dashboard.main', 'Update failed!'); ?>
 										</span>
+
+										<?php if (Cii::getConfig('theme') == $name): ?>
+											<span class="activetheme pure-button pure-button-xsmall pure-button-primary">
+												<?php echo Yii::t('Dashboard.main', 'Current Theme'); ?>
+											</span>
+										<?php else: ?>
+											<span class="usetheme pure-button pure-button-xsmall pure-button-secondary" data-attr-name="<?php echo $name; ?>">
+												<?php echo Yii::t('Dashboard.main', 'Use This Theme'); ?>
+											</span>
+										<?php endif; ?>
+
 										<div class="clearfix"></div>
 									</header>
 
