@@ -46,3 +46,7 @@ main .pure-form div#main label {
 	font-weight: bold;
 	margin-bottom: 10px;
 }
+
+.clearfix {
+	clear:both;
+}

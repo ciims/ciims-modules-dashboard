@@ -1,0 +1,61 @@
+section#installed-themes .theme-details-container {
+	width: 100%;
+	padding-bottom: 40px;
+	border-bottom: 1px solid #eee;
+	margin-bottom: 20px;
+}
+
+section#installed-themes .theme-details-container div.badge {
+	margin: 0 auto;
+	text-align:center;
+	float:right;
+}
+
+section#installed-themes .theme-details-container div.badge img {
+	margin: 0 auto;
+	text-align:center;
+	max-width: 100%;
+	margin-top: 20px;
+}
+
+section#installed-themes .theme-details-container header {
+	clear:both;
+}
+
+section#installed-themes .theme-details-container h2 {
+	border-bottom: 1px solid #e5e5e5;
+	color: #333;
+}
+
+section#installed-themes .theme-details-container span {
+	float: right;
+	position: relative;
+	top: -50px;
+}
+
+section#installed-themes .theme-details-container span.uptodate,
+section#installed-themes .theme-details-container span.update-available,
+section#installed-themes .theme-details-container span.updatefailed,
+section#installed-themes .theme-details-container span.updating {
+	display: none;
+}
+
+section#installed-themes .theme-details-container .sub-details .version {
+	float: right;
+	position: relative;
+	top: -40px;
+	font-size: 10px;
+	font-style: italic;
+}
+
+section#installed-themes .theme-details-container .theme-details {
+	width: 100%;
+	margin-top: -50px;
+}
+
+section#installed-themes .theme-details-container .readmore-js-toggle {
+	text-align: center;
+	text-decoration: none;
+	color: #2d2d2d;
+	text-transform: lowercase;
+}

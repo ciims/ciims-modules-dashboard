@@ -1,7 +1,7 @@
 {
   "version": 3,
   "file": "jquery.nanoscroller.js",
-  "sourceRoot": "../../coffeescripts/",
+  "sourceRoot": "./",
   "sources": [
     "jquery.nanoscroller.coffee"
   ],

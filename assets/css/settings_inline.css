@@ -7,7 +7,8 @@ section.settings_container {
 	padding: 10px;
 }
 
-section.settings_container legend {
+section.settings_container legend,
+section.settings_container_u legend {
 	display: block;
 	width: 100%;
 	padding: 0.3em 0;
@@ -30,15 +31,26 @@ section.settings_container form label {
 	margin-right: 10px;
 }
 
-section.settings_container fieldset {
-	border: none;
-}
-
 section.settings_container hr {
 	height: 1px;
 	border: 0;
 	border-top: 1px solid #ccc;
 	margin: 1em 0;
+}
+
+section.settings_container_u fieldset {
+	padding: 0.35em 0 0.75em;
+	border: 0;
+	margin: 10px 20px;
+}
+
+section.settings_container_u legend {
+	white-space: normal;
+}
+
+section.settings_container fieldset,
+section.settings_container_u fieldset {
+	border: none;
 }
 
 #testEmailSettings, #flush_cache {

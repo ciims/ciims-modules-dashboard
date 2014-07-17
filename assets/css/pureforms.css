@@ -112,12 +112,14 @@
   -webkit-animation-name: orangellowPulse;
   -webkit-animation-duration: 2s;
   -webkit-animation-iteration-count: infinite;
+  color:#fff;
 }
 
 .pure-button-warning2-pulse {
   -webkit-animation-name: orangePulse;
   -webkit-animation-duration: 2s;
   -webkit-animation-iteration-count: infinite;
+  color:#fff;
 }
 
 .pure-button-success-pulse {
@@ -130,6 +132,7 @@
   -webkit-animation-name: redPulse;
   -webkit-animation-duration: 2s;
   -webkit-animation-iteration-count: infinite;
+  color:#fff;
 }
 
 .pure-button-primary-pulse {

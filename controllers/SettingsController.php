@@ -55,7 +55,8 @@ class SettingsController extends CiiDashboardController
 	public function actionAppearance()
 	{
 		$this->render('theme', array(
-			'model' => new ThemeSettings
+			'model' => new ThemeSettings,
+			'md' => new CMarkdownParser 	
 		));
 	}
 

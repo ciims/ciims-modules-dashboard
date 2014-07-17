@@ -7,12 +7,15 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-bower-task');
+    grunt.loadNpmTasks('grunt-string-replace');
 
     // Register the tasks we want to run
     grunt.registerTask('default', [
         'bower:install',
         'copy:fontawesome',
         'copy:nanoscrollermap',
+        'copy:nanoscrollercoffeescript',
+        "string-replace",
         'concat:css',
         'concat:js',
         'cssmin:css'
@@ -39,18 +42,40 @@ module.exports = function(grunt) {
         },
 
         copy: {
-            fontawesome: {
+            nanoscrollermap: {
                 expand: true,
                 flatten: true,
                 src: "<%= paths.bower %>/nanoscroller/bin/javascripts/jquery.nanoscroller.js.map",
                 dest: "<%= paths.dist %>/"
             },
-            nanoscrollermap: {
+            nanoscrollercoffeescript: {
+                expand: true,
+                flatten: true,
+                src: "<%= paths.bower %>/nanoscroller/coffeescripts/jquery.nanoscroller.coffee",
+                dest: "<%= paths.dist %>/"
+            },
+            fontawesome: {
                 expand: true,
                 flatten: true,
                 src: "<%= paths.assets %>/lib/fontawesome/fonts/**",
                 dest: "<%= paths.assets %>/fonts/"
             }
+        },
+
+        'string-replace': {
+          inline: {
+            options: {
+              replacements: [
+                {
+                    pattern: "../../coffeescripts/",
+                    replacement: './'
+                }
+              ]
+            },
+            files: {
+                "<%= paths.dist %>/jquery.nanoscroller.js.map" :  "<%= paths.dist %>/jquery.nanoscroller.js.map"
+            }
+          }
         },
 
         concat: {
@@ -63,13 +88,17 @@ module.exports = function(grunt) {
                 dest: '<%= paths.dist %>/dashboard.css'
             },
             js : {
+                options: {
+                    separator: ';',
+                },
                 src: [
                     '<%= paths.lib %>/pace/pace.min.js',
-                    '<%= paths.lib %>/highlight.js/highlight.min.js',
                     '<%= paths.lib %>/pace/pace.min.js',
                     '<%= paths.lib %>/shapeshift/core/jquery.shapeshift.min.js',
                     '<%= paths.lib %>/nanoscroller/jquery.nanoscroller.js',
+                    '<%= paths.bower %>/highlight.min/index.js',
                     '<%= paths.bower %>/reMarked/reMarked.js',
+                    '<%= paths.lib %>/readmore/readmore.js',
                     '<%= paths.js %>/*'
                 ],
                 dest: '<%= paths.dist %>/dashboard.js'

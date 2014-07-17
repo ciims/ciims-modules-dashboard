@@ -119,27 +119,26 @@ var Analytics = {
 	 * Submits an ajax change request
 	 */
 	submitAjaxChangeRequest : function() {
-		console.log("change event submitted");
 
 		var self = this,
 			data = $("form").serialize();
 
 		$.ajax({
-				url: window.location.origin + '/api/setting/analytics',
-				type: 'POST',
-				headers: {
-					'X-Auth-Email': self.ciims.email,
-					'X-Auth-Token': self.ciims.token
-				},
-				data: data,
-				beforeSend: function() {
-					self.ajaxBeforeSend();
-				},
-				success: function(data, textStatus, jqXHR) {
-					self.ajaxSuccess(data.success);
-				},
-				completed: self.ajaxCompleted()
-			});
+			url: window.location.origin + '/api/setting/analytics',
+			type: 'POST',
+			headers: {
+				'X-Auth-Email': self.ciims.email,
+				'X-Auth-Token': self.ciims.token
+			},
+			data: data,
+			beforeSend: function() {
+				self.ajaxBeforeSend();
+			},
+			success: function(data, textStatus, jqXHR) {
+				self.ajaxSuccess(data.success);
+			},
+			completed: self.ajaxCompleted()
+		});
 	},
 
 	/**
