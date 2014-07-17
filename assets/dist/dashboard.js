@@ -2360,6 +2360,41 @@ Array.prototype.remove = function(from, to) {
 		    	self.list(false, self.query, ++self.page);
 		});
 	},
+};;var CiiMSDashboard = {
+	
+	/**
+	 * Authentication data for the API
+	 * @var authData
+	 */
+	authData : false,
+
+	/**
+	 * Rerieves the authdata
+	 * @return object
+	 */
+	getAuthData : function() {
+		if (this.authData == false)
+			this.setAuthData();
+
+		// If the authdata is still an empty object, we need to perform re-authentication 
+		if (this.authData == null)
+		{
+			var next = window.location.pathname.substring('/dashboard'),
+				base = window.location.pathname.substring(0, window.location.pathname.indexOf('dashboard')),
+				origin = window.location.origin;
+
+			window.location = origin+base+'logout?next='+next;
+		}
+
+		return this.authData;
+	},
+
+	/**
+	 * Sets the authdata
+	 */
+	setAuthData : function() {
+		this.authData = $.parseJSON(localStorage.getItem('ciims'));
+	}
 };;/*
 Copyright (c) 2010 Ryan Schuft (ryan.schuft@gmail.com)
 
@@ -3289,12 +3324,17 @@ if (!String.prototype.ordinalize)
 					'X-Auth-Email': self.ciims.email,
 					'X-Auth-Token': self.ciims.token
 				},
-				success : function(data) {
+				beforeSend : function() {
 					$(btn).hide();
+					$(btn).parent().find('.updating').show();
+				},
+				success : function(data) {
+					$(btn).parent().find('.updating').hide();
 					$(btn).parent().find('.uptodate').show();
+					$(btn).parent().parent().find('.version').text(data.response['latest-version']);
 				},
 				error : function() {
-					$(btn).hide();
+					$(btn).parent().find('.updating').hide();
 					$(btn).parent().find('.updatefailed').show();
 				}
 			});
@@ -3315,11 +3355,16 @@ if (!String.prototype.ordinalize)
 					'X-Auth-Token': self.ciims.token
 				},
 				success : function(data) {
-					var activeTheme = $(".activetheme").clone();
-					$(".activetheme").hide();
+					var activeTheme = $(".activetheme").clone(),
+						present = $(btn).clone();
+
+					$(".activetheme").after($(present));
+					$(".activetheme").remove();
 
 					$(btn).hide();
 					$(btn).after($(activeTheme));
+
+					self.changeTheme();
 				}
 			});
 		});

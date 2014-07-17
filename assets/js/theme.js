@@ -71,12 +71,17 @@ var Theme = {
 					'X-Auth-Email': self.ciims.email,
 					'X-Auth-Token': self.ciims.token
 				},
-				success : function(data) {
+				beforeSend : function() {
 					$(btn).hide();
+					$(btn).parent().find('.updating').show();
+				},
+				success : function(data) {
+					$(btn).parent().find('.updating').hide();
 					$(btn).parent().find('.uptodate').show();
+					$(btn).parent().parent().find('.version').text(data.response['latest-version']);
 				},
 				error : function() {
-					$(btn).hide();
+					$(btn).parent().find('.updating').hide();
 					$(btn).parent().find('.updatefailed').show();
 				}
 			});
@@ -97,11 +102,16 @@ var Theme = {
 					'X-Auth-Token': self.ciims.token
 				},
 				success : function(data) {
-					var activeTheme = $(".activetheme").clone();
-					$(".activetheme").hide();
+					var activeTheme = $(".activetheme").clone(),
+						present = $(btn).clone();
+
+					$(".activetheme").after($(present));
+					$(".activetheme").remove();
 
 					$(btn).hide();
 					$(btn).after($(activeTheme));
+
+					self.changeTheme();
 				}
 			});
 		});

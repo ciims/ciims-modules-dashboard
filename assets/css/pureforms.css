@@ -126,6 +126,7 @@
   -webkit-animation-name: greenPulse;
   -webkit-animation-duration: 2s;
   -webkit-animation-iteration-count: infinite;
+  color: #fff;
 }
 
 .pure-button-error-pulse {
@@ -139,6 +140,7 @@
   -webkit-animation-name: bluePulse;
   -webkit-animation-duration: 2s;
   -webkit-animation-iteration-count: infinite;
+  color: #fff;
 }
 
 .pure-button-puurple-pulse {
