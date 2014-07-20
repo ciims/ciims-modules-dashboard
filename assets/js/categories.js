@@ -28,7 +28,7 @@ var Categories = {
 	searchTimeout : null,
 
 	registerCategories : function() {
-		this.ciims = $.parseJSON(localStorage.getItem('ciims'));
+		this.ciims = CiiMSDashboard.getAuthData();
 
 		// Load the initial categories list
 		this.list(false, this.query, this.page);

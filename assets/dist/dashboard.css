@@ -4377,6 +4377,58 @@ section.settings_container_u fieldset {
 	top: 68px;
 	right: 3%;
 }
+
+/**********************************/
+
+section.settings_container#filter_container {
+	padding-top: 0px;
+	max-height: 25px;
+	color: #999;
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+}
+
+section.settings_container#filter_container .filter-container {
+	float:left;
+}
+
+section.settings_container#filter_container .order-container {
+	float: right;
+}
+
+section.settings_container#filter_container ul {
+	display: inline-block;
+	list-style: none;
+	padding-left: 5px;
+	margin-left: 3px;
+}
+
+section.settings_container#filter_container ul li {
+	margin: 0 3px;
+	list-style: none;
+	display: inline-block;
+	transition: all .5s ease-in-out;
+	cursor: pointer;
+}
+
+section.settings_container#filter_container ul li:hover,
+section.settings_container#filter_container ul li.active {
+	color: #2d2d2d;
+	transition: all .5s ease-in-out;
+}
+
+section.settings_container#filter_container ul li.asc:after {
+	font-family: FontAwesome;
+	content: "\f0de";
+	margin-left: 5px;
+}
+
+section.settings_container#filter_container ul li.dsc:after {
+	font-family: FontAwesome;
+	content: "\f0dd";
+	margin-left: 5px;
+}
 section.paginated_results {
 	background-color: #fff;
 	width: 300px;
@@ -4415,8 +4467,21 @@ section.paginated_results ul li.active {
 	background: #F5F5F5;
 }
 
-section.paginated_results ul li.Administrator {
+section.paginated_results ul li div.user-info span.draft {
+	color: #e84d08;
+}
+
+section.paginated_results ul li div.user-info span.scheduled {
+	color: #e6a550;
+}
+
+section.paginated_results ul li.Administrator,
+section.paginated_results ul li.draft {
 	border-right: 3px solid #e84d08;
+}
+
+section.paginated_results ul li.scheduled {
+	border-right: 3px solid #e6a550;
 }
 
 section.paginated_results ul li.Author {
@@ -4460,6 +4525,7 @@ section.paginated_results ul li div.user-info h6 {
 
 section.paginated_results ul li div.user-info span {
 	color: #999;
+
 	text-transform: uppercase;
 	font-size: 10px;
 	width: 100%;
@@ -4474,6 +4540,48 @@ section.paginated_results div.paginated_search form input {
 	margin-top: 11px;
 	margin-left: 5px;
 	padding: 5px !important;
+}
+
+/*************************************/
+
+section.paginated_results ul li div.icons {
+	font-size: 12px;
+	float: right;
+	width: 30px;
+	position: relative;
+	top: 5px;
+	margin-top: 7px;
+}
+
+section.paginated_results ul li div.icons .likes-container,
+section.paginated_results ul li div.icons .comment-container {
+	display: block;
+	font-size: 12px;
+}
+
+section.paginated_results ul li div.icons .comment-container a {
+	text-decoration: none;
+	color: #A7CE44;
+}
+
+section.paginated_results ul li div.icons .likes-container {
+	color: #CE4444;
+}
+
+section.paginated_results ul li div.icons .likes-container:after {
+	font-family: FontAwesome;
+	content: "\f004";
+	padding: 0 10px;
+	padding-right: 5px;
+	color: #CE4444;
+}
+
+section.paginated_results ul li div.icons .comment-container:after {
+	font-family: FontAwesome;
+	content: "\f086";
+	padding: 0 10px;
+	padding-right: 5px;
+	color: #A7CE44;
 }
 section#installed-themes .theme-details-container {
 	width: 100%;

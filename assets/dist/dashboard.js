@@ -1608,6 +1608,220 @@ reMarked = function(opts) {
   * License MIT (c) Dustin Diaz 2014
   */
 !function(e,t,n){typeof define=="function"?define(n):typeof module!="undefined"?module.exports=n():t[e]=n()}("klass",this,function(){function i(e){return a.call(s(e)?e:function(){},e,1)}function s(e){return typeof e===t}function o(e,t,n){return function(){var i=this.supr;this.supr=n[r][e];var s={}.fabricatedUndefined,o=s;try{o=t.apply(this,arguments)}finally{this.supr=i}return o}}function u(e,t,i){for(var u in t)t.hasOwnProperty(u)&&(e[u]=s(t[u])&&s(i[r][u])&&n.test(t[u])?o(u,t[u],i):t[u])}function a(e,t){function n(){}function c(){this.init?this.init.apply(this,arguments):(t||a&&i.apply(this,arguments),f.apply(this,arguments))}n[r]=this[r];var i=this,o=new n,a=s(e),f=a?e:this,l=a?{}:e;return c.methods=function(e){return u(o,e,i),c[r]=o,this},c.methods.call(c,l).prototype.constructor=c,c.extend=arguments.callee,c[r].implement=c.statics=function(e,t){return e=typeof e=="string"?function(){var n={};return n[e]=t,n}():e,u(this,e,i),this},c}var e=this,t="function",n=/xyz/.test(function(){xyz})?/\bsupr\b/:/.*/,r="prototype";return i})
+;/**
+ * Timeago is a jQuery plugin that makes it easy to support automatically
+ * updating fuzzy timestamps (e.g. "4 minutes ago" or "about 1 day ago").
+ *
+ * @name timeago
+ * @version 1.4.1
+ * @requires jQuery v1.2.3+
+ * @author Ryan McGeary
+ * @license MIT License - http://www.opensource.org/licenses/mit-license.php
+ *
+ * For usage and examples, visit:
+ * http://timeago.yarp.com/
+ *
+ * Copyright (c) 2008-2013, Ryan McGeary (ryan -[at]- mcgeary [*dot*] org)
+ */
+
+(function (factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(['jquery'], factory);
+  } else {
+    // Browser globals
+    factory(jQuery);
+  }
+}(function ($) {
+  $.timeago = function(timestamp) {
+    if (timestamp instanceof Date) {
+      return inWords(timestamp);
+    } else if (typeof timestamp === "string") {
+      return inWords($.timeago.parse(timestamp));
+    } else if (typeof timestamp === "number") {
+      return inWords(new Date(timestamp));
+    } else {
+      return inWords($.timeago.datetime(timestamp));
+    }
+  };
+  var $t = $.timeago;
+
+  $.extend($.timeago, {
+    settings: {
+      refreshMillis: 60000,
+      allowPast: true,
+      allowFuture: false,
+      localeTitle: false,
+      cutoff: 0,
+      strings: {
+        prefixAgo: null,
+        prefixFromNow: null,
+        suffixAgo: "ago",
+        suffixFromNow: "from now",
+        inPast: 'any moment now',
+        seconds: "less than a minute",
+        minute: "about a minute",
+        minutes: "%d minutes",
+        hour: "about an hour",
+        hours: "about %d hours",
+        day: "a day",
+        days: "%d days",
+        month: "about a month",
+        months: "%d months",
+        year: "about a year",
+        years: "%d years",
+        wordSeparator: " ",
+        numbers: []
+      }
+    },
+
+    inWords: function(distanceMillis) {
+      if(!this.settings.allowPast && ! this.settings.allowFuture) {
+          throw 'timeago allowPast and allowFuture settings can not both be set to false.';
+      }
+
+      var $l = this.settings.strings;
+      var prefix = $l.prefixAgo;
+      var suffix = $l.suffixAgo;
+      if (this.settings.allowFuture) {
+        if (distanceMillis < 0) {
+          prefix = $l.prefixFromNow;
+          suffix = $l.suffixFromNow;
+        }
+      }
+
+      if(!this.settings.allowPast && distanceMillis >= 0) {
+        return this.settings.strings.inPast;
+      }
+
+      var seconds = Math.abs(distanceMillis) / 1000;
+      var minutes = seconds / 60;
+      var hours = minutes / 60;
+      var days = hours / 24;
+      var years = days / 365;
+
+      function substitute(stringOrFunction, number) {
+        var string = $.isFunction(stringOrFunction) ? stringOrFunction(number, distanceMillis) : stringOrFunction;
+        var value = ($l.numbers && $l.numbers[number]) || number;
+        return string.replace(/%d/i, value);
+      }
+
+      var words = seconds < 45 && substitute($l.seconds, Math.round(seconds)) ||
+        seconds < 90 && substitute($l.minute, 1) ||
+        minutes < 45 && substitute($l.minutes, Math.round(minutes)) ||
+        minutes < 90 && substitute($l.hour, 1) ||
+        hours < 24 && substitute($l.hours, Math.round(hours)) ||
+        hours < 42 && substitute($l.day, 1) ||
+        days < 30 && substitute($l.days, Math.round(days)) ||
+        days < 45 && substitute($l.month, 1) ||
+        days < 365 && substitute($l.months, Math.round(days / 30)) ||
+        years < 1.5 && substitute($l.year, 1) ||
+        substitute($l.years, Math.round(years));
+
+      var separator = $l.wordSeparator || "";
+      if ($l.wordSeparator === undefined) { separator = " "; }
+      return $.trim([prefix, words, suffix].join(separator));
+    },
+
+    parse: function(iso8601) {
+      var s = $.trim(iso8601);
+      s = s.replace(/\.\d+/,""); // remove milliseconds
+      s = s.replace(/-/,"/").replace(/-/,"/");
+      s = s.replace(/T/," ").replace(/Z/," UTC");
+      s = s.replace(/([\+\-]\d\d)\:?(\d\d)/," $1$2"); // -04:00 -> -0400
+      s = s.replace(/([\+\-]\d\d)$/," $100"); // +09 -> +0900
+      return new Date(s);
+    },
+    datetime: function(elem) {
+      var iso8601 = $t.isTime(elem) ? $(elem).attr("datetime") : $(elem).attr("title");
+      return $t.parse(iso8601);
+    },
+    isTime: function(elem) {
+      // jQuery's `is()` doesn't play well with HTML5 in IE
+      return $(elem).get(0).tagName.toLowerCase() === "time"; // $(elem).is("time");
+    }
+  });
+
+  // functions that can be called via $(el).timeago('action')
+  // init is default when no action is given
+  // functions are called with context of a single element
+  var functions = {
+    init: function(){
+      var refresh_el = $.proxy(refresh, this);
+      refresh_el();
+      var $s = $t.settings;
+      if ($s.refreshMillis > 0) {
+        this._timeagoInterval = setInterval(refresh_el, $s.refreshMillis);
+      }
+    },
+    update: function(time){
+      var parsedTime = $t.parse(time);
+      $(this).data('timeago', { datetime: parsedTime });
+      if($t.settings.localeTitle) $(this).attr("title", parsedTime.toLocaleString());
+      refresh.apply(this);
+    },
+    updateFromDOM: function(){
+      $(this).data('timeago', { datetime: $t.parse( $t.isTime(this) ? $(this).attr("datetime") : $(this).attr("title") ) });
+      refresh.apply(this);
+    },
+    dispose: function () {
+      if (this._timeagoInterval) {
+        window.clearInterval(this._timeagoInterval);
+        this._timeagoInterval = null;
+      }
+    }
+  };
+
+  $.fn.timeago = function(action, options) {
+    var fn = action ? functions[action] : functions.init;
+    if(!fn){
+      throw new Error("Unknown function name '"+ action +"' for timeago");
+    }
+    // each over objects here and call the requested function
+    this.each(function(){
+      fn.call(this, options);
+    });
+    return this;
+  };
+
+  function refresh() {
+    var data = prepareData(this);
+    var $s = $t.settings;
+
+    if (!isNaN(data.datetime)) {
+      if ( $s.cutoff == 0 || Math.abs(distance(data.datetime)) < $s.cutoff) {
+        $(this).text(inWords(data.datetime));
+      }
+    }
+    return this;
+  }
+
+  function prepareData(element) {
+    element = $(element);
+    if (!element.data("timeago")) {
+      element.data("timeago", { datetime: $t.datetime(element) });
+      var text = $.trim(element.text());
+      if ($t.settings.localeTitle) {
+        element.attr("title", element.data('timeago').datetime.toLocaleString());
+      } else if (text.length > 0 && !($t.isTime(element) && element.attr("title"))) {
+        element.attr("title", text);
+      }
+    }
+    return element.data("timeago");
+  }
+
+  function inWords(date) {
+    return $t.inWords(distance(date));
+  }
+
+  function distance(date) {
+    return (new Date().getTime() - date.getTime());
+  }
+
+  // fix for IE6 suckage
+  document.createElement("abbr");
+  document.createElement("time");
+}));
 ;/*!
  * Readmore.js jQuery plugin
  * Author: @jed_foster
@@ -1819,7 +2033,7 @@ reMarked = function(opts) {
 	 */
 	init : function() {
 
-		this.ciims = $.parseJSON(localStorage.getItem('ciims'));
+		this.ciims = CiiMSDashboard.getAuthData();
 
 		this.nanoscroller();
 
@@ -1854,7 +2068,6 @@ reMarked = function(opts) {
 	 */
 	centerAlignImages: function() {
 		setTimeout(function() {
-			console.log("call");
 			$(".providers img").each(function() {
 				var height = $(this).height(),
 					top = (50 - ( height / 2 ));
@@ -1985,7 +2198,7 @@ Array.prototype.remove = function(from, to) {
 	searchTimeout : null,
 
 	registerCategories : function() {
-		this.ciims = $.parseJSON(localStorage.getItem('ciims'));
+		this.ciims = CiiMSDashboard.getAuthData();
 
 		// Load the initial categories list
 		this.list(false, this.query, this.page);
@@ -2376,16 +2589,6 @@ Array.prototype.remove = function(from, to) {
 		if (this.authData == false)
 			this.setAuthData();
 
-		// If the authdata is still an empty object, we need to perform re-authentication 
-		if (this.authData == null)
-		{
-			var next = window.location.pathname.substring('/dashboard'),
-				base = window.location.pathname.substring(0, window.location.pathname.indexOf('dashboard')),
-				origin = window.location.origin;
-
-			window.location = origin+base+'logout?next='+next;
-		}
-
 		return this.authData;
 	},
 
@@ -2395,6 +2598,446 @@ Array.prototype.remove = function(from, to) {
 	setAuthData : function() {
 		this.authData = $.parseJSON(localStorage.getItem('ciims'));
 	}
+};;var Content = {
+
+	/**
+	 * CiiMS data from localStorage
+	 */
+	ciims : {},
+
+	/**
+	 * The current page
+	 */
+	page : 1,
+
+	/**
+	 * Search query, if any
+	 */
+	query : null,
+
+	/**
+	 * Filters that should be applied
+	 */
+	filter : null,
+
+	/**
+	 * Order that results should be displayed in
+	 */
+	order : null,
+
+	/**
+	 * Content that we have currently loaded
+	 * Ajax response should store their information here to prevent having to fire off an Ajax
+	 * Request to display the data
+	 */
+	content : [],
+	contentCopy: [],
+
+	/**
+	 * Search timeout
+	 */
+	searchTimeout : null,
+
+	init : function() {
+		this.ciims = CiiMSDashboard.getAuthData();
+
+		// Load the initial content list
+		this.list(false, this.query, this.page);
+
+		// Bind the search form functionality
+		this.bindSearch();
+		this.bindFilter();
+		this.bindSorting();
+	},
+
+	/**
+	 * Ajax Before send parent
+	 */
+	ajaxBeforeSend: function() {
+		$("#nav-icon").removeClass("fa-ellipsis-v");
+
+		if ($("#nav-icon").find("span").length == 0)
+		{
+			var element = $("<span>").addClass("fa fa-spinner fa-spin active");
+			$("#nav-icon").append($(element));
+		}
+
+		// Remove all the previous success messages
+		$(".alert-show").remove();
+	},
+
+	/**
+	 * Ajax completed callback
+	 */
+	ajaxCompleted: function() {
+		setTimeout(function() {
+			$("#nav-icon").addClass("fa-ellipsis-v");
+			$("#nav-icon").find("span").remove(); 
+		}, 1000);
+	},
+
+	/**
+	 * Ajax success callback
+	 */
+	ajaxSuccess: function(message) {
+
+		var self = this,
+			alert = $("<section>").addClass("settings_container alert-show"),
+			fieldset = $("<fieldset>"),
+			divOverflow = $("<div>"),
+			div = $("<div>").addClass("alert alert-success").css("width", "auto").css("margin-bottom", "0px").text(message);
+
+		$(divOverflow).append($(div));
+		$(fieldset).append($(divOverflow));
+		$(alert).append($(fieldset));
+
+		if (message != null)
+		{
+			$("main .paginated_results").after(alert);
+
+			// Automatically hide the alert after 5s
+			setTimeout(function() {
+				$(".alert-show").remove();
+			}, 5000);
+		}
+
+		// Bind behaviors
+		self.clickBehavior();
+		self.nanoscroller();
+	},
+
+	/**
+	 * Render wrapper
+	 * @param array data
+	 */
+	render : function(data) {
+		var self = this;
+
+		var ul = $(".paginated_results ul");
+		$(data).each(function() {
+			self.renderLi(this, ul);
+			$(".timeago").timeago();
+			// Render the comment counts
+			CMSComments.commentCount()
+
+			// Wait until the data has finished loading before calling completed
+			self.ajaxCompleted();
+		});
+	},
+
+	/**
+	 * Renders an LI element
+	 * @param object data
+	 * @param DOM ul
+	 * @param boolean prepend
+	 */
+	renderLi: function(data, ul, prepend) {
+		var self = this;
+		self.content[data.id] = data;
+
+		if (prepend == undefined)
+			prepend = false;
+
+		var li = $("<li>").attr('content_id', data.id),
+			info = $("<div>"),
+			side = $("<div>").addClass("icons");
+
+		// Build the info object
+		$(info).addClass("user-info");
+		$(info).append($("<h6>").text(data.title));
+		var name = data.author.firstName + " " + data.author.lastName;
+		$(info).append($("<span>").text(name)).attr('title', name);
+
+		if (data.status == 0)
+		{
+			$(li).addClass("draft");
+			var text = $(".draft-text").text();
+			$(info).append($("<span>").addClass("draft").text(text).attr('title', text));
+		}
+		else if (data.status == 1)
+		{
+			var currentUnixTime = Math.round(new Date().getTime() / 1000);
+			if (currentUnixTime < data.published)
+			{
+				$(li).addClass("scheduled");
+				var dateTime = new Date( (data.published * 1000) ),
+					dateTime = dateTime.format('F d, Y @ H:i'),
+					text = $(".scheduled-text").text().replace('{{date}}', dateTime);
+
+				$(info).append($("<span>").addClass("scheduled").text(text).attr('title', text));
+			}
+			else
+			{
+				// Date time
+				var dateTime = new Date( (data.created * 1000) ),
+					titleTime = dateTime.format('F d, Y @ H:i'),
+					dateTime = dateTime.format('c');
+
+				$(info).append($("<span>").addClass("timeago").attr('datetime', dateTime).attr('title', titleTime));
+
+				// Comment Icons
+				$(side).append($("<span>").addClass("comment-container comment-count").attr('data-attr-slug', "/"+data.slug).attr('data-attr-id', data.id));
+				$(side).append($("<span>").addClass("likes-container").append(data.like_count));
+			}
+		}
+
+		$(li).append($(info)).append($(side));
+		
+		// Append it to the list
+		if (prepend)
+			$(ul).prepend($(li));
+		else
+			$(ul).append($(li));
+
+	},
+
+	/**
+	 * Binds search functionality to the list view
+	 */
+	bindSearch : function() {
+		// When the search field changes
+		var self = this;
+		$("#search").keyup(function() {
+			// Set a timeout to perform the search
+			clearTimeout(self.searchTimeout);
+			self.searchTimeout = setTimeout(function() {
+				self.query = $("#search").val();
+				self.list(true, self.query, 1);
+			}, 500);
+		});
+	},
+	
+	/**
+	 * Populates the content-form with the data provided from content.content[]
+	 * @param object data
+	 */
+	populate : function(data) {
+
+		console.log(data);
+
+	},
+
+	/**
+	 * Rebinds the click behavior to the appropriate elements
+	 */
+	clickBehavior : function() {
+		var self = this;
+		$(".paginated_results ul li").unbind("click");
+		$(".paginated_results ul li").click(function() {
+
+			// Remove the active class from the other attributes
+			$(".paginated_results ul li").removeClass("active");
+
+			self.populate(self.content[$(this).attr('content_id')]);
+
+			$(this).addClass("active");
+
+			self.deleteBehavior();
+		});
+	},
+
+	deleteBehavior: function() {
+		var self = this;
+		$("#ContentDelete_Submit").click(function(e) {
+			e.preventDefault();
+			$.ajax({
+				url: window.location.origin + '/api/content/' + $("#m-content-form #content_id").val(),
+				type: 'DELETE',
+				headers: {
+					'X-Auth-Email': self.ciims.email,
+					'X-Auth-Token': self.ciims.token
+				},
+				beforeSend: function() {
+					self.ajaxBeforeSend();
+				},
+				error: function(data) {
+					var json = $.parseJSON(data.responseText),
+						message = json.message,
+						alert = $("<div>").addClass("alert alert-error");
+
+					$("#content-form").prepend($(alert));
+				},
+				success: function(data, textStatus, jqXHR) {
+					self.ajaxSuccess(data.success);
+
+					var id = $("#m-content-form #content_id").val();
+					self.content.remove(id);
+
+					$(".paginated_results ul li[content_id=" + id + "]").remove();
+
+					// Reutilize the click to transition the view
+					$("#NewContentButton").click();
+				},
+				completed: self.ajaxCompleted()
+			});
+
+			return false;
+		});
+	},
+
+	/**
+	 * Binds the filter behavior to the page
+	 */
+	bindFilter : function() {
+		var self = this;
+
+		$(".filter-container ul.filter li").click(function() {
+			if ($(this).hasClass("active"))
+			{
+				$(this).removeClass("active");
+				self.filter = null;
+				self.list(true, self.query, 1);
+			}
+			else
+			{
+				$(".filter-container ul.filter li").removeClass("active");
+				$(this).addClass("active");
+				self.filter = $(this).attr('data-attr-param');
+				self.list(true, self.query, 1);
+			}
+		});
+	},
+
+	/**
+	 * Binds the sorting behavior to the page
+	 */
+	bindSorting : function() {
+		var self = this;
+
+		$(".order-container ul.order li").click(function() {
+
+			var name = $(this).attr('name');
+
+			// Create a deep copy of the content array
+			if (self.contentCopy == null)
+				self.contentCopy = self.content.reverse();
+
+			// Retrieve the order
+			var order = $(this).hasClass('asc') ? 'asc' : ($(this).hasClass('dsc') ? 'dsc' : false);
+
+			$(".order-container ul.order li").removeClass("active").removeClass("asc").removeClass("dsc");
+			$(this).addClass("active");
+
+			if (order == false)
+			{
+				// Transition from an undefined state to an ASC sort by this attribute
+				$(this).addClass("asc").removeClass("dsc");
+				self.content = self.sortByKey(self.content, name, 1);
+			}
+			else if (order == 'asc')
+			{
+				$(this).removeClass("asc").addClass("dsc");
+				self.content = self.sortByKey(self.content, name, -1);
+			}
+			else if (order == 'dsc')
+			{
+				$(this).removeClass("dsc").removeClass("asc").removeClass("active");
+
+				// Clear the content out
+				self.content = [];
+
+				// And remove the leading key that is used for identification so it can be redisplayed without issue
+				$.each(self.contentCopy, function(k, v) {
+					if (v != undefined)
+						self.content.push(v);
+				});
+			}
+
+			// Clear the displayed results
+			self.ajaxBeforeSend();
+			$(".paginated_results ul").empty();
+
+			var copy = self.content;
+			self.content = [];
+
+			self.render(copy);
+
+			self.ajaxSuccess(null);
+		});
+	},
+
+	/**
+	 * Sorts the content array by a given key
+	 * http://stackoverflow.com/a/8175221
+	 * @param array array
+	 * @param string key
+	 * @return array
+	 */
+	sortByKey : function(array, key, order) {
+		var copy = [];
+
+		$.each(array, function(k, v) {
+			if (v != undefined)
+				copy.push(v);
+		});
+
+	    return copy.sort(function(a, b) {
+	        var x = a[key]; var y = b[key];
+	        return ((x < y) ? (order * -1) : ((x > y) ? order : 0));
+	    });
+	},
+
+	/**
+	 * Performs an AJAX GET query to load the available content
+	 * @param boolean clear
+	 * @param string query
+	 * @param int page
+	 */
+	list : function(clear, query, page) {
+		var self = this;
+		// Null the copy
+		self.contentCopy = null;
+
+		$.ajax({
+			url: window.location.origin + '/api/content/index?page=' + page + 
+				(self.query == null ? '' : '&Content[content]='+self.query) + 
+				(self.filter == null ? '' : '&' + self.filter),
+			type: 'GET',
+			headers: {
+				'X-Auth-Email': self.ciims.email,
+				'X-Auth-Token': self.ciims.token
+			},
+			beforeSend: function() {
+				// Clear the results on before send, if requested
+				if (clear)
+					$(".paginated_results ul").empty();
+
+				self.page = page;
+
+				self.ajaxBeforeSend();
+			},
+			error: function(data) {
+				var json = $.parseJSON(data.responseText);
+
+				// unbind the scrolling event to prevent unecessary requests to the API
+				if (json.status == 404)
+					$(".paginated_results .nano .nano-content").unbind("scroll");
+			},
+			success: function(data, textStatus, jqXHR) {
+				self.render(data.response);
+				self.ajaxSuccess(null);
+			}
+		});
+	},
+
+	/**
+	 * Triggers the nanoscroller
+	 * @return nanoScroller
+	 */
+	nanoscroller : function() {
+		// Froce nanoscroller to rebuild itself
+		var self = this;
+		
+		$(".paginated_results .nano").nanoScroller({ destroy: true });
+		$(".paginated_results .nano").nanoScroller({ iOSNativeScrolling: true }); 
+
+		// Rebind the scrollend behavior
+		$(".paginated_results .nano .nano-content").unbind("scroll");
+		$(".paginated_results .nano .nano-content").bind("scroll", function(e) {
+			if($(this).scrollTop() + $(this).innerHeight() >= this.scrollHeight - 1)
+		    	self.list(false, self.query, ++self.page);
+		});
+	},
 };;/*
 Copyright (c) 2010 Ryan Schuft (ryan.schuft@gmail.com)
 
@@ -3071,7 +3714,7 @@ if (!String.prototype.ordinalize)
 			e.preventDefault();
 			// Self
 			var self = this,
-				ciims = $.parseJSON(localStorage.getItem('ciims'));
+				ciims = CiiMSDashboard.getAuthData();
 
 			$.ajax({
 				url: Settings.getRoute() + "/flushcache",
@@ -3111,7 +3754,7 @@ if (!String.prototype.ordinalize)
 			e.preventDefault();
 			// Self
 			var self = this,
-				ciims = $.parseJSON(localStorage.getItem('ciims'));
+				ciims = CiiMSDashboard.getAuthData();
 
 			$.ajax({
 				url: Settings.getRoute() + "test",
@@ -3176,7 +3819,7 @@ if (!String.prototype.ordinalize)
 
 		// Self
 		var self = this,
-			ciims = $.parseJSON(localStorage.getItem('ciims'));
+			ciims = CiiMSDashboard.getAuthData();
 
 		// Clears the previously set timeout
 		clearTimeout(this.timeout);
@@ -3403,7 +4046,7 @@ if (!String.prototype.ordinalize)
 	 */
 	registerUsers : function() {
 		// Populate the api credentials
-		this.ciims = $.parseJSON(localStorage.getItem('ciims'));
+		this.ciims = CiiMSDashboard.getAuthData();
 
 		// Load the initial user list
 		this.list(false, this.query, this.page);

@@ -17,7 +17,7 @@ var Analytics = {
 	 */
 	init : function() {
 
-		this.ciims = $.parseJSON(localStorage.getItem('ciims'));
+		this.ciims = CiiMSDashboard.getAuthData();
 
 		this.nanoscroller();
 
@@ -52,7 +52,6 @@ var Analytics = {
 	 */
 	centerAlignImages: function() {
 		setTimeout(function() {
-			console.log("call");
 			$(".providers img").each(function() {
 				var height = $(this).height(),
 					top = (50 - ( height / 2 ));

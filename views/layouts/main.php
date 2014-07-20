@@ -51,5 +51,6 @@
 			<div class="clearfix"></div>
 		</section>
 		<?php Cii::loadUserInfo(); ?>
+		<span id="endpoint" data-attr-endpoint="<?php echo Yii::app()->getBaseUrl(true); ?>" style="display:none"></span>
     </body>
 </html>

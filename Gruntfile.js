@@ -98,6 +98,7 @@ module.exports = function(grunt) {
                     '<%= paths.lib %>/nanoscroller/jquery.nanoscroller.js',
                     '<%= paths.bower %>/highlight.min/index.js',
                     '<%= paths.bower %>/reMarked/reMarked.js',
+                    '<%= paths.bower %>/jquery-timeago/jquery.timeago.js',
                     '<%= paths.lib %>/readmore/readmore.js',
                     '<%= paths.js %>/*'
                 ],

@@ -32,7 +32,7 @@ var Users = {
 	 */
 	registerUsers : function() {
 		// Populate the api credentials
-		this.ciims = $.parseJSON(localStorage.getItem('ciims'));
+		this.ciims = CiiMSDashboard.getAuthData();
 
 		// Load the initial user list
 		this.list(false, this.query, this.page);

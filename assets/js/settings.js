@@ -19,7 +19,7 @@ var Settings = {
 			e.preventDefault();
 			// Self
 			var self = this,
-				ciims = $.parseJSON(localStorage.getItem('ciims'));
+				ciims = CiiMSDashboard.getAuthData();
 
 			$.ajax({
 				url: Settings.getRoute() + "/flushcache",
@@ -59,7 +59,7 @@ var Settings = {
 			e.preventDefault();
 			// Self
 			var self = this,
-				ciims = $.parseJSON(localStorage.getItem('ciims'));
+				ciims = CiiMSDashboard.getAuthData();
 
 			$.ajax({
 				url: Settings.getRoute() + "test",
@@ -124,7 +124,7 @@ var Settings = {
 
 		// Self
 		var self = this,
-			ciims = $.parseJSON(localStorage.getItem('ciims'));
+			ciims = CiiMSDashboard.getAuthData();
 
 		// Clears the previously set timeout
 		clearTimeout(this.timeout);
