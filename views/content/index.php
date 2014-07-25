@@ -46,7 +46,11 @@
 
 <section id="content_container" class="settings_container"></section>
 <section id="comment_container" class="settings_container">
-	<?php $this->widget('ext.cii.widgets.comments.CiiCommentWidget'); ?>
+	<div class="nano">
+		<div class="nano-content">
+			<?php $this->widget('ext.cii.widgets.comments.CiiCommentWidget'); ?>
+		</div>
+	</div>
 </section>
 
 <?php echo CHtml::tag('span', array('class' => 'draft-text', 'style' => 'display: none'), Yii::t('Dashboard.views', 'Draft')); ?>

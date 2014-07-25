@@ -259,7 +259,7 @@ var Content = {
 		$("#content_container .nano").nanoScroller({ destroy: true });
 		$("#content_container .nano").nanoScroller({ iOSNativeScrolling: true }); 
 
-		$("#comment_container #comment div:first-of-type").empty();
+		$("#comment_container #comment div#comment").empty();
 		$("#comment_container header").remove();
 		$("#comment_container").prepend($(header).clone());
 
@@ -289,9 +289,12 @@ var Content = {
 			var isLoaded = Comments.isLoaded;
 			if (!isLoaded)
 			{
-				
 				Comments.reload($("a#comment_action").attr("data-attr-id"));
 				Comments.isLoaded = true;
+				setTimeout(function() {
+					$("#comment_container .nano").nanoScroller({ destroy: true });
+					$("#comment_container .nano").nanoScroller({ iOSNativeScrolling: true }); 
+				}, 1000);
 			}
 
 			$("#comment_container").toggle();

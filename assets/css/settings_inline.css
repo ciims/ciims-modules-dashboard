@@ -148,7 +148,8 @@ section.settings_container#comment_container header div {
 }
 
 section.settings_container#content_container header div a,
-section.settings_container#comment_container header div a {
+section.settings_container#comment_container header div a,
+section.settings_container#comment_container a {
 	text-decoration: none;
 	color: #999;
 	padding: 5px 7px;
@@ -158,7 +159,8 @@ section.settings_container#comment_container header div a {
 }
 
 section.settings_container#content_container header div a:hover,
-section.settings_container#comment_container header div a:hover {
+section.settings_container#comment_container header div a:hover,
+section.settings_container#comment_container a:hover {
 	color: #2d2d2d;
 	transition: all .5s ease-in-out;
 }
@@ -186,4 +188,9 @@ section.settings_container#content_container .nano {
 
 section.settings_container#comment_container {
 	display: none;
+}
+
+section.settings_container#comment_container .nano-content {
+	padding: 10px;
+	padding-top: 0px;
 }
