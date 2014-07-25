@@ -118,7 +118,7 @@ var Content = {
 			self.renderLi(this, ul);
 			$(".timeago").timeago();
 			// Render the comment counts
-			CMSComments.commentCount()
+			Comments.commentCount()
 
 			// Wait until the data has finished loading before calling completed
 			self.ajaxCompleted();
@@ -213,8 +213,113 @@ var Content = {
 	 */
 	populate : function(data) {
 
-		console.log(data);
+		var self = this;
+		self.ajaxBeforeSend();
 
+		var header = $("<header>"),
+			title = $("<h1>"),
+			status = $("<span>").addClass("label"),
+			icons = $("<div>"),
+			nano = $("<div>").addClass("nano"),
+			nanocontent = $("<div>").addClass("nano-content");
+
+		// Header content
+		$(title).text(data.title);
+
+		// Set the status
+		if (data.status == 0)
+			$(status).text($(".draft-text-li").text().singularize());
+		else
+		{
+			var currentUnixTime = Math.round(new Date().getTime() / 1000);
+			if (currentUnixTime < data.published)
+				$(status).text($(".scheduled-text-li").text());
+			else
+				$(status).text($(".published-text-li").text());
+		}
+
+		// Create the default icon set
+		$(icons).append($(status));
+		$(icons).append($("<a>").append($("<span>").addClass("fa fa-eye")).attr("href", data.slug));
+		if (data.status != 0)
+			$(icons).append($("<a>").append($("<span>").addClass("fa fa-comments")).attr("id", "comment_action").attr("href", "#comments"));
+		$(icons).append($("<a>").append($("<span>").addClass("fa fa-edit")).attr("href", $("#endpoint").attr("data-attr-endpoint")+"/dashboard/content/save/"+data.id));
+		$(icons).append($("<a>").append($("<span>").addClass("fa fa-trash-o")));
+
+		// Build the header
+		$(header).append($(title)).append($(icons));
+
+		// Build the main content
+		$(nanocontent).append($("<div>").addClass("main-preview").html(self.marked(data.content)));
+		$(nano).append($(nanocontent));
+
+		// Add the content to the primary container and finish
+		$("#content_container").empty().append($(header)).append($(nano));
+
+		$("#content_container .nano").nanoScroller({ destroy: true });
+		$("#content_container .nano").nanoScroller({ iOSNativeScrolling: true }); 
+
+		$("#comment_container #comment div:first-of-type").empty();
+		$("#comment_container header").remove();
+		$("#comment_container").prepend($(header).clone());
+
+		$("#comment_container").hide();
+		$("#content_container").show();
+
+		// Only load comments if they aren't drafts
+		if (data.status != 0)
+			self.bindCommentClick(data);
+
+		self.ajaxCompleted();
+	},
+
+	/**
+	 * Toggle behavior for comment button
+	 * @return void
+	 */
+	bindCommentClick : function(data) {
+		$("a#comment_action").attr("data-attr-id", data.id);
+		Comments.init(data.id, data.title, data.slug);
+		Comments.isLoaded = false;
+
+		$("a#comment_action").unbind('click')
+
+		// If the comments aren't loaded by the click action, load them
+		$("a#comment_action").click(function() {
+			var isLoaded = Comments.isLoaded;
+			if (!isLoaded)
+			{
+				
+				Comments.reload($("a#comment_action").attr("data-attr-id"));
+				Comments.isLoaded = true;
+			}
+
+			$("#comment_container").toggle();
+			$("#content_container").toggle();
+		});
+	},
+
+	/**
+	 * Renders Markdownified content
+	 * @param string data
+	 * @return string
+	 */
+	marked : function(data) {
+		marked.setOptions({
+		    gfm: true,
+		    highlight: function (lang, code) {
+		        return hljs.highlightAuto(lang, code).value;
+		    },
+		    tables: true,
+		    breaks: true,
+		    pedantic: false,
+		    sanitize: false,
+		    smartLists: true,
+		    smartypants: true,
+		    langPrefix: "lang-"
+		});
+
+		return marked(data);
 	},
 
 	/**

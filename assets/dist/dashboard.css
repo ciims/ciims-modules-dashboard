@@ -4429,6 +4429,82 @@ section.settings_container#filter_container ul li.dsc:after {
 	content: "\f0dd";
 	margin-left: 5px;
 }
+
+
+section.settings_container#content_container,
+section.settings_container#comment_container {
+	padding: 0px;
+	max-height: 93%;
+	overflow: hidden;
+}
+
+section.settings_container#content_container header,
+section.settings_container#comment_container header  {
+	color: #999;
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+	padding: 5px;
+	border-bottom: 1px solid #eee;
+	min-height: 27px;
+}
+
+section.settings_container#content_container header h1,
+section.settings_container#comment_container header h1 {
+	float: left;
+	margin: 0;
+	padding: 10px;
+	padding-top:5px;
+	font-size: 11px;
+}
+
+section.settings_container#content_container header div,
+section.settings_container#comment_container header div {
+	float:right;
+	min-height: 45px;
+	padding-top: 3px;
+}
+
+section.settings_container#content_container header div a,
+section.settings_container#comment_container header div a {
+	text-decoration: none;
+	color: #999;
+	padding: 5px 7px;
+	font-size: 13px;
+	transition: all .5s ease-in-out;
+	cursor: pointer;
+}
+
+section.settings_container#content_container header div a:hover,
+section.settings_container#comment_container header div a:hover {
+	color: #2d2d2d;
+	transition: all .5s ease-in-out;
+}
+
+section.settings_container#content_container header div a:first-of-type,
+section.settings_container#comment_container header div a:first-of-type {
+	border-left: 1px solid #eee;
+}
+
+section.settings_container#content_container header div span.label,
+section.settings_container#comment_container header div span.label {
+	padding-right: 7px;
+}
+
+section.settings_container#content_container .main-preview {
+	padding: 0px 15px;
+	padding-bottom: 15px;
+	font-size: 14px;
+}
+
+section.settings_container#content_container .nano {
+	height: 88% !important;
+	top: -13px;
+}
+
+section.settings_container#comment_container {
+	display: none;
+}
 section.paginated_results {
 	background-color: #fff;
 	width: 300px;
@@ -4582,6 +4658,22 @@ section.paginated_results ul li div.icons .comment-container:after {
 	padding: 0 10px;
 	padding-right: 5px;
 	color: #A7CE44;
+}
+@media (max-width: 1045px) {
+	section.settings_container#filter_container {
+		max-height: 45px;
+	}
+
+	section.settings_container#filter_container ul {
+		margin: 0;
+	}
+
+	section.settings_container#filter_container .order-container,
+	section.settings_container#filter_container .filter-container {
+		margin: 0;
+		float: left;
+		margin-top: 10px;
+	}
 }
 section#installed-themes .theme-details-container {
 	width: 100%;

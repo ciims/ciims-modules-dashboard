@@ -1,0 +1,16 @@
+@media (max-width: 1045px) {
+	section.settings_container#filter_container {
+		max-height: 45px;
+	}
+
+	section.settings_container#filter_container ul {
+		margin: 0;
+	}
+
+	section.settings_container#filter_container .order-container,
+	section.settings_container#filter_container .filter-container {
+		margin: 0;
+		float: left;
+		margin-top: 10px;
+	}
+}

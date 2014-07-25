@@ -26,8 +26,9 @@
 	<div class="filter-container">
 		<?php echo Yii::t('Dashboard.main', 'Filter By:'); ?>
 		<ul class="filter">
-			<li data-attr-param="Content[status]=0"><?php echo Yii::t('Dashboard.main', 'Drafts'); ?></li>
-			<li data-attr-param="Content[status]=1&Content[published]=false"><?php echo Yii::t('Dashboard.main', 'Scheduled'); ?></li>
+			<li class="draft-text-li" data-attr-param="Content[status]=0"><?php echo Yii::t('Dashboard.main', 'Drafts'); ?></li>
+			<li class="scheduled-text-li" data-attr-param="Content[status]=1&Content[published]=false"><?php echo Yii::t('Dashboard.main', 'Scheduled'); ?></li>
+			<li class="published-text-li" data-attr-param="Content[status]=1&Content[published]=true"><?php echo Yii::t('Dashboard.main', 'Published'); ?></li>
 		</ul>
 	</div>
 	<div class="order-container">
@@ -43,8 +44,9 @@
 	<div class="clearfix"></div>
 </section>
 
-<section id="content_container" class="settings_container">
-asdfasdf
+<section id="content_container" class="settings_container"></section>
+<section id="comment_container" class="settings_container">
+	<?php $this->widget('ext.cii.widgets.comments.CiiCommentWidget'); ?>
 </section>
 
 <?php echo CHtml::tag('span', array('class' => 'draft-text', 'style' => 'display: none'), Yii::t('Dashboard.views', 'Draft')); ?>
