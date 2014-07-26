@@ -244,7 +244,7 @@ var Content = {
 		if (data.status != 0)
 			$(icons).append($("<a>").append($("<span>").addClass("fa fa-comments")).attr("id", "comment_action").attr("href", "#comments"));
 		$(icons).append($("<a>").append($("<span>").addClass("fa fa-edit")).attr("href", $("#endpoint").attr("data-attr-endpoint")+"/dashboard/content/save/"+data.id));
-		$(icons).append($("<a>").append($("<span>").addClass("fa fa-trash-o")));
+		$(icons).append($("<a>").append($("<span>").addClass("fa fa-trash-o")).attr("data-attr-id", data.id).attr("id", "delete-entry-btn"));
 
 		// Build the header
 		$(header).append($(title)).append($(icons));
@@ -270,7 +270,63 @@ var Content = {
 		if (data.status != 0)
 			self.bindCommentClick(data);
 
+		self.bindDeleteBehavior();
+
 		self.ajaxCompleted();
+	},
+
+	bindDeleteBehavior : function() {
+		var self = this;
+
+		$("a#delete-entry-btn").unbind("click");
+		$("a#delete-entry-btn").click(function() {
+			var id = $(this).attr("data-attr-id");
+
+			alertify.set({ 
+				labels: {
+				    ok     : $("#accept-btn-label").text(),
+				    cancel : $("#reject-btn-label").text()
+				}
+			});
+			var message = $("#delete-confirm-message").text().replace('{{entry}}', self.content[id].title);
+			alertify.confirm(message, function (e) {
+			    if (e)
+			    {
+			        // Send a DELETE request to the API to purge it.
+			        $.ajax({
+						url: window.location.origin + '/api/content/' + id,
+						type: 'DELETE',
+						headers: {
+							'X-Auth-Email': self.ciims.email,
+							'X-Auth-Token': self.ciims.token
+						},
+						beforeSend: function() {
+							self.ajaxBeforeSend();
+						},
+						error: function(data) {
+							var json = $.parseJSON(data.responseText),
+								message = json.message,
+								alert = $("<div>").addClass("alert alert-error");
+
+							$("#content_container").prepend($(alert));
+						},
+						success: function(data, textStatus, jqXHR) {
+							self.ajaxSuccess(data.success);
+									
+					    	// Delete the element from the internal reference array
+					        delete self.content[id];
+
+					        // Delete it from the sidebar and main view
+					        $("li[content_id="+id+"]").remove();
+					        $("#content_container").empty().hide();
+					        $("#comment_container").hide();
+						},
+						completed: self.ajaxCompleted()
+					});
+			    }
+			});
+
+		});
 	},
 
 	/**

@@ -82,6 +82,7 @@ module.exports = function(grunt) {
             css: {
                 src: [
                     '<%= paths.lib %>/fontawesome/css/font-awesome.min.css',
+                    '<%= paths.bower %>/alertify.js/themes/alertify.core.css',
                     '<%= paths.lib %>/*/*.css',
                     '<%= paths.css %>/*',
                 ],
@@ -96,6 +97,7 @@ module.exports = function(grunt) {
                     '<%= paths.lib %>/pace/pace.min.js',
                     '<%= paths.lib %>/shapeshift/core/jquery.shapeshift.min.js',
                     '<%= paths.lib %>/nanoscroller/jquery.nanoscroller.js',
+                    '<%= paths.lib %>/alertify.js/alertify.js',
                     '<%= paths.bower %>/highlight.min/index.js',
                     '<%= paths.bower %>/reMarked/reMarked.js',
                     '<%= paths.bower %>/jquery-timeago/jquery.timeago.js',

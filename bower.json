@@ -12,6 +12,7 @@
     "readmore": "git://github.com/jedfoster/Readmore.js#master",
     "highlight.min": "http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js",
     "jquery-timeago": "~1.4.1",
-    "date.format": "git@github.com:jacwright/date.format.git#master"
+    "date.format": "git@github.com:jacwright/date.format.git#master",
+    "alertify.js": "~0.3.11"
   }
 }

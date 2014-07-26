@@ -56,6 +56,10 @@
 <?php echo CHtml::tag('span', array('class' => 'draft-text', 'style' => 'display: none'), Yii::t('Dashboard.views', 'Draft')); ?>
 <?php echo CHtml::tag('span', array('class' => 'scheduled-text', 'style' => 'display: none'), Yii::t('Dashboard.views', 'Scheduled For {{date}}')); ?>
 
+<?php echo CHtml::tag('span', array('id' => 'accept-btn-label', 'style' => 'display: none'), Yii::t('Dashboard.views', 'Yes I do. Make it go away.')); ?>
+<?php echo CHtml::tag('span', array('id' => 'reject-btn-label', 'style' => 'display: none'), Yii::t('Dashboard.views', 'No I don\'t. Leave it be.')); ?>
+<?php echo CHtml::tag('span', array('id' => 'delete-confirm-message', 'style' => 'display: none'), Yii::t('Dashboard.views', 'Do you want to permanently delete "{{entry}}"?')); ?>
+
 <?php $this->widget('ext.cii.widgets.comments.CiiCommentMaster', array(
 	'type' => Cii::getCommentProvider(), 
 	'content' => false
