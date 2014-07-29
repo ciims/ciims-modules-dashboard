@@ -120,13 +120,19 @@ var Content = {
 			these.push(this.id);
 			self.renderLi(this, ul);
 			$(".timeago").timeago();
-			// Render the comment counts
-			Comments.commentCount();
 		});
 
+		// Render the comment counts
+		Comments.commentCount();
+
+		// Shows the daily page view counts
 		self.pageViewCounts(these);
 	},
 
+	/**
+	 * Fetches all the daily page view counts in a single batch
+	 * @param array these
+	 */
 	pageViewCounts : function(these) {
 		var self = this;
 		$.ajax({

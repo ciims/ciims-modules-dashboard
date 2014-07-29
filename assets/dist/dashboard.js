@@ -3355,10 +3355,12 @@ Array.prototype.remove = function(from, to) {
 			these.push(this.id);
 			self.renderLi(this, ul);
 			$(".timeago").timeago();
-			// Render the comment counts
-			Comments.commentCount();
 		});
 
+		// Render the comment counts
+		Comments.commentCount();
+
+		// Shows the daily page view counts
 		self.pageViewCounts(these);
 	},
 
