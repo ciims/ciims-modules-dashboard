@@ -113,15 +113,38 @@ var Content = {
 	render : function(data) {
 		var self = this;
 
-		var ul = $(".paginated_results ul");
+		var ul = $(".paginated_results ul"),
+			these = [];
+
 		$(data).each(function() {
+			these.push(this.id);
 			self.renderLi(this, ul);
 			$(".timeago").timeago();
 			// Render the comment counts
-			Comments.commentCount()
+			Comments.commentCount();
+		});
 
-			// Wait until the data has finished loading before calling completed
-			self.ajaxCompleted();
+		self.pageViewCounts(these);
+	},
+
+	pageViewCounts : function(these) {
+		var self = this;
+		$.ajax({
+			url: window.location.origin + '/api/event/count',
+			type: 'POST',
+			headers: {
+				'X-Auth-Email': self.ciims.email,
+				'X-Auth-Token': self.ciims.token
+			},
+			data : { "ids": these },
+			success: function(data, textStatus, jqXHR) {
+				for (var id in data.response)
+				{
+				    var count = data.response[id];
+				    $("li[content_id="+id+"]").find(".daily-container").text(count);
+				}
+			},
+			completed: self.ajaxCompleted()
 		});
 	},
 
@@ -178,6 +201,7 @@ var Content = {
 				// Comment Icons
 				$(side).append($("<span>").addClass("comment-container comment-count").attr('data-attr-slug', "/"+data.slug).attr('data-attr-id', data.id));
 				$(side).append($("<span>").addClass("likes-container").append(data.like_count));
+				$(side).append($("<span>").addClass("daily-container").text(0));
 			}
 		}
 
