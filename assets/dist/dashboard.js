@@ -3364,6 +3364,10 @@ Array.prototype.remove = function(from, to) {
 		self.pageViewCounts(these);
 	},
 
+	/**
+	 * Fetches all the daily page view counts in a single batch
+	 * @param array these
+	 */
 	pageViewCounts : function(these) {
 		var self = this;
 		$.ajax({
@@ -3501,7 +3505,7 @@ Array.prototype.remove = function(from, to) {
 
 		// Create the default icon set
 		$(icons).append($(status));
-		$(icons).append($("<a>").append($("<span>").addClass("fa fa-eye")).attr("href", data.slug));
+		$(icons).append($("<a>").append($("<span>").addClass("fa fa-eye")).attr("href", $("#endpoint").attr("data-attr-endpoint") + "/" + data.slug));
 		if (data.status != 0)
 			$(icons).append($("<a>").append($("<span>").addClass("fa fa-comments")).attr("id", "comment_action").attr("href", "#comments"));
 		$(icons).append($("<a>").append($("<span>").addClass("fa fa-edit")).attr("href", $("#endpoint").attr("data-attr-endpoint")+"/dashboard/content/save/"+data.id));
@@ -3863,6 +3867,17 @@ Array.prototype.remove = function(from, to) {
 		    	self.list(false, self.query, ++self.page);
 		});
 	},
+};;var Editor = {
+
+	ciims : null,
+
+	init : function() {
+		this.ciims = CiiMSDashboard.getAuthData();
+	},
+
+	marked : function(data) {
+		return Content.marked(data);
+	}
 };;/*
 Copyright (c) 2010 Ryan Schuft (ryan.schuft@gmail.com)
 

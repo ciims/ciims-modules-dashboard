@@ -270,7 +270,7 @@ var Content = {
 
 		// Create the default icon set
 		$(icons).append($(status));
-		$(icons).append($("<a>").append($("<span>").addClass("fa fa-eye")).attr("href", data.slug));
+		$(icons).append($("<a>").append($("<span>").addClass("fa fa-eye")).attr("href", $("#endpoint").attr("data-attr-endpoint") + "/" + data.slug));
 		if (data.status != 0)
 			$(icons).append($("<a>").append($("<span>").addClass("fa fa-comments")).attr("id", "comment_action").attr("href", "#comments"));
 		$(icons).append($("<a>").append($("<span>").addClass("fa fa-edit")).attr("href", $("#endpoint").attr("data-attr-endpoint")+"/dashboard/content/save/"+data.id));
