@@ -8,10 +8,13 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-bower-task');
     grunt.loadNpmTasks('grunt-string-replace');
+    grunt.loadNpmTasks('grunt-run-grunt');
 
     // Register the tasks we want to run
     grunt.registerTask('default', [
         'bower:install',
+        'run_grunt:lepture_editor',
+        'copy:lepture_editor',
         'copy:fontawesome',
         'copy:nanoscrollermap',
         'copy:nanoscrollercoffeescript',
@@ -59,6 +62,12 @@ module.exports = function(grunt) {
                 flatten: true,
                 src: "<%= paths.assets %>/lib/fontawesome/fonts/**",
                 dest: "<%= paths.assets %>/fonts/"
+            },
+            lepture_editor: {
+                expand: true,
+                flatten: true,
+                src: "<%= paths.bower %>/lepture-editor/build/fonts/**",
+                dest: "<%= paths.dist %>/fonts/"  
             }
         },
 
@@ -83,6 +92,7 @@ module.exports = function(grunt) {
                 src: [
                     '<%= paths.lib %>/fontawesome/css/font-awesome.min.css',
                     '<%= paths.bower %>/alertify.js/themes/alertify.core.css',
+                    '<%= paths.bower %>/lepture-editor/build/editor.css',
                     '<%= paths.lib %>/*/*.css',
                     '<%= paths.css %>/*',
                 ],
@@ -101,6 +111,7 @@ module.exports = function(grunt) {
                     '<%= paths.bower %>/highlight.min/index.js',
                     '<%= paths.bower %>/reMarked/reMarked.js',
                     '<%= paths.bower %>/jquery-timeago/jquery.timeago.js',
+                    '<%= paths.bower %>/lepture-editor/build/editor.js',
                     '<%= paths.lib %>/readmore/readmore.js',
                     '<%= paths.js %>/*'
                 ],
@@ -120,6 +131,20 @@ module.exports = function(grunt) {
                 }
             }
         },
+
+        run_grunt: {
+            options: {
+                minimumFiles: 1,
+                task : ['transport']
+            },
+            lepture_editor: {
+                options: {
+                    log: false
+                },
+                src: ['<%= paths.bower %>/lepture-editor/Gruntfile.js',]
+            },
+        },
+
         watch: {
           files: ['<%= paths.css %>/*', '<%= paths.js %>/*', '<%= paths.lib %>/*'],
           tasks: ['default']

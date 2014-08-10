@@ -1,4 +1,4 @@
-var Editor = {
+var ContentEditor = {
 
 	ciims : null,
 
