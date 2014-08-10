@@ -25,8 +25,12 @@
 		</div>
 	</section>
 
-	<section class="editor">
-		<?php echo $form->textArea($model, 'content'); ?>
+	<section class="content_inner_container settings_container_inner">
+		<section class="editor">
+			<?php echo $form->textArea($model, 'content'); ?>
+		</section>
+		<section class="preview"></section>
 	</section>
-	<section class="preview"></section>
 <?php $this->endWidget(); ?>
+
+<?php Yii::app()->clientScript->registerScript('Editor', 'ContentEditor.init();'); ?>
