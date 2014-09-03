@@ -4744,6 +4744,37 @@ section#analytics-sidebar label {
 	margin-left: 0;
 	width: 80px;
 }
+section.content_inner_container {
+	display: inline-block;
+	max-width: 83%;
+	margin-left: 15px !important;
+	width: 100%;
+}
+
+section.content_inner_container #title-container {
+	float: left;
+	display: inline-block;
+	margin-left: 10px;
+	width: 96%;
+	height: 22px;
+	background-color: #fff;
+	box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	padding: 10px;
+	margin-bottom: 10px;
+}
+
+section.content_inner_container #title-container #Content_title {
+	margin: 0 !important;
+	padding-left: 10px !imporant;
+	font-size: 22px !important;
+	height: 42px;
+	position: relative;
+	top: -10px;
+	left: -10px;
+	width: 80%;
+	border: none;
+	box-shadow: none;
+}
 section.settings_container_inner {
 	margin-top: 0px;
 	margin-left: 305px;

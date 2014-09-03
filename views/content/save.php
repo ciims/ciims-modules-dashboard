@@ -26,6 +26,9 @@
 	</section>
 
 	<section class="content_inner_container settings_container_inner">
+		<div id="title-container">
+			<?php echo $form->textField($model, 'title', array('placeholder' => Yii::t('ciims.models.Content', 'Title'),)); ?>
+		</div>
 		<section class="editor">
 			<?php echo $form->textArea($model, 'content'); ?>
 		</section>
