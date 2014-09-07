@@ -273,7 +273,7 @@ var Content = {
 		$(icons).append($("<a>").append($("<span>").addClass("fa fa-eye")).attr("href", $("#endpoint").attr("data-attr-endpoint") + "/" + data.slug));
 		if (data.status != 0)
 			$(icons).append($("<a>").append($("<span>").addClass("fa fa-comments")).attr("id", "comment_action").attr("href", "#comments"));
-		$(icons).append($("<a>").append($("<span>").addClass("fa fa-edit")).attr("href", $("#endpoint").attr("data-attr-endpoint")+"/dashboard/content/save/"+data.id));
+		$(icons).append($("<a>").append($("<span>").addClass("fa fa-edit")).attr("href", $("#endpoint").attr("data-attr-endpoint")+"/dashboard/content/save/id/"+data.id));
 		$(icons).append($("<a>").append($("<span>").addClass("fa fa-trash-o")).attr("data-attr-id", data.id).attr("id", "delete-entry-btn"));
 
 		// Build the header

@@ -12,9 +12,10 @@ module.exports = function(grunt) {
 
     // Register the tasks we want to run
     grunt.registerTask('default', [
-        'bower:install',
+        //'bower:install',
         'run_grunt:lepture_editor',
         'copy:lepture_editor',
+        'copy:markdown_mark',
         'copy:fontawesome',
         'copy:nanoscrollermap',
         'copy:nanoscrollercoffeescript',
@@ -68,6 +69,12 @@ module.exports = function(grunt) {
                 flatten: true,
                 src: "<%= paths.bower %>/lepture-editor/build/fonts/**",
                 dest: "<%= paths.dist %>/fonts/"  
+            },
+            markdown_mark: {
+                expand: true,
+                flatten: true,
+                src: "<%= paths.bower %>/markdown-mark/icon-font/fonts/**",
+                dest: "<%= paths.dist %>/fonts/"
             }
         },
 
@@ -93,6 +100,7 @@ module.exports = function(grunt) {
                     '<%= paths.lib %>/fontawesome/css/font-awesome.min.css',
                     '<%= paths.bower %>/alertify.js/themes/alertify.core.css',
                     '<%= paths.bower %>/lepture-editor/build/editor.css',
+                    '<%= paths.lib %>/markdown-mark/icon-font/style.css',
                     '<%= paths.lib %>/*/*.css',
                     '<%= paths.css %>/*',
                 ],

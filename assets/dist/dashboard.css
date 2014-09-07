@@ -558,6 +558,38 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}
   margin-top: 0;
 }
 
+@font-face {
+	font-family: 'markdown';
+	src:url('fonts/markdown.eot?-6fnbp5');
+	src:url('fonts/markdown.eot?#iefix-6fnbp5') format('embedded-opentype'),
+		url('fonts/markdown.woff?-6fnbp5') format('woff'),
+		url('fonts/markdown.ttf?-6fnbp5') format('truetype'),
+		url('fonts/markdown.svg?-6fnbp5#markdown') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="markdown-"], [class*=" markdown-"] {
+	font-family: 'markdown';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.markdown-mark:before {
+	content: "\e600";
+}
+.markdown-mark-solid:before {
+	content: "\e601";
+}
+
 /*
  * CSS TOGGLE SWITCHES
  * Unlicense
@@ -4744,41 +4776,16 @@ section#analytics-sidebar label {
 	margin-left: 0;
 	width: 80px;
 }
-section.content_inner_container {
-	display: inline-block;
-	max-width: 83%;
-	margin-left: 15px !important;
-	width: 100%;
-}
-
-section.content_inner_container #title-container {
-	float: left;
-	display: inline-block;
-	margin-left: 10px;
-	width: 96%;
-	height: 22px;
-	background-color: #fff;
-	box-shadow: 0 1px 2px rgba(0,0,0,.2);
-	padding: 10px;
-	margin-bottom: 10px;
-}
-
-section.content_inner_container #title-container #Content_title {
-	margin: 0 !important;
-	padding-left: 10px !imporant;
-	font-size: 22px !important;
-	height: 42px;
-	position: relative;
-	top: -10px;
-	left: -10px;
-	width: 80%;
-	border: none;
-	box-shadow: none;
-}
-section.settings_container_inner {
-	margin-top: 0px;
-	margin-left: 305px;
+#content_form {
 	height: 100%;
+	min-height: 100%;
+}
+
+section.settings_container_inner {
+	display: inline-block;
+	min-height: 100%;
+	height: 100%;
+	width: calc(100% - 300px);
 }
 
 section.editor,
@@ -4786,15 +4793,31 @@ section.preview {
 	float: left;
 	display: inline-block;
 	margin-left: 10px;
-	width: 47%;
-	height: 93%;
+	width: 46%;
+	height: 92%;
+	min-height: 92%;
+	max-height: 92% !important;
 	background-color: #fff;
 	box-shadow: 0 1px 2px rgba(0,0,0,.2);
 	padding: 10px;
 }
 
+section.preview div#content_preview {
+	padding: 15px;
+	padding-top: 0px;
+} 
+
+section.preview div#content_preview img {
+	width: 100%;
+}
+
 section.editor .editor-toolbar {
 	font-size: 12px;
+}
+
+section.editor .editor-toolbar .markdown-mark:before {
+	position: relative;
+	top: 1px;
 }
 
 section.editor .editor-toolbar:before {
@@ -4805,14 +4828,53 @@ section.editor .editor-toolbar:before {
 
 section.editor .editor-toolbar:after {
 	margin: 1px;
+	clear: both;
+}
+
+section.editor .CodeMirror-scroll,
+section.preview div#content_preview {
+	font-size: 12px;
+	overflow-x: hidden;
+}
+
+section.editor .CodeMirror-hscrollbar,
+section.editor .CodeMirror-vscrollbar {
+	display: none !important;
 }
 
 section.editor .CodeMirror-scroll {
-	font-size: 12px;
+	margin-right: -15px;
+	padding-bottom: 0px;
+	margin-bottom: 0px;
 }
 
 section.editor .CodeMirror.cm-s-paper {
-	height: 89% !important;
+	height: 93% !important;
+	max-height: 93% !important;
+}
+
+section.content_inner_container #title-container {
+	display: inline-block;
+	margin-left: 10px;
+	width: calc(92% + 30px);
+	height: 22px;
+	background-color: #fff;
+	box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	padding: 10px;
+	margin-bottom: 10px;
+}
+
+section.content_inner_container #title-container #Content_title {
+	margin: 0 !important;
+	padding-left: 10px !important;
+	font-size: 20px !important;
+	height: 42px;
+	position: relative;
+	top: -10px;
+	left: -10px;
+	width: 80%;
+	border: none;
+	box-shadow: none;
 }
 /*
 

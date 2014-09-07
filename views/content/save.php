@@ -32,7 +32,10 @@
 		<section class="editor">
 			<?php echo $form->textArea($model, 'content'); ?>
 		</section>
-		<section class="preview"></section>
+		<section class="preview nano">
+			<div id="content_preview" class="nano-content"></div>
+		</section>
+		<div class="clearfix"></div>
 	</section>
 <?php $this->endWidget(); ?>
 

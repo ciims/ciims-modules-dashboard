@@ -1,7 +1,13 @@
-section.settings_container_inner {
-	margin-top: 0px;
-	margin-left: 305px;
+#content_form {
 	height: 100%;
+	min-height: 100%;
+}
+
+section.settings_container_inner {
+	display: inline-block;
+	min-height: 100%;
+	height: 100%;
+	width: calc(100% - 300px);
 }
 
 section.editor,
@@ -9,15 +15,31 @@ section.preview {
 	float: left;
 	display: inline-block;
 	margin-left: 10px;
-	width: 47%;
-	height: 93%;
+	width: 46%;
+	height: 92%;
+	min-height: 92%;
+	max-height: 92% !important;
 	background-color: #fff;
 	box-shadow: 0 1px 2px rgba(0,0,0,.2);
 	padding: 10px;
 }
 
+section.preview div#content_preview {
+	padding: 15px;
+	padding-top: 0px;
+} 
+
+section.preview div#content_preview img {
+	width: 100%;
+}
+
 section.editor .editor-toolbar {
 	font-size: 12px;
+}
+
+section.editor .editor-toolbar .markdown-mark:before {
+	position: relative;
+	top: 1px;
 }
 
 section.editor .editor-toolbar:before {
@@ -28,12 +50,51 @@ section.editor .editor-toolbar:before {
 
 section.editor .editor-toolbar:after {
 	margin: 1px;
+	clear: both;
+}
+
+section.editor .CodeMirror-scroll,
+section.preview div#content_preview {
+	font-size: 12px;
+	overflow-x: hidden;
+}
+
+section.editor .CodeMirror-hscrollbar,
+section.editor .CodeMirror-vscrollbar {
+	display: none !important;
 }
 
 section.editor .CodeMirror-scroll {
-	font-size: 12px;
+	margin-right: -15px;
+	padding-bottom: 0px;
+	margin-bottom: 0px;
 }
 
 section.editor .CodeMirror.cm-s-paper {
-	height: 89% !important;
+	height: 93% !important;
+	max-height: 93% !important;
+}
+
+section.content_inner_container #title-container {
+	display: inline-block;
+	margin-left: 10px;
+	width: calc(92% + 30px);
+	height: 22px;
+	background-color: #fff;
+	box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	padding: 10px;
+	margin-bottom: 10px;
+}
+
+section.content_inner_container #title-container #Content_title {
+	margin: 0 !important;
+	padding-left: 10px !important;
+	font-size: 20px !important;
+	height: 42px;
+	position: relative;
+	top: -10px;
+	left: -10px;
+	width: 80%;
+	border: none;
+	box-shadow: none;
 }
