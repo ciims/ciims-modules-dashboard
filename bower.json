@@ -15,6 +15,7 @@
     "date.format": "git@github.com:jacwright/date.format.git#master",
     "alertify.js": "~0.3.11",
     "lepture-editor": "https://github.com/lepture/editor.git#0.1.0",
-    "markdown-mark": "git://github.com/james2doyle/markdown-mark#icon-font"
+    "markdown-mark": "git://github.com/james2doyle/markdown-mark#icon-font",
+    "dropzone": "~3.10.2"
   }
 }

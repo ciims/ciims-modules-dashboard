@@ -4789,7 +4789,8 @@ section.settings_container_inner {
 }
 
 section.editor,
-section.preview {
+section.preview,
+section.extract {
 	float: left;
 	display: inline-block;
 	margin-left: 10px;
@@ -4802,6 +4803,41 @@ section.preview {
 	padding: 10px;
 }
 
+section.extract,
+section.extract .upload-element {
+	display: none;
+}
+
+section.extract .upload-element {
+	border-bottom: 1px solid #eee;
+}
+
+section.extract .upload-element h3 {
+	padding: 0;
+	margin: 0;
+	padding-bottom: 5px;
+	border-bottom: 1px solid #eee;
+	font-size: 14px;
+}
+
+section.extract .video-upload input {
+	float:left;
+	width: 75%;
+	position: relative;
+	top: 5px;
+	box-shadow: none;
+}
+
+section.extract .video-upload a {
+	float:right;
+	position: relative;
+	top: 8px;
+}
+
+section.extract span.extract-text {
+	display: none;
+}
+
 section.preview div#content_preview {
 	padding: 15px;
 	padding-top: 0px;
@@ -4811,44 +4847,53 @@ section.preview div#content_preview img {
 	width: 100%;
 }
 
-section.editor .editor-toolbar {
+section.editor .editor-toolbar,
+section.extract .editor-toolbar {
 	font-size: 12px;
 }
 
-section.editor .editor-toolbar .markdown-mark:before {
+section.editor .editor-toolbar .markdown-mark:before,
+section.extract .editor-toolbar .markdown-mark:before {
 	position: relative;
 	top: 1px;
 }
 
-section.editor .editor-toolbar:before {
+section.editor .editor-toolbar:before,
+section.extract .editor-toolbar:before {
 	margin: 0px;
 	height: 0px;
 	background: none;
 }
 
-section.editor .editor-toolbar:after {
+section.editor .editor-toolbar:after,
+section.extract .editor-toolbar:after {
 	margin: 1px;
 	clear: both;
 }
 
 section.editor .CodeMirror-scroll,
+section.extract .CodeMirror-scroll,
 section.preview div#content_preview {
 	font-size: 12px;
 	overflow-x: hidden;
 }
 
 section.editor .CodeMirror-hscrollbar,
-section.editor .CodeMirror-vscrollbar {
+section.editor .CodeMirror-vscrollbar,
+section.extract .CodeMirror-hscrollbar,
+section.extract .CodeMirror-vscrollbar {
 	display: none !important;
 }
 
-section.editor .CodeMirror-scroll {
+section.editor .CodeMirror-scroll,
+section.extract .CodeMirror-scroll {
 	margin-right: -15px;
 	padding-bottom: 0px;
 	margin-bottom: 0px;
 }
 
-section.editor .CodeMirror.cm-s-paper {
+section.editor .CodeMirror.cm-s-paper,
+section.extract .CodeMirror.cm-s-paper {
 	height: 93% !important;
 	max-height: 93% !important;
 }

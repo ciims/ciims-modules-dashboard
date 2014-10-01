@@ -10055,32 +10055,6 @@ global.Editor = Editor;
 	},
 
 	/**
-	 * Ajax Before send parent
-	 */
-	ajaxBeforeSend: function() {
-		$("#nav-icon").removeClass("fa-ellipsis-v");
-
-		if ($("#nav-icon").find("span").length == 0)
-		{
-			var element = $("<span>").addClass("fa fa-spinner fa-spin active");
-			$("#nav-icon").append($(element));
-		}
-
-		// Remove all the previous success messages
-		$(".alert-show").remove();
-	},
-
-	/**
-	 * Ajax completed callback
-	 */
-	ajaxCompleted: function() {
-		setTimeout(function() {
-			$("#nav-icon").addClass("fa-ellipsis-v");
-			$("#nav-icon").find("span").remove(); 
-		}, 500);
-	},
-
-	/**
 	 * Ajax success callback
 	 */
 	ajaxSuccess: function(message) {
@@ -10125,12 +10099,12 @@ global.Editor = Editor;
 			},
 			data: data,
 			beforeSend: function() {
-				self.ajaxBeforeSend();
+				CiiMSDashboard.ajaxBeforeSend();
 			},
 			success: function(data, textStatus, jqXHR) {
 				self.ajaxSuccess(data.success);
 			},
-			completed: self.ajaxCompleted()
+			completed: CiiMSDashboard.ajaxCompleted()
 		});
 	},
 
@@ -10222,7 +10196,7 @@ Array.prototype.remove = function(from, to) {
 				beforeSend: function() {
 					$("#category-form :input").removeClass("error");
 					$("#category-form").find(".alert").remove();
-					self.ajaxBeforeSend();
+					CiiMSDashboard.ajaxBeforeSend();
 				},
 				error: function(data) {
 					var json = $.parseJSON(data.responseText),
@@ -10245,37 +10219,11 @@ Array.prototype.remove = function(from, to) {
 
 					self.ajaxSuccess(data.success);
 				},
-				completed: self.ajaxCompleted()
+				completed: CiiMSDashboard.ajaxCompleted()
 			});
 
 			return false;
 		});
-	},
-
-	/**
-	 * Ajax Before send parent
-	 */
-	ajaxBeforeSend: function() {
-		$("#nav-icon").removeClass("fa-ellipsis-v");
-
-		if ($("#nav-icon").find("span").length == 0)
-		{
-			var element = $("<span>").addClass("fa fa-spinner fa-spin active");
-			$("#nav-icon").append($(element));
-		}
-
-		// Remove all the previous success messages
-		$(".alert-show").remove();
-	},
-
-	/**
-	 * Ajax completed callback
-	 */
-	ajaxCompleted: function() {
-		setTimeout(function() {
-			$("#nav-icon").addClass("fa-ellipsis-v");
-			$("#nav-icon").find("span").remove(); 
-		}, 1000);
 	},
 
 	/**
@@ -10400,7 +10348,7 @@ Array.prototype.remove = function(from, to) {
 					'X-Auth-Token': self.ciims.token
 				},
 				beforeSend: function() {
-					self.ajaxBeforeSend();
+					CiiMSDashboard.ajaxBeforeSend();
 				},
 				error: function(data) {
 					var json = $.parseJSON(data.responseText),
@@ -10420,7 +10368,7 @@ Array.prototype.remove = function(from, to) {
 					// Reutilize the click to transition the view
 					$("#NewCategoryButton").click();
 				},
-				completed: self.ajaxCompleted()
+				completed: CiiMSDashboard.ajaxCompleted()
 			});
 
 			return false;
@@ -10456,7 +10404,7 @@ Array.prototype.remove = function(from, to) {
 				beforeSend: function() {
 					$("#m-category-form :input").removeClass("error");
 					$("#m-category-form").find(".alert").remove();
-					self.ajaxBeforeSend();
+					CiiMSDashboard.ajaxBeforeSend();
 				},
 				error: function(data) {
 					var json = $.parseJSON(data.responseText),
@@ -10483,7 +10431,7 @@ Array.prototype.remove = function(from, to) {
 					// Reutilize the click to transition the view
 					$("#NewCategoryButton").click();
 				},
-				completed: self.ajaxCompleted()
+				completed: CiiMSDashboard.ajaxCompleted()
 			});
 
 			return false;
@@ -10512,7 +10460,7 @@ Array.prototype.remove = function(from, to) {
 
 				self.page = page;
 
-				self.ajaxBeforeSend();
+				CiiMSDashboard.ajaxBeforeSend();
 			},
 			error: function(data) {
 				var json = $.parseJSON(data.responseText);
@@ -10529,7 +10477,7 @@ Array.prototype.remove = function(from, to) {
 
 				self.ajaxSuccess(null);
 			},
-			completed: self.ajaxCompleted()
+			completed: CiiMSDashboard.ajaxCompleted()
 		});
 	},
 
@@ -10575,7 +10523,33 @@ Array.prototype.remove = function(from, to) {
 	 */
 	setAuthData : function() {
 		this.authData = $.parseJSON(localStorage.getItem('ciims'));
-	}
+	},
+
+	/**
+	 * Before send Ajax behavior
+	 */
+	ajaxBeforeSend: function() {
+		$("#nav-icon").removeClass("fa-ellipsis-v");
+
+		if ($("#nav-icon").find("span").length == 0)
+		{
+			var element = $("<span>").addClass("fa fa-spinner fa-spin active");
+			$("#nav-icon").append($(element));
+		}
+
+		// Remove all the previous success messages
+		$(".alert-show").remove();
+	},
+
+	/**
+	 * Ajax completed callback
+	 */
+	ajaxCompleted: function() {
+		setTimeout(function() {
+			$("#nav-icon").addClass("fa-ellipsis-v");
+			$("#nav-icon").find("span").remove(); 
+		}, 500);
+	},
 };;var Content = {
 
 	/**
@@ -10626,32 +10600,6 @@ Array.prototype.remove = function(from, to) {
 		this.bindSearch();
 		this.bindFilter();
 		this.bindSorting();
-	},
-
-	/**
-	 * Ajax Before send parent
-	 */
-	ajaxBeforeSend: function() {
-		$("#nav-icon").removeClass("fa-ellipsis-v");
-
-		if ($("#nav-icon").find("span").length == 0)
-		{
-			var element = $("<span>").addClass("fa fa-spinner fa-spin active");
-			$("#nav-icon").append($(element));
-		}
-
-		// Remove all the previous success messages
-		$(".alert-show").remove();
-	},
-
-	/**
-	 * Ajax completed callback
-	 */
-	ajaxCompleted: function() {
-		setTimeout(function() {
-			$("#nav-icon").addClass("fa-ellipsis-v");
-			$("#nav-icon").find("span").remove(); 
-		}, 1000);
 	},
 
 	/**
@@ -10728,7 +10676,7 @@ Array.prototype.remove = function(from, to) {
 				    $("li[content_id="+id+"]").find(".daily-container").text(count);
 				}
 			},
-			completed: self.ajaxCompleted()
+			completed: CiiMSDashboard.ajaxCompleted()
 		});
 	},
 
@@ -10822,7 +10770,7 @@ Array.prototype.remove = function(from, to) {
 	populate : function(data) {
 
 		var self = this;
-		self.ajaxBeforeSend();
+		CiiMSDashboard.ajaxBeforeSend();
 
 		var header = $("<header>"),
 			title = $("<h1>"),
@@ -10880,7 +10828,7 @@ Array.prototype.remove = function(from, to) {
 
 		self.bindDeleteBehavior();
 
-		self.ajaxCompleted();
+		CiiMSDashboard.ajaxCompleted();
 	},
 
 	bindDeleteBehavior : function() {
@@ -10909,7 +10857,7 @@ Array.prototype.remove = function(from, to) {
 							'X-Auth-Token': self.ciims.token
 						},
 						beforeSend: function() {
-							self.ajaxBeforeSend();
+							CiiMSDashboard.ajaxBeforeSend();
 						},
 						error: function(data) {
 							var json = $.parseJSON(data.responseText),
@@ -10929,7 +10877,7 @@ Array.prototype.remove = function(from, to) {
 					        $("#content_container").empty().hide();
 					        $("#comment_container").hide();
 						},
-						completed: self.ajaxCompleted()
+						completed: CiiMSDashboard.ajaxCompleted()
 					});
 			    }
 			});
@@ -11020,7 +10968,7 @@ Array.prototype.remove = function(from, to) {
 					'X-Auth-Token': self.ciims.token
 				},
 				beforeSend: function() {
-					self.ajaxBeforeSend();
+					CiiMSDashboard.ajaxBeforeSend();
 				},
 				error: function(data) {
 					var json = $.parseJSON(data.responseText),
@@ -11040,7 +10988,7 @@ Array.prototype.remove = function(from, to) {
 					// Reutilize the click to transition the view
 					$("#NewContentButton").click();
 				},
-				completed: self.ajaxCompleted()
+				completed: CiiMSDashboard.ajaxCompleted()
 			});
 
 			return false;
@@ -11116,7 +11064,7 @@ Array.prototype.remove = function(from, to) {
 			}
 
 			// Clear the displayed results
-			self.ajaxBeforeSend();
+			CiiMSDashboard.ajaxBeforeSend();
 			$(".paginated_results ul").empty();
 
 			var copy = self.content;
@@ -11176,7 +11124,7 @@ Array.prototype.remove = function(from, to) {
 
 				self.page = page;
 
-				self.ajaxBeforeSend();
+				CiiMSDashboard.ajaxBeforeSend();
 			},
 			error: function(data) {
 				var json = $.parseJSON(data.responseText);
@@ -11216,14 +11164,16 @@ Array.prototype.remove = function(from, to) {
 
 	editor : null,
 
+	excerptEditor : null,
+
 	reloadTimeout : null,
 
 	init : function() {
 		var self = this;
-		this.ciims = CiiMSDashboard.getAuthData();
+		
+		self.ciims = CiiMSDashboard.getAuthData();
 
-		// Render the editor
-		this.editor = new Editor({
+		self.editor = new Editor({
 			element: document.querySelector('#Content_content'),
 			toolbar: [
 			  { name: 'bold',      className: 'fa fa-bold',      action: ContentEditor.Editor.toggleBold },
@@ -11245,7 +11195,10 @@ Array.prototype.remove = function(from, to) {
 		});
 
 		// Bind the change
-		this.onChangeEvent();
+		self.onChangeEvent();
+
+		// Refresh the instance so we can see the counts in the bottom
+		self.editor.codemirror.refresh()
 
 		// Nanoscrollerize the preview window
 		self.nanoscroller(".preview.nano", false);
@@ -11322,12 +11275,118 @@ Array.prototype.remove = function(from, to) {
 	},
 
 	/**
+	 * Excerpt related functionality
+	 */
+	Excerpt : {
+
+		/**
+		 * Binds the image upload and video upload behaviors to the DOM
+		 */
+		bindBehaviors: function() {
+			var self = this;
+			self.bindVideoUploadBehavior();
+			self.bindImageUploadBehavior();
+		},
+
+		/**
+		 * Binds the video upload behavior
+		 */
+		bindVideoUploadBehavior : function() {
+			var self = ContentEditor;
+			$("a#upload-video").click(function(e) {
+				e.preventDefault();
+
+				// Ajax video upload
+				$.ajax({
+					url: window.location.origin + '/api/content/uploadVideo/id/' + $("#Content_id").val(),
+					type: 'POST',
+					headers: {
+						'X-Auth-Email': self.ciims.email,
+						'X-Auth-Token': self.ciims.token
+					},
+					data : { 'video' : $("#Excerpt_image").val() },
+					beforeSend : CiiMSDashboard.ajaxBeforeSend(),
+					success: function(data, textStatus, jqXHR) {
+						console.log(data);
+					},
+					completed: CiiMSDashboard.ajaxCompleted()
+				});
+
+				return false;
+			});
+		},
+
+		bindImageUploadBehavior : function() {
+
+		},
+
+		/**
+		 * Displays the element for uploading excerpt images
+		 * @param el editor
+		 */
+		insertPhoto : function(editor) {
+			$(".video-upload").hide();
+			if ($(".image-upload").is(":visible"))
+				$(".image-upload").hide();
+			else
+				$(".image-upload").show();
+		},
+
+		/**
+		 * Displays the element for uploading excerpt videos
+		 * @param el editor
+		 */
+		insertVideo : function(editor) {
+			$(".image-upload").hide();
+			if ($(".video-upload").is(":visible"))
+				$(".video-upload").hide();
+			else
+				$(".video-upload").show();
+		},
+
+		/**
+		 * Hides the extract editor and shows the preview editor
+		 * @param el editor
+		 */
+		excerpt : function(editor) {
+			$(".extract").hide();
+			$(".video-upload").hide();
+			$(".image-upload").hide();
+			$(".editor").show();
+		},
+	},
+
+	/**
 	 * Overrides for lepture/editor to inject our own custom elements
 	 */
 	Editor : {
 
+		/**
+		 * Hides the editor and shows the extract editor
+		 * @param el editor
+		 */
 		extract : function(editor) {
-			console.log("Show Extract");
+			// Instantiate the extract editor if it hasn't bee done yet
+			if (ContentEditor.excerptEditor == null)
+			{
+				ContentEditor.excerptEditor = new Editor({
+					element: document.querySelector('#Content_extract'),
+					toolbar: [
+					  { name: 'photo', className: 'fa fa-photo',        action: ContentEditor.Excerpt.insertPhoto },
+			  		  { name: 'video', className: 'fa fa-video-camera', action: ContentEditor.Excerpt.insertVideo },
+			  		  '|',
+					  { name: 'extract', className: 'fa fa-caret-square-o-up', action: ContentEditor.Excerpt.excerpt },
+					  '|',
+					  { name: 'marked', className: 'markdown-mark', 		action: ContentEditor.Editor.explainMarked }
+					]
+				});
+
+				// Bind the necessary behaviors to the DOM now
+				ContentEditor.Excerpt.bindBehaviors();
+			}
+
+			$(".editor").hide();
+			$(".extract").show();
 		},
 
 		explainMarked : function(editor) {
@@ -11386,7 +11445,7 @@ Array.prototype.remove = function(from, to) {
 		insertPhotoTag : function(editor) {
 			var cm = editor.codemirror;
     		var stat = ContentEditor.Editor.getState(cm);
-            ContentEditor.Editor._replaceSelection(cm, false, '{', 'image}');
+            ContentEditor.Editor._replaceSelection(cm, false, '{image}\n', '');
             ContentEditor.triggerChange();
 		},
 
@@ -11397,7 +11456,7 @@ Array.prototype.remove = function(from, to) {
 		insertVideoTag : function(editor) {
 			var cm = editor.codemirror;
     		var stat = ContentEditor.Editor.getState(cm);
-            ContentEditor.Editor._replaceSelection(cm, false, '{', 'video}');
+            ContentEditor.Editor._replaceSelection(cm, false, '{video}\n', '');
             ContentEditor.triggerChange();
 		},
 
@@ -12560,7 +12619,7 @@ if (!String.prototype.ordinalize)
 				beforeSend: function() {
 					$("#registration-form :input").removeClass("error");
 					$("#registration-form").find(".alert").remove();
-					self.ajaxBeforeSend();
+					CiiMSDashboard.ajaxBeforeSend();
 				},
 				error: function(data) {
 					var json = $.parseJSON(data.responseText),
@@ -12582,37 +12641,11 @@ if (!String.prototype.ordinalize)
 
 					self.ajaxSuccess(data.success);
 				},
-				completed: self.ajaxCompleted()
+				completed: CiiMSDashboard.ajaxCompleted()
 			});
 
 			return false;
 		});
-	},
-
-	/**
-	 * Ajax Before send parent
-	 */
-	ajaxBeforeSend: function() {
-		$("#nav-icon").removeClass("fa-ellipsis-v");
-
-		if ($("#nav-icon").find("span").length == 0)
-		{
-			var element = $("<span>").addClass("fa fa-spinner fa-spin active");
-			$("#nav-icon").append($(element));
-		}
-
-		// Remove all the previous success messages
-		$(".alert-show").remove();
-	},
-
-	/**
-	 * Ajax completed callback
-	 */
-	ajaxCompleted: function() {
-		setTimeout(function() {
-			$("#nav-icon").addClass("fa-ellipsis-v");
-			$("#nav-icon").find("span").remove(); 
-		}, 1000);
 	},
 
 	/**
@@ -12669,7 +12702,7 @@ if (!String.prototype.ordinalize)
 				beforeSend: function() {
 					$("#InvitationForm_email").removeClass("error");
 					$("#invitation-form").find(".alert").remove();
-					self.ajaxBeforeSend();
+					CiiMSDashboard.ajaxBeforeSend();
 				},
 				error: function(data) {
 					$("#InvitationForm_email").addClass("error");
@@ -12683,7 +12716,7 @@ if (!String.prototype.ordinalize)
 
 					self.ajaxSuccess(data.message);
 				},
-				completed: self.ajaxCompleted()
+				completed: CiiMSDashboard.ajaxCompleted()
 			});
 
 			return false;
@@ -12781,7 +12814,7 @@ if (!String.prototype.ordinalize)
 					beforeSend: function() {
 						$("#user-form :input[type!='button']").removeClass("error");
 						$("#user-form").find(".alert").remove();
-						self.ajaxBeforeSend();
+						CiiMSDashboard.ajaxBeforeSend();
 					},
 					error: function(data) {
 						var json = $.parseJSON(data.responseText),
@@ -12804,7 +12837,7 @@ if (!String.prototype.ordinalize)
 						// Reutilize the click to transition the view
 						$("#NewUserButton").click();
 					},
-					completed: self.ajaxCompleted()
+					completed: CiiMSDashboard.ajaxCompleted()
 				});
 
 				return false;
@@ -12845,7 +12878,7 @@ if (!String.prototype.ordinalize)
 
 				self.page = page;
 
-				self.ajaxBeforeSend();
+				CiiMSDashboard.ajaxBeforeSend();
 			},
 			error: function(data) {
 				var json = $.parseJSON(data.responseText);
@@ -12862,7 +12895,7 @@ if (!String.prototype.ordinalize)
 
 				self.ajaxSuccess(null);
 			},
-			completed: self.ajaxCompleted()
+			completed: CiiMSDashboard.ajaxCompleted()
 		});
 	},
 

@@ -4,14 +4,16 @@ var ContentEditor = {
 
 	editor : null,
 
+	excerptEditor : null,
+
 	reloadTimeout : null,
 
 	init : function() {
 		var self = this;
-		this.ciims = CiiMSDashboard.getAuthData();
+		
+		self.ciims = CiiMSDashboard.getAuthData();
 
-		// Render the editor
-		this.editor = new Editor({
+		self.editor = new Editor({
 			element: document.querySelector('#Content_content'),
 			toolbar: [
 			  { name: 'bold',      className: 'fa fa-bold',      action: ContentEditor.Editor.toggleBold },
@@ -33,7 +35,10 @@ var ContentEditor = {
 		});
 
 		// Bind the change
-		this.onChangeEvent();
+		self.onChangeEvent();
+
+		// Refresh the instance so we can see the counts in the bottom
+		self.editor.codemirror.refresh()
 
 		// Nanoscrollerize the preview window
 		self.nanoscroller(".preview.nano", false);
@@ -110,12 +115,118 @@ var ContentEditor = {
 	},
 
 	/**
+	 * Excerpt related functionality
+	 */
+	Excerpt : {
+
+		/**
+		 * Binds the image upload and video upload behaviors to the DOM
+		 */
+		bindBehaviors: function() {
+			var self = this;
+			self.bindVideoUploadBehavior();
+			self.bindImageUploadBehavior();
+		},
+
+		/**
+		 * Binds the video upload behavior
+		 */
+		bindVideoUploadBehavior : function() {
+			var self = ContentEditor;
+			$("a#upload-video").click(function(e) {
+				e.preventDefault();
+
+				// Ajax video upload
+				$.ajax({
+					url: window.location.origin + '/api/content/uploadVideo/id/' + $("#Content_id").val(),
+					type: 'POST',
+					headers: {
+						'X-Auth-Email': self.ciims.email,
+						'X-Auth-Token': self.ciims.token
+					},
+					data : { 'video' : $("#Excerpt_image").val() },
+					beforeSend : CiiMSDashboard.ajaxBeforeSend(),
+					success: function(data, textStatus, jqXHR) {
+						console.log(data);
+					},
+					completed: CiiMSDashboard.ajaxCompleted()
+				});
+
+				return false;
+			});
+		},
+
+		bindImageUploadBehavior : function() {
+
+		},
+
+		/**
+		 * Displays the element for uploading excerpt images
+		 * @param el editor
+		 */
+		insertPhoto : function(editor) {
+			$(".video-upload").hide();
+			if ($(".image-upload").is(":visible"))
+				$(".image-upload").hide();
+			else
+				$(".image-upload").show();
+		},
+
+		/**
+		 * Displays the element for uploading excerpt videos
+		 * @param el editor
+		 */
+		insertVideo : function(editor) {
+			$(".image-upload").hide();
+			if ($(".video-upload").is(":visible"))
+				$(".video-upload").hide();
+			else
+				$(".video-upload").show();
+		},
+
+		/**
+		 * Hides the extract editor and shows the preview editor
+		 * @param el editor
+		 */
+		excerpt : function(editor) {
+			$(".extract").hide();
+			$(".video-upload").hide();
+			$(".image-upload").hide();
+			$(".editor").show();
+		},
+	},
+
+	/**
 	 * Overrides for lepture/editor to inject our own custom elements
 	 */
 	Editor : {
 
+		/**
+		 * Hides the editor and shows the extract editor
+		 * @param el editor
+		 */
 		extract : function(editor) {
-			console.log("Show Extract");
+			// Instantiate the extract editor if it hasn't bee done yet
+			if (ContentEditor.excerptEditor == null)
+			{
+				ContentEditor.excerptEditor = new Editor({
+					element: document.querySelector('#Content_extract'),
+					toolbar: [
+					  { name: 'photo', className: 'fa fa-photo',        action: ContentEditor.Excerpt.insertPhoto },
+			  		  { name: 'video', className: 'fa fa-video-camera', action: ContentEditor.Excerpt.insertVideo },
+			  		  '|',
+					  { name: 'extract', className: 'fa fa-caret-square-o-up', action: ContentEditor.Excerpt.excerpt },
+					  '|',
+					  { name: 'marked', className: 'markdown-mark', 		action: ContentEditor.Editor.explainMarked }
+					]
+				});
+
+				// Bind the necessary behaviors to the DOM now
+				ContentEditor.Excerpt.bindBehaviors();
+			}
+
+			$(".editor").hide();
+			$(".extract").show();
 		},
 
 		explainMarked : function(editor) {
@@ -174,7 +285,7 @@ var ContentEditor = {
 		insertPhotoTag : function(editor) {
 			var cm = editor.codemirror;
     		var stat = ContentEditor.Editor.getState(cm);
-            ContentEditor.Editor._replaceSelection(cm, false, '{', 'image}');
+            ContentEditor.Editor._replaceSelection(cm, false, '{image}\n', '');
             ContentEditor.triggerChange();
 		},
 
@@ -185,7 +296,7 @@ var ContentEditor = {
 		insertVideoTag : function(editor) {
 			var cm = editor.codemirror;
     		var stat = ContentEditor.Editor.getState(cm);
-            ContentEditor.Editor._replaceSelection(cm, false, '{', 'video}');
+            ContentEditor.Editor._replaceSelection(cm, false, '{video}\n', '');
             ContentEditor.triggerChange();
 		},
 

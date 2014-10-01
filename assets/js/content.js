@@ -51,32 +51,6 @@ var Content = {
 	},
 
 	/**
-	 * Ajax Before send parent
-	 */
-	ajaxBeforeSend: function() {
-		$("#nav-icon").removeClass("fa-ellipsis-v");
-
-		if ($("#nav-icon").find("span").length == 0)
-		{
-			var element = $("<span>").addClass("fa fa-spinner fa-spin active");
-			$("#nav-icon").append($(element));
-		}
-
-		// Remove all the previous success messages
-		$(".alert-show").remove();
-	},
-
-	/**
-	 * Ajax completed callback
-	 */
-	ajaxCompleted: function() {
-		setTimeout(function() {
-			$("#nav-icon").addClass("fa-ellipsis-v");
-			$("#nav-icon").find("span").remove(); 
-		}, 1000);
-	},
-
-	/**
 	 * Ajax success callback
 	 */
 	ajaxSuccess: function(message) {
@@ -150,7 +124,7 @@ var Content = {
 				    $("li[content_id="+id+"]").find(".daily-container").text(count);
 				}
 			},
-			completed: self.ajaxCompleted()
+			completed: CiiMSDashboard.ajaxCompleted()
 		});
 	},
 
@@ -244,7 +218,7 @@ var Content = {
 	populate : function(data) {
 
 		var self = this;
-		self.ajaxBeforeSend();
+		CiiMSDashboard.ajaxBeforeSend();
 
 		var header = $("<header>"),
 			title = $("<h1>"),
@@ -302,7 +276,7 @@ var Content = {
 
 		self.bindDeleteBehavior();
 
-		self.ajaxCompleted();
+		CiiMSDashboard.ajaxCompleted();
 	},
 
 	bindDeleteBehavior : function() {
@@ -331,7 +305,7 @@ var Content = {
 							'X-Auth-Token': self.ciims.token
 						},
 						beforeSend: function() {
-							self.ajaxBeforeSend();
+							CiiMSDashboard.ajaxBeforeSend();
 						},
 						error: function(data) {
 							var json = $.parseJSON(data.responseText),
@@ -351,7 +325,7 @@ var Content = {
 					        $("#content_container").empty().hide();
 					        $("#comment_container").hide();
 						},
-						completed: self.ajaxCompleted()
+						completed: CiiMSDashboard.ajaxCompleted()
 					});
 			    }
 			});
@@ -442,7 +416,7 @@ var Content = {
 					'X-Auth-Token': self.ciims.token
 				},
 				beforeSend: function() {
-					self.ajaxBeforeSend();
+					CiiMSDashboard.ajaxBeforeSend();
 				},
 				error: function(data) {
 					var json = $.parseJSON(data.responseText),
@@ -462,7 +436,7 @@ var Content = {
 					// Reutilize the click to transition the view
 					$("#NewContentButton").click();
 				},
-				completed: self.ajaxCompleted()
+				completed: CiiMSDashboard.ajaxCompleted()
 			});
 
 			return false;
@@ -538,7 +512,7 @@ var Content = {
 			}
 
 			// Clear the displayed results
-			self.ajaxBeforeSend();
+			CiiMSDashboard.ajaxBeforeSend();
 			$(".paginated_results ul").empty();
 
 			var copy = self.content;
@@ -598,7 +572,7 @@ var Content = {
 
 				self.page = page;
 
-				self.ajaxBeforeSend();
+				CiiMSDashboard.ajaxBeforeSend();
 			},
 			error: function(data) {
 				var json = $.parseJSON(data.responseText);

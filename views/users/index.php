@@ -56,7 +56,7 @@
 		    )); ?>
 
 				<?php echo $form->textFieldRow($registerform, 'email', array('class' => 'pure-u-1', 'placeholder' => $registerform->getAttributeLabel('email') )); ?>
-				<?php echo $form->textFieldRow($registerform, 'displayName', array('class' => 'pure-u-1', 'placeholder' => $registerform->getAttributeLabel('displayName') )); ?>
+				<?php echo $form->textFieldRow($registerform, 'username', array('class' => 'pure-u-1', 'placeholder' => $registerform->getAttributeLabel('username') )); ?>
 				<?php echo $form->passwordFieldRow($registerform, 'password', array('class' => 'pure-u-1', 'placeholder' => $registerform->getAttributeLabel('password'), 'id' => 'password' )); ?>
 				<?php echo $form->passwordFieldRow($registerform, 'password_repeat', array('class' => 'pure-u-1', 'placeholder' => $registerform->getAttributeLabel('password_repeat'), 'id' => 'password_repeat' )); ?>
 
@@ -86,12 +86,8 @@
 		    	<?php echo $form->textField($user, 'email', array('class' => 'pure-u-1', 'placeholder' => $user->getAttributeLabel('email') )); ?>
 
 		    	<legend><h5><?php echo Yii::t('Dashboard.views', "Change the User's Personal Details"); ?></h5></legend>
-				<?php echo $form->textField($user, 'displayName', array('class' => 'pure-u-1', 'placeholder' => $user->getAttributeLabel('displayName') )); ?>
-				<?php echo $form->textField($user, 'firstName', array('class' => 'pure-u-1', 'placeholder' => $user->getAttributeLabel('firstName') )); ?>
-				<?php echo $form->textField($user, 'lastName', array('class' => 'pure-u-1', 'placeholder' => $user->getAttributeLabel('lastName') )); ?>
+				<?php echo $form->textField($user, 'username', array('class' => 'pure-u-1', 'placeholder' => $user->getAttributeLabel('username') )); ?>
 				<?php echo $form->dropDownList($user, 'user_role', CHtml::listData(UserRoles::model()->findAll(), 'id', 'name'), array('class' => 'pure-u-1')); ?>
-
-				<?php echo $form->textArea($user, 'about', array('class' => 'pure-u-1', 'rows' => 10, 'placeholder' => $user->getAttributeLabel('about') )); ?>
 
 				<hr />
 

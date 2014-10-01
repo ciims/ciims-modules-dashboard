@@ -74,7 +74,7 @@ var Categories = {
 				beforeSend: function() {
 					$("#category-form :input").removeClass("error");
 					$("#category-form").find(".alert").remove();
-					self.ajaxBeforeSend();
+					CiiMSDashboard.ajaxBeforeSend();
 				},
 				error: function(data) {
 					var json = $.parseJSON(data.responseText),
@@ -97,37 +97,11 @@ var Categories = {
 
 					self.ajaxSuccess(data.success);
 				},
-				completed: self.ajaxCompleted()
+				completed: CiiMSDashboard.ajaxCompleted()
 			});
 
 			return false;
 		});
-	},
-
-	/**
-	 * Ajax Before send parent
-	 */
-	ajaxBeforeSend: function() {
-		$("#nav-icon").removeClass("fa-ellipsis-v");
-
-		if ($("#nav-icon").find("span").length == 0)
-		{
-			var element = $("<span>").addClass("fa fa-spinner fa-spin active");
-			$("#nav-icon").append($(element));
-		}
-
-		// Remove all the previous success messages
-		$(".alert-show").remove();
-	},
-
-	/**
-	 * Ajax completed callback
-	 */
-	ajaxCompleted: function() {
-		setTimeout(function() {
-			$("#nav-icon").addClass("fa-ellipsis-v");
-			$("#nav-icon").find("span").remove(); 
-		}, 1000);
 	},
 
 	/**
@@ -252,7 +226,7 @@ var Categories = {
 					'X-Auth-Token': self.ciims.token
 				},
 				beforeSend: function() {
-					self.ajaxBeforeSend();
+					CiiMSDashboard.ajaxBeforeSend();
 				},
 				error: function(data) {
 					var json = $.parseJSON(data.responseText),
@@ -272,7 +246,7 @@ var Categories = {
 					// Reutilize the click to transition the view
 					$("#NewCategoryButton").click();
 				},
-				completed: self.ajaxCompleted()
+				completed: CiiMSDashboard.ajaxCompleted()
 			});
 
 			return false;
@@ -308,7 +282,7 @@ var Categories = {
 				beforeSend: function() {
 					$("#m-category-form :input").removeClass("error");
 					$("#m-category-form").find(".alert").remove();
-					self.ajaxBeforeSend();
+					CiiMSDashboard.ajaxBeforeSend();
 				},
 				error: function(data) {
 					var json = $.parseJSON(data.responseText),
@@ -335,7 +309,7 @@ var Categories = {
 					// Reutilize the click to transition the view
 					$("#NewCategoryButton").click();
 				},
-				completed: self.ajaxCompleted()
+				completed: CiiMSDashboard.ajaxCompleted()
 			});
 
 			return false;
@@ -364,7 +338,7 @@ var Categories = {
 
 				self.page = page;
 
-				self.ajaxBeforeSend();
+				CiiMSDashboard.ajaxBeforeSend();
 			},
 			error: function(data) {
 				var json = $.parseJSON(data.responseText);
@@ -381,7 +355,7 @@ var Categories = {
 
 				self.ajaxSuccess(null);
 			},
-			completed: self.ajaxCompleted()
+			completed: CiiMSDashboard.ajaxCompleted()
 		});
 	},
 

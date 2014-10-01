@@ -80,7 +80,7 @@ var Users = {
 				beforeSend: function() {
 					$("#registration-form :input").removeClass("error");
 					$("#registration-form").find(".alert").remove();
-					self.ajaxBeforeSend();
+					CiiMSDashboard.ajaxBeforeSend();
 				},
 				error: function(data) {
 					var json = $.parseJSON(data.responseText),
@@ -102,37 +102,11 @@ var Users = {
 
 					self.ajaxSuccess(data.success);
 				},
-				completed: self.ajaxCompleted()
+				completed: CiiMSDashboard.ajaxCompleted()
 			});
 
 			return false;
 		});
-	},
-
-	/**
-	 * Ajax Before send parent
-	 */
-	ajaxBeforeSend: function() {
-		$("#nav-icon").removeClass("fa-ellipsis-v");
-
-		if ($("#nav-icon").find("span").length == 0)
-		{
-			var element = $("<span>").addClass("fa fa-spinner fa-spin active");
-			$("#nav-icon").append($(element));
-		}
-
-		// Remove all the previous success messages
-		$(".alert-show").remove();
-	},
-
-	/**
-	 * Ajax completed callback
-	 */
-	ajaxCompleted: function() {
-		setTimeout(function() {
-			$("#nav-icon").addClass("fa-ellipsis-v");
-			$("#nav-icon").find("span").remove(); 
-		}, 1000);
 	},
 
 	/**
@@ -189,7 +163,7 @@ var Users = {
 				beforeSend: function() {
 					$("#InvitationForm_email").removeClass("error");
 					$("#invitation-form").find(".alert").remove();
-					self.ajaxBeforeSend();
+					CiiMSDashboard.ajaxBeforeSend();
 				},
 				error: function(data) {
 					$("#InvitationForm_email").addClass("error");
@@ -203,7 +177,7 @@ var Users = {
 
 					self.ajaxSuccess(data.message);
 				},
-				completed: self.ajaxCompleted()
+				completed: CiiMSDashboard.ajaxCompleted()
 			});
 
 			return false;
@@ -301,7 +275,7 @@ var Users = {
 					beforeSend: function() {
 						$("#user-form :input[type!='button']").removeClass("error");
 						$("#user-form").find(".alert").remove();
-						self.ajaxBeforeSend();
+						CiiMSDashboard.ajaxBeforeSend();
 					},
 					error: function(data) {
 						var json = $.parseJSON(data.responseText),
@@ -324,7 +298,7 @@ var Users = {
 						// Reutilize the click to transition the view
 						$("#NewUserButton").click();
 					},
-					completed: self.ajaxCompleted()
+					completed: CiiMSDashboard.ajaxCompleted()
 				});
 
 				return false;
@@ -365,7 +339,7 @@ var Users = {
 
 				self.page = page;
 
-				self.ajaxBeforeSend();
+				CiiMSDashboard.ajaxBeforeSend();
 			},
 			error: function(data) {
 				var json = $.parseJSON(data.responseText);
@@ -382,7 +356,7 @@ var Users = {
 
 				self.ajaxSuccess(null);
 			},
-			completed: self.ajaxCompleted()
+			completed: CiiMSDashboard.ajaxCompleted()
 		});
 	},
 

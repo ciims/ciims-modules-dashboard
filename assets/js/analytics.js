@@ -61,32 +61,6 @@ var Analytics = {
 	},
 
 	/**
-	 * Ajax Before send parent
-	 */
-	ajaxBeforeSend: function() {
-		$("#nav-icon").removeClass("fa-ellipsis-v");
-
-		if ($("#nav-icon").find("span").length == 0)
-		{
-			var element = $("<span>").addClass("fa fa-spinner fa-spin active");
-			$("#nav-icon").append($(element));
-		}
-
-		// Remove all the previous success messages
-		$(".alert-show").remove();
-	},
-
-	/**
-	 * Ajax completed callback
-	 */
-	ajaxCompleted: function() {
-		setTimeout(function() {
-			$("#nav-icon").addClass("fa-ellipsis-v");
-			$("#nav-icon").find("span").remove(); 
-		}, 500);
-	},
-
-	/**
 	 * Ajax success callback
 	 */
 	ajaxSuccess: function(message) {
@@ -131,12 +105,12 @@ var Analytics = {
 			},
 			data: data,
 			beforeSend: function() {
-				self.ajaxBeforeSend();
+				CiiMSDashboard.ajaxBeforeSend();
 			},
 			success: function(data, textStatus, jqXHR) {
 				self.ajaxSuccess(data.success);
 			},
-			completed: self.ajaxCompleted()
+			completed: CiiMSDashboard.ajaxCompleted()
 		});
 	},
 
