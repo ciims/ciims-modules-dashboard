@@ -4946,7 +4946,7 @@ section.settings_container_inner {
 
 section.editor,
 section.preview,
-section.extract {
+section.excerpt {
 	float: left;
 	display: inline-block;
 	margin-left: 10px;
@@ -4959,16 +4959,16 @@ section.extract {
 	padding: 10px;
 }
 
-section.extract,
-section.extract .upload-element {
+section.excerpt,
+section.excerpt .upload-element {
 	display: none;
 }
 
-section.extract .upload-element {
+section.excerpt .upload-element {
 	border-bottom: 1px solid #eee;
 }
 
-section.extract .upload-element h3 {
+section.excerpt .upload-element h3 {
 	padding: 0;
 	margin: 0;
 	padding-bottom: 5px;
@@ -4976,7 +4976,7 @@ section.extract .upload-element h3 {
 	font-size: 14px;
 }
 
-section.extract .video-upload input {
+section.excerpt .video-upload input {
 	float:left;
 	width: 75%;
 	position: relative;
@@ -4984,13 +4984,13 @@ section.extract .video-upload input {
 	box-shadow: none;
 }
 
-section.extract .video-upload a {
+section.excerpt .video-upload a {
 	float:right;
 	position: relative;
 	top: 8px;
 }
 
-section.extract span.extract-text {
+section.excerpt span.excerpt-text {
 	display: none;
 }
 
@@ -5004,31 +5004,31 @@ section.preview div#content_preview img {
 }
 
 section.editor .editor-toolbar,
-section.extract .editor-toolbar {
+section.excerpt .editor-toolbar {
 	font-size: 12px;
 }
 
 section.editor .editor-toolbar .markdown-mark:before,
-section.extract .editor-toolbar .markdown-mark:before {
+section.excerpt .editor-toolbar .markdown-mark:before {
 	position: relative;
 	top: 1px;
 }
 
 section.editor .editor-toolbar:before,
-section.extract .editor-toolbar:before {
+section.excerpt .editor-toolbar:before {
 	margin: 0px;
 	height: 0px;
 	background: none;
 }
 
 section.editor .editor-toolbar:after,
-section.extract .editor-toolbar:after {
+section.excerpt .editor-toolbar:after {
 	margin: 1px;
 	clear: both;
 }
 
 section.editor .CodeMirror-scroll,
-section.extract .CodeMirror-scroll,
+section.excerpt .CodeMirror-scroll,
 section.preview div#content_preview {
 	font-size: 12px;
 	overflow-x: hidden;
@@ -5036,20 +5036,20 @@ section.preview div#content_preview {
 
 section.editor .CodeMirror-hscrollbar,
 section.editor .CodeMirror-vscrollbar,
-section.extract .CodeMirror-hscrollbar,
-section.extract .CodeMirror-vscrollbar {
+section.excerpt .CodeMirror-hscrollbar,
+section.excerpt .CodeMirror-vscrollbar {
 	display: none !important;
 }
 
 section.editor .CodeMirror-scroll,
-section.extract .CodeMirror-scroll {
+section.excerpt .CodeMirror-scroll {
 	margin-right: -15px;
 	padding-bottom: 0px;
 	margin-bottom: 0px;
 }
 
 section.editor .CodeMirror.cm-s-paper,
-section.extract .CodeMirror.cm-s-paper {
+section.excerpt .CodeMirror.cm-s-paper {
 	height: 93% !important;
 	max-height: 93% !important;
 }

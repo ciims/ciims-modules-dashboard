@@ -35,8 +35,7 @@
 			<?php echo $form->textArea($model, 'content'); ?>
 		</section>
 
-		<section class="extract">
-
+		<section class="excerpt">
 			<div class="image-upload upload-element">
 				<h3><?php echo Yii::t('Dashboard.views', 'Upload a Cover Image'); ?></h3>
 				<div id="dropzone-excerpt-upload"></div>

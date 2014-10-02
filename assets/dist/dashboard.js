@@ -11193,7 +11193,7 @@ Array.prototype.remove = function(from, to) {
 			  //{ name: 'video', className: 'fa fa-video-camera', action: ContentEditor.Editor.insertVideoTag },
 			  { name: 'code',  className: 'fa fa-code',         action: ContentEditor.Editor.insertCodeTag },
 			  '|',
-			  { name: 'extract', className: 'fa fa-caret-square-o-down', action: ContentEditor.Editor.extract },
+			  { name: 'excerpt', className: 'fa fa-caret-square-o-down', action: ContentEditor.Editor.excerpt },
 			  '|',
 			  { name: 'marked', className: 'markdown-mark', 		action: ContentEditor.Editor.explainMarked }
 			]
@@ -11272,6 +11272,8 @@ Array.prototype.remove = function(from, to) {
 	},
 
 	bindDropzoneElements : function() {
+		var self = this;
+
 		$("#content_preview div.dropzone").each(function() {
 
 			// If the dropzone element is already bound, ignore it
@@ -11290,14 +11292,60 @@ Array.prototype.remove = function(from, to) {
 
 			// Then bind the dropzone element
 			var dz = new Dropzone("#content_preview div.dropzone-" + hash, {
-				url : CiiMSDashboard.getEndpoint() + "/content/upload/id/" + $("#Content_id").val(),
+				url : CiiMSDashboard.getEndpoint() + "/api/content/uploadImage/id/" + $("#Content_id").val(),
+				headers: {
+					'X-Auth-Email': self.ciims.email,
+					'X-Auth-Token': self.ciims.token
+				},
 				dictDefaultMessage : "Drop files here to upload - or click",
 				success : function(data) {
-					console.log('data');
+					// Get the response data
+					var json     = $.parseJSON(data.xhr.response),
+						response = $.parseJSON(json.response),
+						markdown = self.editor.codemirror.getValue(),
+						i        = 0,
+						index    = null;
+
+					// Iterate through all the dropzone elements until we find the one with this hash
+					$("#content_preview div.dropzone").each(function() {
+						if ($(this).hasClass("dropzone-" + hash))
+							return false;
+						i++;
+					});
+
+					// Now figure out what item in the editor we should replace
+					index = self.getSubstringIndex(markdown, "{image}", i + 1);
+					if (index == '-1')
+						index = 0;
+
+					// Remove the uploader
+					$("#content_preview div.dropzone-" + hash).remove();
+
+					markdown = self.splice(markdown, index, 7, "\n![" + response.filename + "](" + response.filepath +")");
+					self.editor.codemirror.setValue(markdown);
+
+					self.triggerChange();
 				}
 			});
 		});
 	},
+
+	// Utility method for getting a substring index. This finds the unique instance of {image}
+	getSubstringIndex : function(str, substring, n) {
+	    var times = 0, index = null;
+
+	    while (times < n && index !== -1) {
+	        index = str.indexOf(substring, index+1);
+	        times++;
+	    }
+
+	    return index;
+	},
+
+	splice : function(str, idx, rem, s) {
+	    return (str.slice(0,idx) + s + str.slice(idx + Math.abs(rem)));
+	},
+
 
 	/**
 	 * Generates markdown generated content
@@ -11318,7 +11366,6 @@ Array.prototype.remove = function(from, to) {
 		 */
 		bindBehaviors: function() {
 			var self = this;
-			//self.bindVideoUploadBehavior();
 			self.bindImageUploadBehavior();
 		},
 
@@ -11335,11 +11382,11 @@ Array.prototype.remove = function(from, to) {
 		},
 
 		/**
-		 * Hides the extract editor and shows the preview editor
+		 * Hides the excerpt editor and shows the preview editor
 		 * @param el editor
 		 */
 		excerpt : function(editor) {
-			$(".extract").hide();
+			$(".excerpt").hide();
 			$(".video-upload").hide();
 			$(".image-upload").hide();
 			$(".editor").show();
@@ -11352,20 +11399,20 @@ Array.prototype.remove = function(from, to) {
 	Editor : {
 
 		/**
-		 * Hides the editor and shows the extract editor
+		 * Hides the editor and shows the excerpt editor
 		 * @param el editor
 		 */
-		extract : function(editor) {
-			// Instantiate the extract editor if it hasn't bee done yet
+		excerpt : function(editor) {
+			// Instantiate the excerpt editor if it hasn't bee done yet
 			if (ContentEditor.excerptEditor == null)
 			{
 				ContentEditor.excerptEditor = new Editor({
-					element: document.querySelector('#Content_extract'),
+					element: document.querySelector('#Content_excerpt'),
 					toolbar: [
 					  { name: 'photo', className: 'fa fa-photo',        action: ContentEditor.Excerpt.insertPhoto },
 			  		  //{ name: 'video', className: 'fa fa-video-camera', action: ContentEditor.Excerpt.insertVideo },
 			  		  '|',
-					  { name: 'extract', className: 'fa fa-caret-square-o-up', action: ContentEditor.Excerpt.excerpt },
+					  { name: 'excerpt', className: 'fa fa-caret-square-o-up', action: ContentEditor.Excerpt.excerpt },
 					  '|',
 					  { name: 'marked', className: 'markdown-mark', 		action: ContentEditor.Editor.explainMarked }
 					]
@@ -11376,7 +11423,7 @@ Array.prototype.remove = function(from, to) {
 			}
 
 			$(".editor").hide();
-			$(".extract").show();
+			$(".excerpt").show();
 		},
 
 		explainMarked : function(editor) {
