@@ -75,7 +75,7 @@ var Users = {
 					'email': $("#RegisterForm_email").val(),
 					'password': $("#RegisterForm_password").val(),
 					'password_repeat': $("#RegisterForm_password_repeat").val(),
-					'displayName' : $("#RegisterForm_displayName").val(),
+					'username' : $("#RegisterForm_username").val(),
 				},
 				beforeSend: function() {
 					$("#registration-form :input").removeClass("error");
@@ -202,7 +202,7 @@ var Users = {
 		$(info).addClass("user-info");
 		$(info).append($("<h6>").text(data.name));
 		$(info).append($("<span>").text(data.email)).attr('title', data.email);
-		$(info).append($("<span>").text(data.displayName));
+		$(info).append($("<span>").text(data.username));
 
 		// Build the list element
 		$(li).addClass(data.role.name);
@@ -326,7 +326,7 @@ var Users = {
 	list : function(clear, query, page) {
 		var self = this;
 		$.ajax({
-			url: window.location.origin + '/api/user?page=' + page + (query == null ? '' : '&Users[displayName]='+query),
+			url: window.location.origin + '/api/user?page=' + page + (query == null ? '' : '&Users[username]='+query),
 			type: 'GET',
 			headers: {
 				'X-Auth-Email': self.ciims.email,

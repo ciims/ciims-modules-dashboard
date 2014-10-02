@@ -25,7 +25,7 @@ var ContentEditor = {
 			  { name: 'ordered-list',   className: 'fa fa-list-ol',    action: ContentEditor.Editor.toggleOrderedList },
 			  '|',
 			  { name: 'photo', className: 'fa fa-photo',        action: ContentEditor.Editor.insertPhotoTag },
-			  { name: 'video', className: 'fa fa-video-camera', action: ContentEditor.Editor.insertVideoTag },
+			  //{ name: 'video', className: 'fa fa-video-camera', action: ContentEditor.Editor.insertVideoTag },
 			  { name: 'code',  className: 'fa fa-code',         action: ContentEditor.Editor.insertCodeTag },
 			  '|',
 			  { name: 'extract', className: 'fa fa-caret-square-o-down', action: ContentEditor.Editor.extract },
@@ -74,6 +74,7 @@ var ContentEditor = {
 		clearTimeout(self.reloadTimeout);
 		self.reloadTimeout = setTimeout(function() {
 			$("section.content_inner_container .preview #content_preview").html(markdown);
+			self.bindDropzoneElements();
 			self.nanoscroller(".preview.nano", false);
 			self.nanoscroller(".CodeMirror.cm-s-paper.nano", false);
 		}, 100);
@@ -105,13 +106,41 @@ var ContentEditor = {
 		}, 150)
 	},
 
+	bindDropzoneElements : function() {
+		$("#content_preview div.dropzone").each(function() {
+
+			// If the dropzone element is already bound, ignore it
+			if ($(this).hasClass("dz-clickable"))
+		 		return;
+
+		 	// Generate a unique ID hash for each element
+		 	var hash = Math.random().toString(36).substring(7);
+
+		 	// Make sure there are no duplicates
+			while ($("#content_preview div.dropzone-"+ hash).length > 0)
+				hash = Math.random().toString(36).substring(15);
+
+			// Then bind it to this element
+			$(this).addClass("dropzone-" + hash);
+
+			// Then bind the dropzone element
+			var dz = new Dropzone("#content_preview div.dropzone-" + hash, {
+				url : CiiMSDashboard.getEndpoint() + "/content/upload/id/" + $("#Content_id").val(),
+				dictDefaultMessage : "Drop files here to upload - or click",
+				success : function(data) {
+					console.log('data');
+				}
+			});
+		});
+	},
+
 	/**
 	 * Generates markdown generated content
 	 * @param  string data 	The input string
 	 * @return string 		Markdown data
 	 */
 	marked : function(data) {
-		return Content.marked(data);
+		return Content.marked(data).replace(/{image}/g, "<div class=\"dropzone\"></div>");
 	},
 
 	/**
@@ -124,36 +153,8 @@ var ContentEditor = {
 		 */
 		bindBehaviors: function() {
 			var self = this;
-			self.bindVideoUploadBehavior();
+			//self.bindVideoUploadBehavior();
 			self.bindImageUploadBehavior();
-		},
-
-		/**
-		 * Binds the video upload behavior
-		 */
-		bindVideoUploadBehavior : function() {
-			var self = ContentEditor;
-			$("a#upload-video").click(function(e) {
-				e.preventDefault();
-
-				// Ajax video upload
-				$.ajax({
-					url: window.location.origin + '/api/content/uploadVideo/id/' + $("#Content_id").val(),
-					type: 'POST',
-					headers: {
-						'X-Auth-Email': self.ciims.email,
-						'X-Auth-Token': self.ciims.token
-					},
-					data : { 'video' : $("#Excerpt_image").val() },
-					beforeSend : CiiMSDashboard.ajaxBeforeSend(),
-					success: function(data, textStatus, jqXHR) {
-						console.log(data);
-					},
-					completed: CiiMSDashboard.ajaxCompleted()
-				});
-
-				return false;
-			});
 		},
 
 		bindImageUploadBehavior : function() {
@@ -165,23 +166,7 @@ var ContentEditor = {
 		 * @param el editor
 		 */
 		insertPhoto : function(editor) {
-			$(".video-upload").hide();
-			if ($(".image-upload").is(":visible"))
-				$(".image-upload").hide();
-			else
-				$(".image-upload").show();
-		},
-
-		/**
-		 * Displays the element for uploading excerpt videos
-		 * @param el editor
-		 */
-		insertVideo : function(editor) {
-			$(".image-upload").hide();
-			if ($(".video-upload").is(":visible"))
-				$(".video-upload").hide();
-			else
-				$(".video-upload").show();
+			$(".image-upload").show();
 		},
 
 		/**
@@ -213,7 +198,7 @@ var ContentEditor = {
 					element: document.querySelector('#Content_extract'),
 					toolbar: [
 					  { name: 'photo', className: 'fa fa-photo',        action: ContentEditor.Excerpt.insertPhoto },
-			  		  { name: 'video', className: 'fa fa-video-camera', action: ContentEditor.Excerpt.insertVideo },
+			  		  //{ name: 'video', className: 'fa fa-video-camera', action: ContentEditor.Excerpt.insertVideo },
 			  		  '|',
 					  { name: 'extract', className: 'fa fa-caret-square-o-up', action: ContentEditor.Excerpt.excerpt },
 					  '|',

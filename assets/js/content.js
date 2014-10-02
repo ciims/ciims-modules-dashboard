@@ -148,7 +148,7 @@ var Content = {
 		// Build the info object
 		$(info).addClass("user-info");
 		$(info).append($("<h6>").text(data.title));
-		var name = data.author.firstName + " " + data.author.lastName;
+		var name = data.author.username;
 		$(info).append($("<span>").text(name)).attr('title', name);
 
 		if (data.status == 0)

@@ -47,7 +47,7 @@
 				<a href="#" class="pure-button pure-button-success pure-button-xsmall" id="upload-video"><?php echo Yii::t('Dashboard.views', 'Upload Video'); ?></a>
 				<div class="clearfix"></div>
 			</div>
-			<?php echo $form->textArea($model, 'extract'); ?>
+			<?php echo $form->textArea($model, 'excerpt'); ?>
 		</section>
 
 		<section class="preview nano">

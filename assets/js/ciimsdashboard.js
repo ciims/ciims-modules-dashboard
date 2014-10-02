@@ -17,6 +17,11 @@ var CiiMSDashboard = {
 		return this.authData;
 	},
 
+	getEndpoint : function() {
+		return $("#endpoint").attr('data-attr-endpoint');
+	},
+
+
 	/**
 	 * Sets the authdata
 	 */

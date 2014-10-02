@@ -47,7 +47,7 @@
 				/*
 				array(
 					'url' => $this->createUrl('/dashboard/settings/plugins'),
-					'label' => CHtml::tag('span', array(), Yii::t('Dashboard.views', 'Plugins')),
+					'label' => NULL,
 					'itemOptions' => array('class' => 'fa fa-puzzle-piece', 'title' => Yii::t('Dashboard.views', 'Plugins')),
 					'active' => ($this->id == 'settings' && $this->action->id == 'plugins' ? true : false)
 				),

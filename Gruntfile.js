@@ -100,6 +100,8 @@ module.exports = function(grunt) {
                     '<%= paths.lib %>/fontawesome/css/font-awesome.min.css',
                     '<%= paths.bower %>/alertify.js/themes/alertify.core.css',
                     '<%= paths.bower %>/lepture-editor/build/editor.css',
+                    '<%= paths.bower %>/dropzone/downloads/css/basic.css',
+                    '<%= paths.bower %>/dropzone/downloads/css/dropzne.css',
                     '<%= paths.lib %>/markdown-mark/icon-font/style.css',
                     '<%= paths.lib %>/*/*.css',
                     '<%= paths.css %>/*',
@@ -120,6 +122,7 @@ module.exports = function(grunt) {
                     '<%= paths.bower %>/reMarked/reMarked.js',
                     '<%= paths.bower %>/jquery-timeago/jquery.timeago.js',
                     '<%= paths.bower %>/lepture-editor/build/editor.js',
+                    '<%= paths.bower %>/dropzone/downloads/dropzone.min.js',
                     '<%= paths.lib %>/readmore/readmore.js',
                     '<%= paths.js %>/*'
                 ],

@@ -14,7 +14,12 @@ class ContentController extends CiiDashboardController
 	public function actionSave($id = NULL)
 	{
 		if ($id == NULL)
+		{
 			$model = new Content;
+	        $model->savePrototype(Yii::app()->user->id);
+
+	        $this->redirect('/dashboard/content/save/id/' . $model->id);
+		}
 		else
 			$model = $this->loadModel($id);
 
