@@ -4,43 +4,43 @@
 			'items' => array(
 				array(
 					'url' => $this->createUrl('/dashboard/settings'),
-					'label' => CHtml::tag('span', array(), Yii::t('Dashboard.views', 'General Settings')),
+					'label' => NULL,
 					'linkOptions' => array('class' => 'fa fa-gears', 'title' => Yii::t('Dashboard.views', 'General Settings')), 
 					'active' => ($this->id == 'settings' && $this->action->id == 'index' ? true : false),
 				),
 				array(
 					'url' => $this->createUrl('/dashboard/users'),
-					'label' => CHtml::tag('span', array(), Yii::t('Dashboard.views', 'Users')),
+					'label' => NULL,
 					'linkOptions' => array('class' => 'fa fa-group', 'title' => Yii::t('Dashboard.views', 'Users')),
 					'active' => ($this->id == 'users')
 				),
 				array(
 					'url' => $this->createUrl('/dashboard/categories'),
-					'label' => CHtml::tag('span', array(), Yii::t('Dashboard.views', 'Categories')),
+					'label' => NULL,
 					'linkOptions' => array('class' => 'fa fa-list', 'title' => Yii::t('Dashboard.views', 'Categories')),
 					'active' => ($this->id == 'categories')
 				),
 				array(
 					'url' => $this->createUrl('/dashboard/settings/analytics'),
-					'label' => CHtml::tag('span', array(), Yii::t('Dashboard.views', 'Analytics')),
+					'label' => NULL,
 					'linkOptions' => array('class' => 'fa fa-bar-chart-o', 'title' => Yii::t('Dashboard.views', 'Analytics')),
 					'active' => ($this->id == 'analytics' || ($this->id == 'settings' && $this->action->id == 'analytics') ? true : false)
 				),
 				array(
 					'url' => $this->createUrl('/dashboard/settings/appearance'),
-					'label' => CHtml::tag('span', array(), Yii::t('Dashboard.views', 'Appearance')),
+					'label' => NULL,
 					'linkOptions' => array('class' => 'fa fa-eye', 'title' => Yii::t('Dashboard.views', 'Appearance')),
 					'active' => ($this->id == 'settings' && $this->action->id == 'appearance' ? true : false)
 				),
 				array(
 					'url' => $this->createUrl('/dashboard/settings/email'), 
-					'label' => CHtml::tag('span', array(), Yii::t('Dashboard.views', 'Email Settings')),
+					'label' => NULL,
 					'linkOptions' => array('class' => 'fa fa-envelope-o', 'title' => Yii::t('Dashboard.views', 'Email Settings')),
 					'active' => ($this->id == 'settings' && $this->action->id == 'email' ? true : false)
 				),
 				array(
 					'url' => $this->createUrl('/dashboard/settings/social'),
-					'label' => CHtml::tag('span', array(), Yii::t('Dashboard.views', 'Social Settings')),
+					'label' => NULL,
 					'linkOptions' => array('class' => 'fa fa-twitter', 'title' => Yii::t('Dashboard.views', 'Social Settings')),
 					'active' => ($this->id == 'settings' && $this->action->id == 'social' ? true : false)
 				),
@@ -54,7 +54,7 @@
 				*/
 				array(
 					'url' => $this->createUrl('/dashboard/settings/theme'), 
-					'label' => CHtml::tag('span', array(), Yii::t('Dashboard.views', 'Active Theme Settings')),
+					'label' => NULL,
 					'linkOptions' => array('class' => 'fa fa-desktop', 'title' => Yii::t('Dashboard.views', 'Active Theme Settings')),
 					'active' => ($this->id == 'settings' && $this->action->id == 'theme')
 				),
