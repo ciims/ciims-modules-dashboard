@@ -5077,6 +5077,87 @@ section.content_inner_container #title-container #Content_title {
 	border: none;
 	box-shadow: none;
 }
+
+section.paginated_results #editor-sidebar .content-sidebar-container {
+	text-transform: uppercase;
+	width: 300px;
+	min-width: 300px;
+	max-width: 300px;
+}
+
+section.paginated_results #editor-sidebar .content-sidebar-container h6 {
+	margin: 0;
+	margin-bottom: 5px;
+}
+
+section.paginated_results #editor-sidebar .content-sidebar-container .content-sidebar-inner-container {
+	border-bottom: 1px solid #eee;
+}
+
+section.paginated_results #editor-sidebar .content-sidebar-container .status-bar {
+	padding: 15px;
+}
+
+section.paginated_results #editor-sidebar .content-sidebar-container .content-actions div:first-of-type {
+	border-right: 1px solid #eee;
+}
+
+section.paginated_results #editor-sidebar .content-sidebar-container .content-actions div .child-el {
+	padding: 15px;
+	text-transform: none;
+}
+
+section.paginated_results #editor-sidebar .content-sidebar-container .content-actions div a {
+	text-decoration: none;
+	color: #2d2d2d;
+}
+
+section.paginated_results #editor-sidebar .content-sidebar-container .content-actions div a#schedule:after {
+	font-family: "FontAwesome";
+	content: "\f073";
+	top: 3px;
+	position: relative;
+	float: right;
+}
+
+section.paginated_results #editor-sidebar .content-sidebar-container .content-actions div a#publish:after {
+	font-family: "FontAwesome";
+	content: "\f0ee";
+	top: 3px;
+	position: relative;
+	float: right;
+}
+
+section.paginated_results #editor-sidebar .content-sidebar-container .status-bar .grid-thirds {
+	width: 33%;
+	max-width: 33%;
+	min-width: 33%;
+	float: left;
+	display: inline-block;
+	padding-bottom: 0px;
+}
+
+section.paginated_results #editor-sidebar .content-sidebar-container .grid-thirds .top-status {
+	font-size: 12px;
+	color: #999;
+	font-style:italic;
+	text-transform:lowercase;
+}
+
+section.paginated_results #editor-sidebar .content-sidebar-container .grid-half {
+	width: 48%;
+	max-width: 48%;
+	min-width: 48%;
+	float: left;
+	display: inline-block;
+	padding-bottom: 0px;
+}
+
+section.paginated_results #editor-sidebar .content-sidebar-container h6.advanced-text:after {
+	font-family: "fontAwesome";
+	content: "\f0d8";
+	margin-left: 5px;
+}
 /*
 
 github.com style (c) Vasily Polovnyov <vast@whiteants.net>

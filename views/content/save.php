@@ -10,8 +10,53 @@
 		<div id="editor-sidebar">
 			<div class="nano">
 				<div class="nano-content">
-					<ul>
-					</ul>
+					<div class="content-sidebar-container">
+						<div class="status-bar content-sidebar-inner-container">
+							<div class="grid-thirds">
+								<h6><?php echo Yii::t('Dashboard.views', 'Status'); ?></h6>
+								<div class="top-status"><?php
+									if ($model->status == 0)
+										echo  Yii::t('Dashboard.views', 'Draft');
+									else if ($model->Status == 1)
+										 Yii::t('Dashboard.views', 'Published');
+									else if ($model->status == 2)
+										 Yii::t('Dashboard.views', 'In Review');
+								?></div>
+							</div>
+							<div class="grid-thirds">
+								<h6><?php echo Yii::t('Dashboard.views', 'Words'); ?></h6>
+								<div class="top-status word-count">0</div>
+							</div>
+							<div class="grid-thirds">
+								<h6><?php echo Yii::t('Dashboard.views', 'Revision'); ?></h6>
+								<div class="top-status revision-count"><?php echo $model->vid; ?></div>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<div class="content-actions content-sidebar-inner-container">
+							<div class="schedule-button grid-half">
+								<div class="child-el">
+									<a href="#" id="schedule"><?php echo Yii::t('Dashboard.views', 'Schedule'); ?></a>
+								</div>
+							</div>
+							<div class="publish-button grid-half">
+								<div class="child-el">
+									<a href="#" id="publish"><?php echo Yii::t('Dashboard.views', 'Publish'); ?></a>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<div class="content-tags content-sidebar-inner-container">
+							<h6><?php echo Yii::t('Dashboard.views', 'Tags'); ?></h6>
+						</div>
+						<div class="basic-options content-sidebar-inner-container">
+							<h6><?php echo Yii::t('Dashboard.views', 'Entry Options'); ?></h6>
+						</div>
+						<div class="advanced-options">
+							<h6 class="advanced-text"><?php echo Yii::t('Dashboard.views', 'Advanced Options'); ?></h6>
+							<div class="advanced-options-child" style="display:none;"></div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
