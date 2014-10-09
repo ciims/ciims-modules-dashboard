@@ -7,20 +7,19 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-bower-task');
-    grunt.loadNpmTasks('grunt-text-replace');
+    grunt.loadNpmTasks('grunt-string-replace');
     grunt.loadNpmTasks('grunt-run-grunt');
 
     // Register the tasks we want to run
     grunt.registerTask('default', [
-        'bower:install',
+        //'bower:install',
         'run_grunt:lepture_editor',
         'copy:lepture_editor',
         'copy:markdown_mark',
         'copy:fontawesome',
         'copy:nanoscrollermap',
         'copy:nanoscrollercoffeescript',
-        'replace:nanoscrollerminmap',
-        'replace:fontawesome',
+        "string-replace",
         'concat:css',
         'concat:js',
         'cssmin:css'
@@ -79,29 +78,31 @@ module.exports = function(grunt) {
             }
         },
 
-        replace: {
-            nanoscrollerminmap: {
-                src: [ "<%= paths.dist %>/jquery.nanoscroller.js.map" ],
-                overwrite: true, 
-                replacements : [{
-                    from: "..\/..\/coffeescripts\/",
-                    to: "./"
-                }]
+        'string-replace': {
+          inline: {
+            options: {
+              replacements: [
+                {
+                    pattern: "../../coffeescripts/",
+                    replacement: './'
+                },
+                {
+                    pattern: "../fonts/",
+                    replacement: './'
+                }
+              ]
             },
-
-            fontawesome: {
-                src: [ "<%= paths.lib %>/fontawesome/font-awesome.css" ],
-                overwrite: true, 
-                replacements : [{
-                    from: "..\/fonts\/",
-                    to: "./fonts/"
-                }]
+            files: {
+                "<%= paths.dist %>/jquery.nanoscroller.js.map" :  "<%= paths.dist %>/jquery.nanoscroller.js.map",
+                "<%= paths.lib %>/fontawesome/css/font-awesome.min.css" :  "<%= paths.lib %>/fontawesome/css/font-awesome.min.css"
             }
+          }
         },
 
         concat: {
             css: {
                 src: [
+                    '<%= paths.lib %>/fontawesome/css/font-awesome.min.css',
                     '<%= paths.bower %>/alertify.js/themes/alertify.core.css',
                     '<%= paths.bower %>/lepture-editor/build/editor.css',
                     '<%= paths.bower %>/dropzone/downloads/css/basic.css',
