@@ -17,6 +17,14 @@ var CiiMSDashboard = {
 		return this.authData;
 	},
 
+	getLanguage: function() {
+		var authData = this.getAuthData();
+		var language = authData.language;
+		var iso2 = language.split("_");
+
+		return iso2[0]; 
+	},
+
 	getEndpoint : function() {
 		return $("#endpoint").attr('data-attr-endpoint');
 	},

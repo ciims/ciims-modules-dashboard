@@ -51,6 +51,57 @@ var ContentEditor = {
 			// Trigger the load immediately
 			self.triggerChange();
 		}, 250);
+
+		$("#tags").tagsInput({
+			onRemoveTag: function(e) {
+				var tag = e.replace('/', '');
+				$.ajax({
+					url: window.location.origin + '/api/content/tag/id/' + $("#Content_id").val() + "/tag/" + tag,
+					type: 'DELETE',
+					headers: {
+						'X-Auth-Email': self.ciims.email,
+						'X-Auth-Token': self.ciims.token
+					},
+					beforeSend: CiiMSDashboard.ajaxBeforeSend(),
+					completed: CiiMSDashboard.ajaxCompleted()
+				});
+			},
+			onAddTag: function(e) {
+				var tag = e.replace('/', '');
+				$.ajax({
+					url: window.location.origin + '/api/content/tag/id/' + $("#Content_id").val(),
+					type: 'POST',
+					headers: {
+						'X-Auth-Email': self.ciims.email,
+						'X-Auth-Token': self.ciims.token
+					},
+					data:  { 
+						"tag" : e
+					},
+					beforeSend: CiiMSDashboard.ajaxBeforeSend(),
+					completed: CiiMSDashboard.ajaxCompleted()
+				});
+			}
+		});
+
+		$("#Content_title").keyup(function(e) {
+			var slug = $("#Content_slug").val();
+			var customTitle = $("#Content_title").val().replace(/\W/g, "-").toLowerCase().replace("--", "-");
+			$("#Content_slug").val(customTitle);
+		});
+
+		$('#Content_published').datetimepicker({
+			format: 'unixtime',
+		  	inline: true,
+		  	language: CiiMSDashboard.getLanguage()
+		});
+
+		$("a#schedule").click(function(e) {
+			if ($(".content-calendar").is(":visible"))
+				$(".content-calendar").slideUp();
+			else
+				$(".content-calendar").slideDown();
+		});
 	},
 
 	/**

@@ -118,7 +118,6 @@ module.exports = function(grunt) {
                 },
                 src: [
                     '<%= paths.lib %>/pace/pace.min.js',
-                    '<%= paths.lib %>/pace/pace.min.js',
                     '<%= paths.lib %>/shapeshift/core/jquery.shapeshift.min.js',
                     '<%= paths.lib %>/nanoscroller/jquery.nanoscroller.js',
                     '<%= paths.lib %>/alertify.js/alertify.js',
@@ -128,6 +127,8 @@ module.exports = function(grunt) {
                     '<%= paths.bower %>/lepture-editor/build/editor.js',
                     '<%= paths.bower %>/dropzone/downloads/dropzone.min.js',
                     '<%= paths.lib %>/readmore/readmore.js',
+                    '<%= paths.lib %>/jquery.tagsinput/jquery.tagsinput.min.js',
+                    '<%= paths.lib %>/datetimepicker/jquery.datetimepicker.js',
                     '<%= paths.js %>/*'
                 ],
                 dest: '<%= paths.dist %>/dashboard.js'

@@ -17,7 +17,7 @@
 								<div class="top-status"><?php
 									if ($model->status == 0)
 										echo  Yii::t('Dashboard.views', 'Draft');
-									else if ($model->Status == 1)
+									else if ($model->status == 1)
 										 Yii::t('Dashboard.views', 'Published');
 									else if ($model->status == 2)
 										 Yii::t('Dashboard.views', 'In Review');
@@ -29,32 +29,66 @@
 							</div>
 							<div class="grid-thirds">
 								<h6><?php echo Yii::t('Dashboard.views', 'Revision'); ?></h6>
-								<div class="top-status revision-count"><?php echo $model->vid; ?></div>
+								<div class="top-status revision-count">
+									<a href="#" id="revisions-link"><?php echo $model->vid; ?></a>
+								</div>
 							</div>
 							<div class="clearfix"></div>
 						</div>
 						<div class="content-actions content-sidebar-inner-container">
 							<div class="schedule-button grid-half">
 								<div class="child-el">
-									<a href="#" id="schedule"><?php echo Yii::t('Dashboard.views', 'Schedule'); ?></a>
+									<?php if (!$model->isScheduled()): ?>
+										<a href="#" id="schedule"><?php echo Yii::t('Dashboard.views', 'Schedule'); ?></a>
+									<?php else: ?>
+										<a href="#" id="schedule"><?php echo Yii::t('Dashboard.views', 'Reschedule'); ?></a>
+									<?php endif; ?>
 								</div>
 							</div>
 							<div class="publish-button grid-half">
 								<div class="child-el">
-									<a href="#" id="publish"><?php echo Yii::t('Dashboard.views', 'Publish'); ?></a>
+									<?php if (!$model->isPublished()): ?>
+										<a href="#" id="publish"><?php echo Yii::t('Dashboard.views', 'Publish'); ?></a>
+									<?php else: ?>
+										<a href="#" id="unpublish"><?php echo Yii::t('Dashboard.views', 'Unpublish'); ?></a>
+									<?php endif; ?>
 								</div>
 							</div>
 							<div class="clearfix"></div>
 						</div>
+						<div class="content-calendar content-sidebar-inner-container">
+							<?php echo $form->textField($model, 'published'); ?>
+						</div>
 						<div class="content-tags content-sidebar-inner-container">
 							<h6><?php echo Yii::t('Dashboard.views', 'Tags'); ?></h6>
+							<?php echo $form->textField($model, 'tagsFlat', array('id' => 'tags')); ?>
 						</div>
 						<div class="basic-options content-sidebar-inner-container">
 							<h6><?php echo Yii::t('Dashboard.views', 'Entry Options'); ?></h6>
-						</div>
-						<div class="advanced-options">
-							<h6 class="advanced-text"><?php echo Yii::t('Dashboard.views', 'Advanced Options'); ?></h6>
-							<div class="advanced-options-child" style="display:none;"></div>
+
+							<div class="pure-control-group">
+								<?php echo $form->textFieldRow($model, 'slug'); ?>
+							</div>
+							<div class="pure-control-group">
+								<?php echo $form->textFieldRow($model, 'password'); ?>
+							</div>
+							<div class="pure-control-group">
+								<?php echo $form->dropDownListRow($model, 'category', CHtml::listData(Categories::model()->findAll(), 'id', 'name'), array('empty'=>Yii::t('Dashboard.views', 'Select a Category'))); ?>
+							</div>
+							<div class="pure-control-group">
+								<?php echo $form->dropDownListRow($model, 'commentable', array('1' => Yii::t('Dashboard.views', 'Allow Comments'), '0' => Yii::t('Dashboard.views', 'Disable Comments'))); ?>
+							</div>
+
+							<div class="pure-control-group">
+								<?php echo $form->dropDownListRow($model, 'type_id', CHtml::listData(ContentTypes::model()->findAll(), 'id', 'name')); ?>
+							</div>
+							<div class="pure-control-group">
+								<?php echo $form->dropDownListRow($model, 'view', $model->getViewFiles()); ?>
+							</div>
+							<div class="pure-control-group">
+								<?php echo $form->dropDownListRow($model, 'layout', $model->getLayoutFiles()); ?>
+							</div>
+
 						</div>
 					</div>
 				</div>
@@ -101,6 +135,7 @@
 	</section>
 	<?php echo $form->hiddenField($model, 'id'); ?>
 	<?php echo $form->hiddenField($model, 'vid'); ?>
+	<?php echo $form->hiddenField($model, 'status'); ?>
 <?php $this->endWidget(); ?>
 
 <?php Yii::app()->clientScript->registerScript('Editor', 'ContentEditor.init();'); ?>

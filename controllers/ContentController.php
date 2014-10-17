@@ -23,7 +23,9 @@ class ContentController extends CiiDashboardController
 		else
 			$model = $this->loadModel($id);
 
-		$this->render('save', array('model' => $model));
+		$this->render('save', array(
+			'model' => $model
+		));
 	}
 
 	/**

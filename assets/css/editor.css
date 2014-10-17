@@ -194,6 +194,10 @@ section.paginated_results #editor-sidebar .content-sidebar-container .content-ac
 	float: right;
 }
 
+section.paginated_results #editor-sidebar .content-sidebar-container .content-calendar {
+	display: none;
+}
+
 section.paginated_results #editor-sidebar .content-sidebar-container .status-bar .grid-thirds {
 	width: 33%;
 	max-width: 33%;
@@ -203,11 +207,13 @@ section.paginated_results #editor-sidebar .content-sidebar-container .status-bar
 	padding-bottom: 0px;
 }
 
-section.paginated_results #editor-sidebar .content-sidebar-container .grid-thirds .top-status {
+section.paginated_results #editor-sidebar .content-sidebar-container .grid-thirds .top-status,
+section.paginated_results #editor-sidebar .content-sidebar-container .grid-thirds .top-status a {
 	font-size: 12px;
 	color: #999;
 	font-style:italic;
 	text-transform:lowercase;
+	text-decoration: none;
 }
 
 section.paginated_results #editor-sidebar .content-sidebar-container .grid-half {
@@ -223,4 +229,93 @@ section.paginated_results #editor-sidebar .content-sidebar-container h6.advanced
 	font-family: "fontAwesome";
 	content: "\f0d8";
 	margin-left: 5px;
+}
+
+section.paginated_results #editor-sidebar .content-sidebar-container .basic-options .form-row,
+section.paginated_results #editor-sidebar .content-sidebar-container .advanced-options .form-row {
+	width: 100%;
+	margin: 10px;
+	clear:both;
+}
+
+section.paginated_results #editor-sidebar .content-sidebar-container .content-tags h6,
+section.paginated_results #editor-sidebar .content-sidebar-container .basic-options h6,
+section.paginated_results #editor-sidebar .content-sidebar-container .advanced-options h6{
+	margin-left: 10px;
+	margin-top: 5px;
+}
+
+section.paginated_results #editor-sidebar .content-sidebar-container .basic-options label,
+section.paginated_results #editor-sidebar .content-sidebar-container .advanced-options label {
+	font-size: 12px;
+	display: inline-block;
+	text-transform: none;
+}
+
+section.paginated_results #editor-sidebar .content-sidebar-container .basic-options input,
+section.paginated_results #editor-sidebar .content-sidebar-container .advanced-options input,
+section.paginated_results #editor-sidebar .content-sidebar-container .basic-options select,
+section.paginated_results #editor-sidebar .content-sidebar-container .advanced-options select { 
+	min-width: 150px;
+	max-width: 150px;
+	width: 150px;
+	padding: 0px !important;
+	border: 0;
+	box-shadow: none;
+	border-bottom: 1px solid #eee;
+	position: relative;
+	top: 5px;
+	padding: 2px 0px!important;
+}
+
+/*****************************/
+
+div.tagsinput {
+	border: none !important;
+	width: 280px !important;
+	margin-left: 10px;
+}
+
+div.tagsinput span.tag a {
+	color: #2d2d2d;
+}
+
+div.tagsinput input#tags_tag {
+	color: #fff !important;
+	width: 80px !important;
+	border: 1px solid rgb(45, 45, 45);
+	box-shadow: none;
+	text-transform: capitalize;
+	background: rgb(51, 51, 51);
+	height: 27px;
+}
+
+div.tagsinput input#tags_tag:focus {
+	text-transform: none;
+}
+
+div.tagsinput input#tags_tag.not_valid {
+	background: #90111A !important;
+}
+
+div.tagsinput span.tag {
+	color: #848484;
+	background: #fff;
+	border: 1px solid #eee;
+	text-transform: none;
+}
+
+/*****************************/
+
+.xdsoft_datetimepicker .xdsoft_datepicker.active+.xdsoft_timepicker {
+	margin-left: -1px;
+	margin-top: 9px;
+}
+
+.xdsoft_datetimepicker .xdsoft_datepicker {
+	margin-left: 1px;
+}
+
+.xdsoft_datetimepicker.xdsoft_inline {
+	border: none;
 }
