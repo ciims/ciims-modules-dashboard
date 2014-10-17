@@ -5974,6 +5974,12 @@ section.paginated_results #editor-sidebar .content-sidebar-container .grid-third
 	text-decoration: none;
 }
 
+section.paginated_results #editor-sidebar .content-sidebar-container .grid-thirds a#revisions-link:after {
+	font-family: "FontAwesome";
+	content:"\f1da";
+	margin-left: 5px;
+}
+
 section.paginated_results #editor-sidebar .content-sidebar-container .grid-half {
 	width: 48%;
 	max-width: 48%;
@@ -6076,6 +6082,11 @@ div.tagsinput span.tag {
 
 .xdsoft_datetimepicker.xdsoft_inline {
 	border: none;
+}
+
+.xdsoft_datetimepicker .xdsoft_month,
+.xdsoft_datetimepicker .xdsoft_year {
+	font-size: 12px !important;
 }
 /*
 

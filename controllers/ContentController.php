@@ -13,6 +13,8 @@ class ContentController extends CiiDashboardController
 	 */
 	public function actionSave($id = NULL)
 	{
+		$asModel = NULL;
+
 		if ($id == NULL)
 		{
 			$model = new Content;
@@ -21,7 +23,15 @@ class ContentController extends CiiDashboardController
 	        $this->redirect('/dashboard/content/save/id/' . $model->id);
 		}
 		else
+		{
 			$model = $this->loadModel($id);
+			$asModel = ContentMetadata::model()->findByAttributes(array('content_id' => $model->id, 'key' => 'autosave'));
+			if ($asModel != NULL)
+			{
+				$model->populate(CJSON::decode($asModel->value));
+				$model->autosavedata = true;
+			}
+		}
 
 		$this->render('save', array(
 			'model' => $model

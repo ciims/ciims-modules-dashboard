@@ -8,6 +8,8 @@ var ContentEditor = {
 
 	reloadTimeout : null,
 
+	autosaveTimeout: null,
+
 	init : function() {
 		var self = this;
 		
@@ -40,6 +42,9 @@ var ContentEditor = {
 		// Refresh the instance so we can see the counts in the bottom
 		self.editor.codemirror.refresh()
 
+		self.initTags();
+		self.misc();
+
 		// Nanoscrollerize the preview window
 		self.nanoscroller(".preview.nano", false);
 
@@ -52,6 +57,12 @@ var ContentEditor = {
 			self.triggerChange();
 		}, 250);
 
+	},
+
+	/**
+	 * Init method for tags
+	 */
+	initTags : function() {
 		$("#tags").tagsInput({
 			onRemoveTag: function(e) {
 				var tag = e.replace('/', '');
@@ -83,7 +94,12 @@ var ContentEditor = {
 				});
 			}
 		});
+	},
 
+	/**
+	 * Misc jQuery functions for UI behaviors
+	 */
+	misc: function() {
 		$("#Content_title").keyup(function(e) {
 			var slug = $("#Content_slug").val();
 			var customTitle = $("#Content_title").val().replace(/\W/g, "-").toLowerCase().replace("--", "-");
@@ -111,6 +127,45 @@ var ContentEditor = {
 		var self = this;
 		$(".CodeMirror.cm-s-paper").on('focus blur keyup paste copy cut input', function() { 
 			self.triggerChange();
+		});
+
+		// Init the excerpteditor if it doesn't exist yet
+		if (self.excerptEditor == null)
+			self.Excerpt.init();
+
+		$(".CodeMirror.cm-s-paper, form :input").on("keyup paste copy cut input change", function() {
+			clearTimeout(self.autosaveTimeout);
+			self.autosaveTimeout = setTimeout(function() {
+				self.autosave();
+			}, 500);
+		});
+	},
+
+	/**
+	 * Autosave method
+	 */
+	autosave: function() {
+		var data = {},
+			self = this;
+
+		$("form :input[id^='Content']").each(function() {
+			var name = $(this).attr("name").replace("Content[", "").replace("]", "");
+			data[name] = $(this).val();
+		});
+
+		data["content"] = self.editor.codemirror.getValue();
+		data["excerpt"] = self.excerptEditor.codemirror.getValue();
+
+		$.ajax({
+			url: window.location.origin + '/api/content/autosave/id/' + data.id,
+			type: 'POST',
+			headers: {
+				'X-Auth-Email': self.ciims.email,
+				'X-Auth-Token': self.ciims.token
+			},
+			data:  data,
+			beforeSend: CiiMSDashboard.ajaxBeforeSend(),
+			completed: CiiMSDashboard.ajaxCompleted()
 		});
 	},
 
@@ -157,6 +212,9 @@ var ContentEditor = {
 		}, 150)
 	},
 
+	/**
+	 * Binds the DropZone.js elements to the page
+	 */
 	bindDropzoneElements : function() {
 		var self = this;
 
@@ -216,7 +274,13 @@ var ContentEditor = {
 		});
 	},
 
-	// Utility method for getting a substring index. This finds the unique instance of {image}
+	/**
+	 * Utility method to retrieve the index of a given instance of a string
+	 * @param  string   str       The string to find
+	 * @param  string   substring The substring to find
+	 * @param  integer  n         The instance of substring to find in str
+	 * @return integer
+	 */
 	getSubstringIndex : function(str, substring, n) {
 	    var times = 0, index = null;
 
@@ -228,6 +292,10 @@ var ContentEditor = {
 	    return index;
 	},
 
+	/**
+	 * Utility string splice method
+	 * @return string
+	 */
 	splice : function(str, idx, rem, s) {
 	    return (str.slice(0,idx) + s + str.slice(idx + Math.abs(rem)));
 	},
@@ -246,6 +314,26 @@ var ContentEditor = {
 	 * Excerpt related functionality
 	 */
 	Excerpt : {
+
+		/**
+		 * Excerpt init method
+		 */
+		init: function() {
+			ContentEditor.excerptEditor = new Editor({
+				element: document.querySelector('#Content_excerpt'),
+				toolbar: [
+				  { name: 'photo', className: 'fa fa-photo',        action: ContentEditor.Excerpt.insertPhoto },
+		  		  //{ name: 'video', className: 'fa fa-video-camera', action: ContentEditor.Excerpt.insertVideo },
+		  		  '|',
+				  { name: 'excerpt', className: 'fa fa-caret-square-o-up', action: ContentEditor.Excerpt.excerpt },
+				  '|',
+				  { name: 'marked', className: 'markdown-mark', 		action: ContentEditor.Editor.explainMarked }
+				]
+			});
+
+			// Bind the necessary behaviors to the DOM now
+			ContentEditor.Excerpt.bindBehaviors();
+		},
 
 		/**
 		 * Binds the image upload and video upload behaviors to the DOM
@@ -291,26 +379,13 @@ var ContentEditor = {
 		excerpt : function(editor) {
 			// Instantiate the excerpt editor if it hasn't bee done yet
 			if (ContentEditor.excerptEditor == null)
-			{
-				ContentEditor.excerptEditor = new Editor({
-					element: document.querySelector('#Content_excerpt'),
-					toolbar: [
-					  { name: 'photo', className: 'fa fa-photo',        action: ContentEditor.Excerpt.insertPhoto },
-			  		  //{ name: 'video', className: 'fa fa-video-camera', action: ContentEditor.Excerpt.insertVideo },
-			  		  '|',
-					  { name: 'excerpt', className: 'fa fa-caret-square-o-up', action: ContentEditor.Excerpt.excerpt },
-					  '|',
-					  { name: 'marked', className: 'markdown-mark', 		action: ContentEditor.Editor.explainMarked }
-					]
-				});
-
-				// Bind the necessary behaviors to the DOM now
-				ContentEditor.Excerpt.bindBehaviors();
-			}
+				ContentEditor.Excerpt.init();
 
 			$(".editor").hide();
-			$(".excerpt").show();
-		},
+			$(".excerpt").show(0, function(e) {
+				ContentEditor.excerptEditor.codemirror.setValue(ContentEditor.excerptEditor.codemirror.getValue());
+			});			
+		},		
 
 		explainMarked : function(editor) {
 			console.log("Explain marked");
