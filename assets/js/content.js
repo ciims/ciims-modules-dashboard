@@ -172,7 +172,7 @@ var Content = {
 			else
 			{
 				// Date time
-				var dateTime = new Date( (data.created * 1000) ),
+				var dateTime = new Date( (data.published * 1000) ),
 					titleTime = dateTime.format('F d, Y @ H:i'),
 					dateTime = dateTime.format('c');
 

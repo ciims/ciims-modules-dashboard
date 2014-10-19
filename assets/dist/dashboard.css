@@ -6088,6 +6088,53 @@ div.tagsinput span.tag {
 .xdsoft_datetimepicker .xdsoft_year {
 	font-size: 12px !important;
 }
+
+/*****************************/
+
+@-webkit-keyframes error {
+  0%   { 
+  	background: #CE4444;
+  }
+  100% {
+  	background: none;
+  }
+}
+
+@keyframes error {
+  0%   { 
+  	background: #CE4444;
+  }
+  100% {
+  	background: none;
+  }
+}
+
+@-webkit-keyframes success {
+  0%   { 
+  	background: #A7CE44;
+  }
+  100% {
+  	background: none;
+  }
+}
+
+@keyframes success {
+  0%   { 
+  	background: #A7CE44;
+  }
+  100% {
+  	background: none;
+  }
+}
+
+.highlight-success {
+	-webkit-animation: success 1s steps(50, start) 1;
+  	animation: success 1s steps(50, start) 1;
+}
+.highlight-warning {
+	-webkit-animation: error 1s steps(50, start) 1;
+  	animation: error 1s steps(50, start) 1;
+}
 /*
 
 github.com style (c) Vasily Polovnyov <vast@whiteants.net>

@@ -100,6 +100,8 @@ var ContentEditor = {
 	 * Misc jQuery functions for UI behaviors
 	 */
 	misc: function() {
+		var self = this;
+
 		$("#Content_title").keyup(function(e) {
 			var slug = $("#Content_slug").val();
 			var customTitle = $("#Content_title").val().replace(/\W/g, "-").toLowerCase().replace("--", "-");
@@ -118,6 +120,74 @@ var ContentEditor = {
 			else
 				$(".content-calendar").slideDown();
 		});
+
+		$("a#publish").click(function(e) {			
+			var data = self.getForm();
+
+			// Change the status to InReview or Published depending upon the user's role
+			if (self.ciims.role == 5)
+				data["status"] = 2;
+			else
+				data["status"] = 1;
+
+			$.ajax({
+				url: window.location.origin + '/api/content/index/id/' + $("#Content_id").val(),
+				type: 'POST',
+				headers: {
+					'X-Auth-Email': self.ciims.email,
+					'X-Auth-Token': self.ciims.token
+				},
+				data: data,
+				beforeSend: CiiMSDashboard.ajaxBeforeSend(),
+				error: function(d) {
+					$(".publish-button").addClass("highlight-warning");
+					setTimeout(function() {
+						$(".publish-button").removeClass("highlight-warning");
+					}, 2000);
+				},
+				success: function(d, jqXHR) {
+					// Reset all the values to what was provided server-side
+					// Which should trigger an AutoSave
+					$("form :input[id^='Content']").each(function() {
+						var name = $(this).attr("name").replace("Content[", "").replace("]", "");
+						if (d.response[name] != null)
+							$(this).val(d.response[name]);
+					});
+
+					$("a#revisions-link").text(d.response["vid"]);
+
+					$(".publish-button").addClass("highlight-success");
+					setTimeout(function() {
+						$(".publish-button").removeClass("highlight-success");
+					}, 2000);
+
+				},
+				completed: CiiMSDashboard.ajaxCompleted()
+			});
+		});
+	},
+
+	/**
+	 * Retrieves the form fields
+	 * @return Object
+	 */
+	getForm: function() {
+		var data = {},
+			self = this;
+
+		$("form :input[id^='Content']").each(function() {
+			var name = $(this).attr("name").replace("Content[", "").replace("]", "");
+			data[name] = $(this).val();
+		});
+
+		data["content"] = self.editor.codemirror.getValue();
+		data["excerpt"] = self.excerptEditor.codemirror.getValue();
+
+		// Set the published data if it hasn't been set
+		if (data["published"] == 0 || data["published"] == "")
+			data.published = Math.round(new Date().getTime() / 1000);
+
+		return data;
 	},
 
 	/**
@@ -145,16 +215,8 @@ var ContentEditor = {
 	 * Autosave method
 	 */
 	autosave: function() {
-		var data = {},
-			self = this;
-
-		$("form :input[id^='Content']").each(function() {
-			var name = $(this).attr("name").replace("Content[", "").replace("]", "");
-			data[name] = $(this).val();
-		});
-
-		data["content"] = self.editor.codemirror.getValue();
-		data["excerpt"] = self.excerptEditor.codemirror.getValue();
+		var self = this;
+		var data = self.getForm();
 
 		$.ajax({
 			url: window.location.origin + '/api/content/autosave/id/' + data.id,
@@ -176,6 +238,9 @@ var ContentEditor = {
 		var self = this,
 			text = self.editor.codemirror.getValue(),
 			markdown = self.marked(text);
+
+		// Update the word count
+		$(".word-count").text($("span.words:first").text());
 
 		clearTimeout(self.reloadTimeout);
 		self.reloadTimeout = setTimeout(function() {

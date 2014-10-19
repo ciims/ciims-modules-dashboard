@@ -17,10 +17,12 @@
 								<div class="top-status"><?php
 									if ($model->status == 0)
 										echo  Yii::t('Dashboard.views', 'Draft');
+									else if ($model->status == 1 && time() <= $model->published)
+										echo Yii::t('Dashboard.view', 'Scheduled');
 									else if ($model->status == 1)
-										 Yii::t('Dashboard.views', 'Published');
+										 echo Yii::t('Dashboard.views', 'Published');
 									else if ($model->status == 2)
-										 Yii::t('Dashboard.views', 'In Review');
+										 echo Yii::t('Dashboard.views', 'In Review');
 								?></div>
 							</div>
 							<div class="grid-thirds">
@@ -47,11 +49,7 @@
 							</div>
 							<div class="publish-button grid-half">
 								<div class="child-el">
-									<?php if (!$model->isPublished()): ?>
-										<a href="#" id="publish"><?php echo Yii::t('Dashboard.views', 'Publish'); ?></a>
-									<?php else: ?>
-										<a href="#" id="unpublish"><?php echo Yii::t('Dashboard.views', 'Unpublish'); ?></a>
-									<?php endif; ?>
+									<a href="#" id="publish"><?php echo Yii::t('Dashboard.views', 'Publish'); ?></a>
 								</div>
 							</div>
 							<div class="clearfix"></div>
@@ -73,7 +71,7 @@
 								<?php echo $form->textFieldRow($model, 'password'); ?>
 							</div>
 							<div class="pure-control-group">
-								<?php echo $form->dropDownListRow($model, 'category', CHtml::listData(Categories::model()->findAll(), 'id', 'name'), array('empty'=>Yii::t('Dashboard.views', 'Select a Category'))); ?>
+								<?php echo $form->dropDownListRow($model, 'category_id', CHtml::listData(Categories::model()->findAll(), 'id', 'name'), array('empty'=>Yii::t('Dashboard.views', 'Select a Category'))); ?>
 							</div>
 							<div class="pure-control-group">
 								<?php echo $form->dropDownListRow($model, 'commentable', array('1' => Yii::t('Dashboard.views', 'Allow Comments'), '0' => Yii::t('Dashboard.views', 'Disable Comments'))); ?>
