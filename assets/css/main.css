@@ -50,3 +50,23 @@ main .pure-form div#main label {
 .clearfix {
 	clear:both;
 }
+
+main .error-module {
+	margin-left: auto;
+	margin-right: auto;
+	width: 500px;
+	text-align: center;
+	margin-top: 10%;
+	min-height: 100px;
+	background: #fff;
+	border: 1px solid #ebeff6;
+	box-shadow: rgba(0,0,0,.1) 0 0 5px;
+	-moz-box-shadow: rgba(0,0,0,.1) 0 0 5px;
+	-webkit-box-shadow: rgba(0,0,0,.1) 0 0 5px;
+	vertical-align: middle;
+	padding: 5%;
+}
+
+main .error-module h1 {
+	margin: 0px;
+}
