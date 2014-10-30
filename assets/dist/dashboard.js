@@ -12813,6 +12813,8 @@ Array.prototype.remove = function(from, to) {
 		self.editor = new Editor({
 			element: document.querySelector('#Content_content'),
 			toolbar: [
+			  { name: 'excerpt', className: 'fa fa-caret-square-o-down', action: ContentEditor.Editor.excerpt },
+			  '|',
 			  { name: 'bold',      className: 'fa fa-bold',      action: ContentEditor.Editor.toggleBold },
 			  { name: 'italic',    className: 'fa fa-italic',    action: ContentEditor.Editor.toggleItalic },
 			  { name: 'underline', className: 'fa fa-underline', action: ContentEditor.Editor.insertUnderlineTag },
@@ -12823,11 +12825,9 @@ Array.prototype.remove = function(from, to) {
 			  '|',
 			  { name: 'photo', className: 'fa fa-photo',        action: ContentEditor.Editor.insertPhotoTag },
 			  //{ name: 'video', className: 'fa fa-video-camera', action: ContentEditor.Editor.insertVideoTag },
-			  { name: 'code',  className: 'fa fa-code',         action: ContentEditor.Editor.insertCodeTag },
-			  '|',
-			  { name: 'excerpt', className: 'fa fa-caret-square-o-down', action: ContentEditor.Editor.excerpt },
-			  '|',
-			  { name: 'marked', className: 'markdown-mark', 		action: ContentEditor.Editor.explainMarked }
+			  { name: 'code',  className: 'fa fa-code',         action: ContentEditor.Editor.insertCodeTag }
+			  //'|',
+			  //{ name: 'marked', className: 'markdown-mark', 		action: ContentEditor.Editor.explainMarked }
 			]
 		});
 
@@ -12943,6 +12943,7 @@ Array.prototype.remove = function(from, to) {
 				if (e)
 				{
 					self.setForm(self.revisions[vid]);
+					self.autosave();
 					$("a.details-back-button").click();
 				}
 			});
@@ -13228,7 +13229,7 @@ Array.prototype.remove = function(from, to) {
 			var dz = new Dropzone("#content_preview div.dropzone-" + hash, {
 				url : CiiMSDashboard.getEndpoint() + "/api/content/uploadImage/id/" + $("#Content_id").val(),
 				headers: CiiMSDashboard.getRequestHeaders(),
-				dictDefaultMessage : "Drop files here to upload - or click",
+				dictDefaultMessage : "",
 				success : function(data) {
 					// Get the response data
 					var json     = $.parseJSON(data.xhr.response),
@@ -13309,12 +13310,13 @@ Array.prototype.remove = function(from, to) {
 			ContentEditor.excerptEditor = new Editor({
 				element: document.querySelector('#Content_excerpt'),
 				toolbar: [
-				  { name: 'photo', className: 'fa fa-photo',        action: ContentEditor.Excerpt.insertPhoto },
-		  		  //{ name: 'video', className: 'fa fa-video-camera', action: ContentEditor.Excerpt.insertVideo },
-		  		  '|',
 				  { name: 'excerpt', className: 'fa fa-caret-square-o-up', action: ContentEditor.Excerpt.excerpt },
 				  '|',
-				  { name: 'marked', className: 'markdown-mark', 		action: ContentEditor.Editor.explainMarked }
+				  { name: 'photo', className: 'fa fa-photo',        action: ContentEditor.Excerpt.insertPhoto }
+		  		  //{ name: 'video', className: 'fa fa-video-camera', action: ContentEditor.Excerpt.insertVideo },
+				  
+				  //'|',
+				  //{ name: 'marked', className: 'markdown-mark', 		action: ContentEditor.Editor.explainMarked }
 				]
 			});
 
@@ -13339,7 +13341,30 @@ Array.prototype.remove = function(from, to) {
 		 * @param el editor
 		 */
 		insertPhoto : function(editor) {
-			$(".image-upload").show();
+
+			if ($(".image-upload").is(":visible"))
+				$(".image-upload").hide();
+			else
+			{
+				$(".image-upload").show();
+
+				var dz = new Dropzone("#dropzone-excerpt-upload", {
+					url : CiiMSDashboard.getEndpoint() + "/api/content/uploadImage/id/" + $("#Content_id").val() + "/promote/1",
+					headers: CiiMSDashboard.getRequestHeaders(),
+					dictDefaultMessage : "",
+					success : function(data) {
+						var json = $.parseJSON(data.xhr.response);
+						var responseData = $.parseJSON(json.response);
+
+						// Remote the dropzone element
+						var el = $("<div>").attr("id", "dropzone-excerpt-upload");
+						$("#dropzone-excerpt-upload").replaceWith(el);
+						$(".image-upload").hide();
+					}
+				});
+
+				$("#dropzone-excerpt-upload").addClass("dropzone");
+			}
 		},
 
 		/**

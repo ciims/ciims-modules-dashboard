@@ -50,7 +50,7 @@
 							<div class="publish-button grid-half">
 								<div class="child-el">
 									<a href="#" id="publish"><?php echo Yii::t('Dashboard.views', 'Publish'); ?></a>
-								</div>
+							</div>
 							</div>
 							<div class="clearfix"></div>
 						</div>
