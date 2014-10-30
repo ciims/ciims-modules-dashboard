@@ -23,7 +23,7 @@ module.exports = function(grunt) {
         'replace:fontawesome',
         'concat:css',
         'concat:js',
-        'cssmin:css'
+        'cssmin:css',
         //'uglify:js'
     ]);
 
@@ -129,6 +129,7 @@ module.exports = function(grunt) {
                     '<%= paths.lib %>/readmore/readmore.js',
                     '<%= paths.lib %>/jquery.tagsinput/jquery.tagsinput.min.js',
                     '<%= paths.lib %>/datetimepicker/jquery.datetimepicker.js',
+                    '<%= paths.lib %>/shapeshift/core/jquery.shapeshift.min.js',
                     '<%= paths.js %>/*'
                 ],
                 dest: '<%= paths.dist %>/dashboard.js'
@@ -144,6 +145,11 @@ module.exports = function(grunt) {
             js: {
                 files: {
                     '<%= paths.dist %>/dashboard.min.js' : ['<%= paths.dist %>/dashboard.js']
+                }
+            },
+            jqui: {
+                files: {
+                    '<%= paths.dist %>/jquery-ui.min.js' : ['<%= paths.lib %>/jquery-ui/jquery-ui.js']
                 }
             }
         },
