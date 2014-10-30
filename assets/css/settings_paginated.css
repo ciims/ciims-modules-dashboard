@@ -61,7 +61,8 @@ section.paginated_results ul li.Publisher {
 	border-right: 3px solid rgb(202, 60, 60);
 }
 
-section.paginated_results ul li.Collaborator {
+section.paginated_results ul li.Collaborator,
+section.paginated_results ul li.active {
 	border-right: 3px solid rgb(66, 184, 221);
 }
 
@@ -120,6 +121,10 @@ section.paginated_results ul li div.icons {
 	position: relative;
 	top: 5px;
 	margin-top: 7px;
+}
+
+section.paginated_results ul li div.icons.icons-no-text {
+	width: auto !important;
 }
 
 section.paginated_results ul li div.icons .likes-container,

@@ -99,10 +99,7 @@ var Analytics = {
 		$.ajax({
 			url: window.location.origin + '/api/setting/analytics',
 			type: 'POST',
-			headers: {
-				'X-Auth-Email': self.ciims.email,
-				'X-Auth-Token': self.ciims.token
-			},
+			headers: CiiMSDashboard.getRequestHeaders(),
 			data: data,
 			beforeSend: function() {
 				CiiMSDashboard.ajaxBeforeSend();

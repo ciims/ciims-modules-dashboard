@@ -17,6 +17,21 @@ var CiiMSDashboard = {
 		return this.authData;
 	},
 
+	/**
+	 * Wrapper to retrieve the request headers
+	 */
+	getRequestHeaders: function() {
+		authData = this.getAuthData();
+
+		return {
+			'X-Auth-Email': authData.email,
+			'X-Auth-Token': authData.token
+		};
+	},
+
+	/**
+	 * Returns the ISO2 language code
+	 */
 	getLanguage: function() {
 		var authData = this.getAuthData();
 		var language = authData.language;
@@ -25,6 +40,9 @@ var CiiMSDashboard = {
 		return iso2[0]; 
 	},
 
+	/**
+	 * Retrieves the base endpoint
+	 */
 	getEndpoint : function() {
 		return $("#endpoint").attr('data-attr-endpoint');
 	},
@@ -37,6 +55,10 @@ var CiiMSDashboard = {
 		this.authData = $.parseJSON(localStorage.getItem('ciims'));
 	},
 
+	ajaxSuccess: function() {
+
+	},
+	
 	/**
 	 * Before send Ajax behavior
 	 */

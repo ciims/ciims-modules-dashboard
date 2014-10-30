@@ -186,6 +186,11 @@ section.paginated_results #editor-sidebar .content-sidebar-container .content-ac
 	float: right;
 }
 
+section.paginated_results #editor-sidebar .content-sidebar-container .content-actions .publish-button .child-el {
+	border-right: none;
+	width: 87%;
+}
+
 section.paginated_results #editor-sidebar .content-sidebar-container .content-actions div a#publish:after {
 	font-family: "FontAwesome";
 	content: "\f0ee";
@@ -272,6 +277,28 @@ section.paginated_results #editor-sidebar .content-sidebar-container .advanced-o
 	position: relative;
 	top: 5px;
 	padding: 2px 0px!important;
+}
+
+/*****************************/
+
+section.paginated_results .paginated_search#revisions {
+	display: none;
+}
+
+section.paginated_results .paginated_search#revisions .revisions_nav {
+	color: #2d2d2d;
+	font-size: 12px;
+	text-transform: uppercase;
+	width: 100%;
+	font-weight: bold;
+	height: 30px;
+	margin-top: 10px;
+}
+
+section.paginated_results .paginated_search#revisions .revisions_nav a {
+	text-decoration: none;
+	color: #2d2d2d;
+	margin-left: 9px;
 }
 
 /*****************************/

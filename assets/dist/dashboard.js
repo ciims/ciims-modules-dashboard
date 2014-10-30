@@ -11715,10 +11715,7 @@ Date.parseFunctions={count:0};Date.parseRegexes=[];Date.formatFunctions={count:0
 		$.ajax({
 			url: window.location.origin + '/api/setting/analytics',
 			type: 'POST',
-			headers: {
-				'X-Auth-Email': self.ciims.email,
-				'X-Auth-Token': self.ciims.token
-			},
+			headers: CiiMSDashboard.getRequestHeaders(),
 			data: data,
 			beforeSend: function() {
 				CiiMSDashboard.ajaxBeforeSend();
@@ -11810,10 +11807,7 @@ Array.prototype.remove = function(from, to) {
 			$.ajax({
 				url: window.location.origin + '/api/category',
 				type: 'POST',
-				headers: {
-					'X-Auth-Email': self.ciims.email,
-					'X-Auth-Token': self.ciims.token
-				},
+				headers: CiiMSDashboard.getRequestHeaders(),
 				data: data,
 				beforeSend: function() {
 					$("#category-form :input").removeClass("error");
@@ -11965,10 +11959,7 @@ Array.prototype.remove = function(from, to) {
 			$.ajax({
 				url: window.location.origin + '/api/category/' + $("#m-category-form #Categories_id").val(),
 				type: 'DELETE',
-				headers: {
-					'X-Auth-Email': self.ciims.email,
-					'X-Auth-Token': self.ciims.token
-				},
+				hheaders: CiiMSDashboard.getRequestHeaders(),
 				beforeSend: function() {
 					CiiMSDashboard.ajaxBeforeSend();
 				},
@@ -12018,10 +12009,7 @@ Array.prototype.remove = function(from, to) {
 			$.ajax({
 				url: window.location.origin + '/api/category/' + $("#m-category-form #Categories_id").val(),
 				type: 'POST',
-				headers: {
-					'X-Auth-Email': self.ciims.email,
-					'X-Auth-Token': self.ciims.token
-				},
+				headers: CiiMSDashboard.getRequestHeaders(),
 				data: data,
 				beforeSend: function() {
 					$("#m-category-form :input").removeClass("error");
@@ -12071,10 +12059,7 @@ Array.prototype.remove = function(from, to) {
 		$.ajax({
 			url: window.location.origin + '/api/category/index?page=' + page + (query == null ? '' : '&Categories[name]='+query),
 			type: 'GET',
-			headers: {
-				'X-Auth-Email': self.ciims.email,
-				'X-Auth-Token': self.ciims.token
-			},
+			headers: CiiMSDashboard.getRequestHeaders(),
 			beforeSend: function() {
 				// Clear the results on before send, if requested
 				if (clear)
@@ -12140,6 +12125,21 @@ Array.prototype.remove = function(from, to) {
 		return this.authData;
 	},
 
+	/**
+	 * Wrapper to retrieve the request headers
+	 */
+	getRequestHeaders: function() {
+		authData = this.getAuthData();
+
+		return {
+			'X-Auth-Email': authData.email,
+			'X-Auth-Token': authData.token
+		};
+	},
+
+	/**
+	 * Returns the ISO2 language code
+	 */
 	getLanguage: function() {
 		var authData = this.getAuthData();
 		var language = authData.language;
@@ -12148,6 +12148,9 @@ Array.prototype.remove = function(from, to) {
 		return iso2[0]; 
 	},
 
+	/**
+	 * Retrieves the base endpoint
+	 */
 	getEndpoint : function() {
 		return $("#endpoint").attr('data-attr-endpoint');
 	},
@@ -12160,6 +12163,10 @@ Array.prototype.remove = function(from, to) {
 		this.authData = $.parseJSON(localStorage.getItem('ciims'));
 	},
 
+	ajaxSuccess: function() {
+
+	},
+	
 	/**
 	 * Before send Ajax behavior
 	 */
@@ -12299,10 +12306,7 @@ Array.prototype.remove = function(from, to) {
 		$.ajax({
 			url: window.location.origin + '/api/event/count',
 			type: 'POST',
-			headers: {
-				'X-Auth-Email': self.ciims.email,
-				'X-Auth-Token': self.ciims.token
-			},
+			headers: CiiMSDashboard.getRequestHeaders(),
 			data : { "ids": these },
 			success: function(data, textStatus, jqXHR) {
 				for (var id in data.response)
@@ -12487,10 +12491,7 @@ Array.prototype.remove = function(from, to) {
 			        $.ajax({
 						url: window.location.origin + '/api/content/' + id,
 						type: 'DELETE',
-						headers: {
-							'X-Auth-Email': self.ciims.email,
-							'X-Auth-Token': self.ciims.token
-						},
+						headers: CiiMSDashboard.getRequestHeaders(),
 						beforeSend: function() {
 							CiiMSDashboard.ajaxBeforeSend();
 						},
@@ -12598,10 +12599,7 @@ Array.prototype.remove = function(from, to) {
 			$.ajax({
 				url: window.location.origin + '/api/content/' + $("#m-content-form #content_id").val(),
 				type: 'DELETE',
-				headers: {
-					'X-Auth-Email': self.ciims.email,
-					'X-Auth-Token': self.ciims.token
-				},
+				headers: CiiMSDashboard.getRequestHeaders(),
 				beforeSend: function() {
 					CiiMSDashboard.ajaxBeforeSend();
 				},
@@ -12805,6 +12803,8 @@ Array.prototype.remove = function(from, to) {
 
 	autosaveTimeout: null,
 
+	revisions: {},
+
 	init : function() {
 		var self = this;
 		
@@ -12842,6 +12842,7 @@ Array.prototype.remove = function(from, to) {
 
 		// Nanoscrollerize the preview window
 		self.nanoscroller(".preview.nano", false);
+		self.nanoscroller("#editor-sidebar .nano", false);
 
 		// lepture/editor doesn't support onLoad callback
 		setTimeout(function() {
@@ -12892,6 +12893,109 @@ Array.prototype.remove = function(from, to) {
 	},
 
 	/**
+	 * Loads all the revisions to be displayed
+	 * @return {[type]} [description]
+	 */
+	loadRevisions: function(clear) {
+		var self = this;
+
+		// Retrieve a list of all the revisions
+		$.ajax({
+			url: window.location.origin + '/api/content/revisions/id/' + $("#Content_id").val(),
+			type: 'GET',
+			headers: CiiMSDashboard.getRequestHeaders(),
+			beforeSend: function() {
+				$(".paginated_results ul").empty();
+
+				CiiMSDashboard.ajaxBeforeSend();
+			},
+			error: function(data) {
+				var json = $.parseJSON(data.responseText);
+
+				// unbind the scrolling event to prevent unecessary requests to the API
+				if (json.status == 404)
+					$(".paginated_results .nano .nano-content").unbind("scroll");
+			},
+			success: function(data, textStatus, jqXHR) {
+				var ul = $(".paginated_results ul");
+				$(data.response.data).each(function() {
+					self.renderLi(this, ul);
+				});
+				$(".timeago").timeago();
+
+				self.bindRevisionRollback();
+				CiiMSDashboard.ajaxSuccess(null);
+			},
+			completed: CiiMSDashboard.ajaxCompleted()
+		});
+	},
+
+	/**
+	 * Binds the behaviors to rollback a revision
+	 */
+	bindRevisionRollback: function() {
+		var self = this;
+
+		$(".rollback-revision").click(function() {
+			var vid = $(this).attr("vid");
+			var text = $(".rollback-text").text().replace("{id}", vid);
+			alertify.confirm(text, function (e) {
+				if (e)
+				{
+					self.setForm(self.revisions[vid]);
+					$("a.details-back-button").click();
+				}
+			});
+		});
+	},
+
+	/**
+	 * Renders an LI element
+	 * @param object data
+	 * @param DOM ul
+	 * @param boolean prepend
+	 */
+	renderLi: function(data, ul, prepend) {
+		this.revisions[data.vid] = data;
+		if (prepend == undefined)
+			prepend = false;
+
+		var li = $("<li>").attr('revision', data.id),
+			info = $("<div>"),
+			side = $("<div>").addClass("icons icons-no-text");
+
+		var revisionText = $(".revisions-text").text().replace('{id}', data.vid);
+
+		var dateTime = new Date( (data.published * 1000) ),
+			titleTime = dateTime.format('F d, Y @ H:i'),
+			dateTime = dateTime.format('c');
+
+		// Build the info object
+		$(info).addClass("user-info");
+		$(info).append($("<h6>").text(data.title));
+		$(info).append($("<span>").text(revisionText));
+		$(info).append($("<span>").addClass("timeago").attr('datetime', dateTime).attr('title', titleTime));
+
+		// Build the list element
+		if ($("#Content_vid").val() == data.vid)
+			$(li).addClass("active");
+
+		$(li).append($("<img>").addClass("user-image").attr("src", "https://www.gravatar.com/avatar/" + md5(data.author.email) + "?s=40"));
+		$(li).append($(info));
+		
+		// Append the icons to the editor
+		$(side).append($("<span>").addClass("fa fa-history rollback-revision").attr("vid", data.vid));
+
+		(li).append($(info)).append($(side));
+
+		// Append it to the list
+		if (prepend)
+			$(ul).prepend($(li));
+		else
+			$(ul).append($(li));
+	},
+
+	/**
 	 * Misc jQuery functions for UI behaviors
 	 */
 	misc: function() {
@@ -12916,6 +13020,22 @@ Array.prototype.remove = function(from, to) {
 				$(".content-calendar").slideDown();
 		});
 
+		$("a#revisions-link").click(function(e) {
+			e.preventDefault();
+			$("#editor-sidebar").hide();
+			$(".paginated_search#revisions").show();
+			self.loadRevisions();
+			self.nanoscroller(".paginated_search .nano", false);
+		});
+
+		$("a.details-back-button").click(function(e) {
+			e.preventDefault();
+			$("#editor-sidebar").show();
+			$(".paginated_search#revisions").hide();
+
+			self.nanoscroller("#editor-sidebar .nano", false);
+		});
+
 		$("a#publish").click(function(e) {			
 			var data = self.getForm();
 
@@ -12928,10 +13048,7 @@ Array.prototype.remove = function(from, to) {
 			$.ajax({
 				url: window.location.origin + '/api/content/index/id/' + $("#Content_id").val(),
 				type: 'POST',
-				headers: {
-					'X-Auth-Email': self.ciims.email,
-					'X-Auth-Token': self.ciims.token
-				},
+				headers: CiiMSDashboard.getRequestHeaders(),
 				data: data,
 				beforeSend: CiiMSDashboard.ajaxBeforeSend(),
 				error: function(d) {
@@ -12960,6 +13077,22 @@ Array.prototype.remove = function(from, to) {
 				completed: CiiMSDashboard.ajaxCompleted()
 			});
 		});
+	},
+
+	/**
+	 * Sets the form fields
+	 */
+	setForm: function(data) {
+		var self = this;
+
+		$("form :input[id^='Content']").each(function() {
+			var name = $(this).attr("name").replace("Content[", "").replace("]", "");
+			if (data[name] != undefined)
+				$(this).val(data[name]);
+		});
+
+		data["content"] = self.editor.codemirror.setValue(data.content);
+		data["excerpt"] = self.excerptEditor.codemirror.setValue(data.excerpt);
 	},
 
 	/**
@@ -13016,10 +13149,7 @@ Array.prototype.remove = function(from, to) {
 		$.ajax({
 			url: window.location.origin + '/api/content/autosave/id/' + data.id,
 			type: 'POST',
-			headers: {
-				'X-Auth-Email': self.ciims.email,
-				'X-Auth-Token': self.ciims.token
-			},
+			headers: CiiMSDashboard.getRequestHeaders(),
 			data:  data,
 			beforeSend: CiiMSDashboard.ajaxBeforeSend(),
 			completed: CiiMSDashboard.ajaxCompleted()
@@ -13097,10 +13227,7 @@ Array.prototype.remove = function(from, to) {
 			// Then bind the dropzone element
 			var dz = new Dropzone("#content_preview div.dropzone-" + hash, {
 				url : CiiMSDashboard.getEndpoint() + "/api/content/uploadImage/id/" + $("#Content_id").val(),
-				headers: {
-					'X-Auth-Email': self.ciims.email,
-					'X-Auth-Token': self.ciims.token
-				},
+				headers: CiiMSDashboard.getRequestHeaders(),
 				dictDefaultMessage : "Drop files here to upload - or click",
 				success : function(data) {
 					// Get the response data
@@ -14102,10 +14229,7 @@ if (!String.prototype.ordinalize)
 			$.ajax({
 				url: Settings.getRoute() + "/flushcache",
 				type: 'GET',
-				headers: {
-					'X-Auth-Email': ciims.email,
-					'X-Auth-Token': ciims.token
-				},
+				headers: CiiMSDashboard.getRequestHeaders(),
 				beforeSend: function() {
 					$("#nav-icon").removeClass("fa-ellipsis-v");
 
@@ -14142,10 +14266,7 @@ if (!String.prototype.ordinalize)
 			$.ajax({
 				url: Settings.getRoute() + "test",
 				type: 'GET',
-				headers: {
-					'X-Auth-Email': ciims.email,
-					'X-Auth-Token': ciims.token
-				},
+				headers: CiiMSDashboard.getRequestHeaders(),
 				beforeSend: function() {
 					$("#nav-icon").removeClass("fa-ellipsis-v");
 
@@ -14213,10 +14334,7 @@ if (!String.prototype.ordinalize)
 				url: self.getRoute(),
 				data: self.getAttributes(),
 				type: 'POST',
-				headers: {
-					'X-Auth-Email': ciims.email,
-					'X-Auth-Token': ciims.token
-				},
+				headers: CiiMSDashboard.getRequestHeaders(),
 				beforeSend: function() {
 					$("#nav-icon").removeClass("fa-ellipsis-v");
 
@@ -14313,10 +14431,7 @@ if (!String.prototype.ordinalize)
 			$.ajax({
 				url: window.location.origin + '/api/theme/updateCheck/name/'+name,
 				type: 'GET',
-				headers: {
-					'X-Auth-Email': self.ciims.email,
-					'X-Auth-Token': self.ciims.token
-				},
+				headers: CiiMSDashboard.getRequestHeaders(),
 				success : function(data) {
 					if (data.response)
 					{
@@ -14346,10 +14461,7 @@ if (!String.prototype.ordinalize)
 			$.ajax({
 				url: window.location.origin + '/api/theme/update/name/'+name,
 				type: 'GET',
-				headers: {
-					'X-Auth-Email': self.ciims.email,
-					'X-Auth-Token': self.ciims.token
-				},
+				hheaders: CiiMSDashboard.getRequestHeaders(),
 				beforeSend : function() {
 					$(btn).hide();
 					$(btn).parent().find('.updating').show();
@@ -14376,10 +14488,7 @@ if (!String.prototype.ordinalize)
 			$.ajax({
 				url: window.location.origin + '/api/theme/changetheme/name/'+name,
 				type: 'GET',
-				headers: {
-					'X-Auth-Email': self.ciims.email,
-					'X-Auth-Token': self.ciims.token
-				},
+				headers: CiiMSDashboard.getRequestHeaders(),
 				success : function(data) {
 					var activeTheme = $(".activetheme").clone(),
 						present = $(btn).clone();
@@ -14464,10 +14573,7 @@ if (!String.prototype.ordinalize)
 			$.ajax({
 				url: window.location.origin + '/api/user',
 				type: 'POST',
-				headers: {
-					'X-Auth-Email': self.ciims.email,
-					'X-Auth-Token': self.ciims.token
-				},
+				headers: CiiMSDashboard.getRequestHeaders(),
 				data: {
 					'email': $("#RegisterForm_email").val(),
 					'password': $("#RegisterForm_password").val(),
@@ -14550,10 +14656,7 @@ if (!String.prototype.ordinalize)
 			$.ajax({
 				url: window.location.origin + '/api/user/invite',
 				type: 'POST',
-				headers: {
-					'X-Auth-Email': self.ciims.email,
-					'X-Auth-Token': self.ciims.token
-				},
+				headers: CiiMSDashboard.getRequestHeaders(),
 				data: {
 					'email': $("#InvitationForm_email").val()
 				},
@@ -14664,10 +14767,7 @@ if (!String.prototype.ordinalize)
 				$.ajax({
 					url: window.location.origin + '/api/user/index/id/' + $("#Users_id").val(),
 					type: 'POST',
-					headers: {
-						'X-Auth-Email': self.ciims.email,
-						'X-Auth-Token': self.ciims.token
-					},
+					headers: CiiMSDashboard.getRequestHeaders(),
 					data: data,
 					beforeSend: function() {
 						$("#user-form :input[type!='button']").removeClass("error");
@@ -14725,10 +14825,7 @@ if (!String.prototype.ordinalize)
 		$.ajax({
 			url: window.location.origin + '/api/user?page=' + page + (query == null ? '' : '&Users[username]='+query),
 			type: 'GET',
-			headers: {
-				'X-Auth-Email': self.ciims.email,
-				'X-Auth-Token': self.ciims.token
-			},
+			headers: CiiMSDashboard.getRequestHeaders(),
 			beforeSend: function() {
 				// Clear the results on before send, if requested
 				if (clear)

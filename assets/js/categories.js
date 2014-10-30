@@ -66,10 +66,7 @@ var Categories = {
 			$.ajax({
 				url: window.location.origin + '/api/category',
 				type: 'POST',
-				headers: {
-					'X-Auth-Email': self.ciims.email,
-					'X-Auth-Token': self.ciims.token
-				},
+				headers: CiiMSDashboard.getRequestHeaders(),
 				data: data,
 				beforeSend: function() {
 					$("#category-form :input").removeClass("error");
@@ -221,10 +218,7 @@ var Categories = {
 			$.ajax({
 				url: window.location.origin + '/api/category/' + $("#m-category-form #Categories_id").val(),
 				type: 'DELETE',
-				headers: {
-					'X-Auth-Email': self.ciims.email,
-					'X-Auth-Token': self.ciims.token
-				},
+				hheaders: CiiMSDashboard.getRequestHeaders(),
 				beforeSend: function() {
 					CiiMSDashboard.ajaxBeforeSend();
 				},
@@ -274,10 +268,7 @@ var Categories = {
 			$.ajax({
 				url: window.location.origin + '/api/category/' + $("#m-category-form #Categories_id").val(),
 				type: 'POST',
-				headers: {
-					'X-Auth-Email': self.ciims.email,
-					'X-Auth-Token': self.ciims.token
-				},
+				headers: CiiMSDashboard.getRequestHeaders(),
 				data: data,
 				beforeSend: function() {
 					$("#m-category-form :input").removeClass("error");
@@ -327,10 +318,7 @@ var Categories = {
 		$.ajax({
 			url: window.location.origin + '/api/category/index?page=' + page + (query == null ? '' : '&Categories[name]='+query),
 			type: 'GET',
-			headers: {
-				'X-Auth-Email': self.ciims.email,
-				'X-Auth-Token': self.ciims.token
-			},
+			headers: CiiMSDashboard.getRequestHeaders(),
 			beforeSend: function() {
 				// Clear the results on before send, if requested
 				if (clear)

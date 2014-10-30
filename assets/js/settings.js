@@ -24,10 +24,7 @@ var Settings = {
 			$.ajax({
 				url: Settings.getRoute() + "/flushcache",
 				type: 'GET',
-				headers: {
-					'X-Auth-Email': ciims.email,
-					'X-Auth-Token': ciims.token
-				},
+				headers: CiiMSDashboard.getRequestHeaders(),
 				beforeSend: function() {
 					$("#nav-icon").removeClass("fa-ellipsis-v");
 
@@ -64,10 +61,7 @@ var Settings = {
 			$.ajax({
 				url: Settings.getRoute() + "test",
 				type: 'GET',
-				headers: {
-					'X-Auth-Email': ciims.email,
-					'X-Auth-Token': ciims.token
-				},
+				headers: CiiMSDashboard.getRequestHeaders(),
 				beforeSend: function() {
 					$("#nav-icon").removeClass("fa-ellipsis-v");
 
@@ -135,10 +129,7 @@ var Settings = {
 				url: self.getRoute(),
 				data: self.getAttributes(),
 				type: 'POST',
-				headers: {
-					'X-Auth-Email': ciims.email,
-					'X-Auth-Token': ciims.token
-				},
+				headers: CiiMSDashboard.getRequestHeaders(),
 				beforeSend: function() {
 					$("#nav-icon").removeClass("fa-ellipsis-v");
 

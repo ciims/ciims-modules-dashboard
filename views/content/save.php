@@ -92,11 +92,17 @@
 				</div>
 			</div>
 		</div>
-		<div id="revisions">
+		<div class="paginated_search" id="revisions">
+			<div class="revisions_nav">
+				<span class="revisions-text" style="display:none;"><?php echo Yii::t('Dashboard.views', 'Revision: {id}'); ?></span>
+				<span class="rollback-text" style="display:none;"><?php echo Yii::t('Dashboard.views', 'Rolling back to revision {id} will erase any autosave drafts. Are you sure you want to rollback to this revision?'); ?></span>
+				<a href="#" class="details-back-button">
+					<span class="fa fa-chevron-left"></span><?php echo Yii::t('Dashboard.views', ' View Details'); ?>
+				</a>
+			</div>
 			<div class="nano">
 				<div class="nano-content">
-					<ul>
-					</ul>
+					<ul></ul>
 				</div>
 			</div>
 		</div>

@@ -112,10 +112,7 @@ var Content = {
 		$.ajax({
 			url: window.location.origin + '/api/event/count',
 			type: 'POST',
-			headers: {
-				'X-Auth-Email': self.ciims.email,
-				'X-Auth-Token': self.ciims.token
-			},
+			headers: CiiMSDashboard.getRequestHeaders(),
 			data : { "ids": these },
 			success: function(data, textStatus, jqXHR) {
 				for (var id in data.response)
@@ -300,10 +297,7 @@ var Content = {
 			        $.ajax({
 						url: window.location.origin + '/api/content/' + id,
 						type: 'DELETE',
-						headers: {
-							'X-Auth-Email': self.ciims.email,
-							'X-Auth-Token': self.ciims.token
-						},
+						headers: CiiMSDashboard.getRequestHeaders(),
 						beforeSend: function() {
 							CiiMSDashboard.ajaxBeforeSend();
 						},
@@ -411,10 +405,7 @@ var Content = {
 			$.ajax({
 				url: window.location.origin + '/api/content/' + $("#m-content-form #content_id").val(),
 				type: 'DELETE',
-				headers: {
-					'X-Auth-Email': self.ciims.email,
-					'X-Auth-Token': self.ciims.token
-				},
+				headers: CiiMSDashboard.getRequestHeaders(),
 				beforeSend: function() {
 					CiiMSDashboard.ajaxBeforeSend();
 				},

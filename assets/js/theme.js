@@ -34,10 +34,7 @@ var Theme = {
 			$.ajax({
 				url: window.location.origin + '/api/theme/updateCheck/name/'+name,
 				type: 'GET',
-				headers: {
-					'X-Auth-Email': self.ciims.email,
-					'X-Auth-Token': self.ciims.token
-				},
+				headers: CiiMSDashboard.getRequestHeaders(),
 				success : function(data) {
 					if (data.response)
 					{
@@ -67,10 +64,7 @@ var Theme = {
 			$.ajax({
 				url: window.location.origin + '/api/theme/update/name/'+name,
 				type: 'GET',
-				headers: {
-					'X-Auth-Email': self.ciims.email,
-					'X-Auth-Token': self.ciims.token
-				},
+				hheaders: CiiMSDashboard.getRequestHeaders(),
 				beforeSend : function() {
 					$(btn).hide();
 					$(btn).parent().find('.updating').show();
@@ -97,10 +91,7 @@ var Theme = {
 			$.ajax({
 				url: window.location.origin + '/api/theme/changetheme/name/'+name,
 				type: 'GET',
-				headers: {
-					'X-Auth-Email': self.ciims.email,
-					'X-Auth-Token': self.ciims.token
-				},
+				headers: CiiMSDashboard.getRequestHeaders(),
 				success : function(data) {
 					var activeTheme = $(".activetheme").clone(),
 						present = $(btn).clone();

@@ -5944,6 +5944,11 @@ section.paginated_results #editor-sidebar .content-sidebar-container .content-ac
 	float: right;
 }
 
+section.paginated_results #editor-sidebar .content-sidebar-container .content-actions .publish-button .child-el {
+	border-right: none;
+	width: 87%;
+}
+
 section.paginated_results #editor-sidebar .content-sidebar-container .content-actions div a#publish:after {
 	font-family: "FontAwesome";
 	content: "\f0ee";
@@ -6030,6 +6035,28 @@ section.paginated_results #editor-sidebar .content-sidebar-container .advanced-o
 	position: relative;
 	top: 5px;
 	padding: 2px 0px!important;
+}
+
+/*****************************/
+
+section.paginated_results .paginated_search#revisions {
+	display: none;
+}
+
+section.paginated_results .paginated_search#revisions .revisions_nav {
+	color: #2d2d2d;
+	font-size: 12px;
+	text-transform: uppercase;
+	width: 100%;
+	font-weight: bold;
+	height: 30px;
+	margin-top: 10px;
+}
+
+section.paginated_results .paginated_search#revisions .revisions_nav a {
+	text-decoration: none;
+	color: #2d2d2d;
+	margin-left: 9px;
 }
 
 /*****************************/
@@ -6960,7 +6987,8 @@ section.paginated_results ul li.Publisher {
 	border-right: 3px solid rgb(202, 60, 60);
 }
 
-section.paginated_results ul li.Collaborator {
+section.paginated_results ul li.Collaborator,
+section.paginated_results ul li.active {
 	border-right: 3px solid rgb(66, 184, 221);
 }
 
@@ -7019,6 +7047,10 @@ section.paginated_results ul li div.icons {
 	position: relative;
 	top: 5px;
 	margin-top: 7px;
+}
+
+section.paginated_results ul li div.icons.icons-no-text {
+	width: auto !important;
 }
 
 section.paginated_results ul li div.icons .likes-container,

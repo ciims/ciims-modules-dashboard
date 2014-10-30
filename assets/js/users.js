@@ -67,10 +67,7 @@ var Users = {
 			$.ajax({
 				url: window.location.origin + '/api/user',
 				type: 'POST',
-				headers: {
-					'X-Auth-Email': self.ciims.email,
-					'X-Auth-Token': self.ciims.token
-				},
+				headers: CiiMSDashboard.getRequestHeaders(),
 				data: {
 					'email': $("#RegisterForm_email").val(),
 					'password': $("#RegisterForm_password").val(),
@@ -153,10 +150,7 @@ var Users = {
 			$.ajax({
 				url: window.location.origin + '/api/user/invite',
 				type: 'POST',
-				headers: {
-					'X-Auth-Email': self.ciims.email,
-					'X-Auth-Token': self.ciims.token
-				},
+				headers: CiiMSDashboard.getRequestHeaders(),
 				data: {
 					'email': $("#InvitationForm_email").val()
 				},
@@ -267,10 +261,7 @@ var Users = {
 				$.ajax({
 					url: window.location.origin + '/api/user/index/id/' + $("#Users_id").val(),
 					type: 'POST',
-					headers: {
-						'X-Auth-Email': self.ciims.email,
-						'X-Auth-Token': self.ciims.token
-					},
+					headers: CiiMSDashboard.getRequestHeaders(),
 					data: data,
 					beforeSend: function() {
 						$("#user-form :input[type!='button']").removeClass("error");
@@ -328,10 +319,7 @@ var Users = {
 		$.ajax({
 			url: window.location.origin + '/api/user?page=' + page + (query == null ? '' : '&Users[username]='+query),
 			type: 'GET',
-			headers: {
-				'X-Auth-Email': self.ciims.email,
-				'X-Auth-Token': self.ciims.token
-			},
+			headers: CiiMSDashboard.getRequestHeaders(),
 			beforeSend: function() {
 				// Clear the results on before send, if requested
 				if (clear)

@@ -13,7 +13,7 @@ class DashboardModule extends CWebModule
 
         foreach(Yii::app()->log->routes as $k=>$v)
         {
-            if (get_class($v) == 'CWebLogRoute')
+            if (get_class($v) == 'CWebLogRoute' || get_class($v) == "CProfileLogRoute")
                 Yii::app()->log->routes[$k]->enabled = false; 
         }
       
