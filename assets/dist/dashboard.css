@@ -5770,8 +5770,6 @@ main .dashboard-cards > div:not(.modal) {
     box-shadow: rgba(0,0,0, 0.1) 0px 0px 5px;
     -moz-box-shadow: rgba(0,0,0, 0.1) 0px 0px 5px;
     -webkit-box-shadow: rgba(0,0,0, 0.1) 0px 0px 5px;
-    height: 230px;
-    width: 230px;
 }
 
 main .dashboard-cards .ss-placeholder-child {
@@ -5779,6 +5777,78 @@ main .dashboard-cards .ss-placeholder-child {
     border: 1px dashed rgba(0,0,0,0.2) !important;
 }
 
+main .dashboard-cards .square {
+    height: 230px;
+    width: 230px;
+}
+
+main .dashboard-cards .rectangle {
+    height: 230px;
+    width: 480px;
+}
+
+main .dashboard-cards .rectangleTall {
+    height: 480px;
+    width: 230px;
+}
+
+main .dashboard-cards .squareBig {
+    height: 480px;
+    width: 480px;
+}
+
+main .dashboard-cards .footer {
+    height: 15%; 
+    border-top: 1px solid #eee;
+}
+
+main .dashboard-cards .body {
+    height:85%;
+}
+
+main .dashboard-cards .rectangleTall .body,
+main .dashboard-cards .squareBig .body {
+    height: 93% !important;
+}
+
+main .dashboard-cards .footer .footer-text {
+    color: #999;
+    border-left: 1px solid #eee;
+    position: relative;
+    padding: 10px;
+    height: 100%;
+    width: 10px;
+}
+
+main .dashboard-cards .footer .footer-text {
+    border-left: 0;
+    font-size: 10px;
+    letter-spacing: 1px;
+    font-family: 'Open Sans';
+    padding-top: 5px;
+    padding-left: 15px;
+    margin-top: 3px;
+    text-transform: uppercase;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    height: 10px;
+    width: 57%;
+    max-width: 57%;
+    float: left;
+}
+
+main .dashboard-cards .footer .fa {
+    color: #999;
+    border-left: 1px solid #eee;
+    position: relative;
+    padding: 10px;
+    height: 100%;
+    width: 10px;
+    float: right;
+    margin-right: 5px;
+}
+   
 main .shader {
     position: fixed;
     top: 0;
