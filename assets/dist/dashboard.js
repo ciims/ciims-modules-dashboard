@@ -11896,7 +11896,6 @@ Array.prototype.remove = function(from, to) {
 
 		// Register the CSS to be applied to the card
 		this.registerScript('css');
-		this.registerScript('js', 'init');
 
 		// Generate the markup
 		var markup = $(defaultCardMarkup[this.options.size]).clone(),
@@ -12023,6 +12022,8 @@ Array.prototype.remove = function(from, to) {
 		// Set the default tile size if one was not provided
 		if (this.options.size == null)
 			this.options.size = this.options.availableTileSizes[0];
+
+		this.registerScript('js', 'init');
 	};
 
 	// Export the object to the global namespace
