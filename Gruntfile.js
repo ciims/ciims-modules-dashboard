@@ -130,6 +130,7 @@ module.exports = function(grunt) {
                     '<%= paths.lib %>/jquery.tagsinput/jquery.tagsinput.min.js',
                     '<%= paths.lib %>/datetimepicker/jquery.datetimepicker.js',
                     '<%= paths.lib %>/shapeshift/core/jquery.shapeshift.min.js',
+                    '<%= paths.lib %>/jquery-getCSS/index.js',
                     '<%= paths.js %>/*'
                 ],
                 dest: '<%= paths.dist %>/dashboard.js'

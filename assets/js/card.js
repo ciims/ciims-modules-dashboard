@@ -12,6 +12,8 @@
 	 */
 	Card.prototype.defaultOptions = {
 		id: null,
+		name: null,
+		version: null,
 		footerText: "",
 		properties: {},
 		size: null,
@@ -19,21 +21,7 @@
 		css: null,
 		js: null,
 		html: null,
-		init: function(options, callback) { return; }
 	};
-
-	/**
-	 * Initializes a card
-	 */
-	Card.prototype.init = function(options, callback) {
-		if (typeof options == "undefined")
-			options = {};
-
-		if (typeof callback == "undefined")
-			callback = function() { return; }
-
-		this.options.init(options, callback);
-	}
 	
 	/**
 	 * Resizes a card, based upon it's available options
@@ -118,8 +106,9 @@
 			return;
 		}
 
-		// Initialize the card
-		this.init();
+		// Register the CSS to be applied to the card
+		this.registerScript('css');
+		this.registerScript('js', 'init');
 
 		// Generate the markup
 		var markup = $(defaultCardMarkup[this.options.size]).clone(),
@@ -127,7 +116,9 @@
 			footer = $("<div>").addClass("footer"),
 			footerText = $("<span>").addClass("footer-text").text(this.options.footerText),
 			bindResize = false,
-			bindSettings = false;
+			bindSettings = false,
+			cardClass = this.options.name.toLowerCase()+"-"+this.options.version.replace(/\./g, "-"),
+			self = this;
 
 		$(footer).append($(footerText));
 
@@ -148,14 +139,65 @@
 		}
 
 		$(markup).attr("id", this.id);
-		$(markup).append($(body)).append($(footer));
+		$(markup).addClass(cardClass);
 
-		// Apply it to the dashboard, then trigger a dashboard rebuild
-		$(".dashboard-cards").append($(markup));
-		this.rebuild();
-		this.bindEventListeners(this.id, { "resize": bindResize, "settings": bindSettings });
+		// Load the card markup and apply it to the body
+		$.get(this.options.basePath+"/card.html", function(data) {
+			$(body).html(data);
+			
+			$(markup).append($(body)).append($(footer));
+
+			// Apply it to the dashboard, then trigger a dashboard rebuild
+			$(".dashboard-cards").append($(markup));
+			self.rebuild();
+			self.bindEventListeners(self.id, { "resize": bindResize, "settings": bindSettings });
+			// Bind the JS
+			self.registerScript('js', 'render');
+		}).fail(function() {
+			// Wipe this object
+			window.cards[self.options.id] = null;
+			console.log("Card markup failed to load, aborting rendering");
+			return;
+		});
 	};
 
+	/**
+	 * Registers the cSS or JS file to the DOM
+	 * @param  string 	type 	the type of script to bind to the DOM
+	 */
+	Card.prototype.registerScript = function(type, e)
+	{
+		var self = this,
+			e = typeof e == "undefined" ? null : e,
+			jsCardClass = self.options.name;
+
+		if (type == "js")
+		{
+			$.ajaxSetup({ cache: true });
+			$.getScript(this.options.basePath+"/card.js", function() {
+				$.ajaxSetup({ cache: false });
+
+				if (e == null)
+					return;
+
+				if (typeof window.cardObjects == "undefined")
+					window.cardObjects = {};
+
+				if (typeof window.cardObjects[self.id] == "undefined")
+				{
+					var element = new window[jsCardClass]();
+					window.cardObjects[self.id] = element;
+				}
+				else 
+					var element = window.cardObjects[self.id];
+
+				element[e]();
+				
+			});
+		}
+		else if (type == "css")
+			$.getCSS(this.options.basePath+"/card.css");
+	}
 
 	/**
 	 * Constructor
@@ -164,6 +206,18 @@
 		// Populate the options for the card object
 		this.options = $.extend({}, this.defaultOptions, opts);
 		this.id = this.options.id;
+
+		if (this.options.name == null)
+		{
+			console.log("Card instantiated without name! Card will not be rendered");
+			return;
+		}
+
+		if (this.options.version == null)
+		{
+			console.log("Card instantiated without version number! Card will not be rendered");
+			return;
+		}
 
 		if (this.id == null)
 		{
@@ -184,10 +238,9 @@
 	};
 
 	// Export the object to the global namespace
-	if (typeof module !== "undefined" && module !== null) {
+	if (typeof module !== "undefined" && module !== null)
     	module.exports = Card;
-  	} else {
+  	else
     	window.Card = Card;
-  	}
 
 }(this));

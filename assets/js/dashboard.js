@@ -18,7 +18,8 @@ var Dashboard = {
 
 		// Iterate through all the cards in the database, and populate them
 		$.each(self.cards, function(id, url) {
-			$.getJSON(url, function(data) {
+			$.getJSON(url + "/card.json", function(data) {
+				data.basePath = url;
 				data.id = id;
 
 				// Set the card properties if they are provided
