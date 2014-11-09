@@ -11842,6 +11842,20 @@ Array.prototype.remove = function(from, to) {
 
 		// Set the next tile name then trigger a rebuild so the card's resize can take place
 		this.options.size = nextTileName;
+
+		// Save the resize data
+		$.ajax({
+			url: window.location.origin + '/api/card/details/id/'+this.id,
+			type: 'POST',
+			headers: CiiMSDashboard.getRequestHeaders(),
+			beforeSend: CiiMSDashboard.ajaxBeforeSend(),
+			data: {
+				"size": this.options.size,
+				"properties": this.options.properties
+			},
+			completed: CiiMSDashboard.ajaxCompleted()
+		});
+
 		this.rebuild();
 	}
 
@@ -13102,6 +13116,26 @@ Array.prototype.remove = function(from, to) {
 		if (typeof window.cards == "undefined")
 			window.cards = {};
 
+		$.ajax({
+			url: window.location.origin + '/api/card',
+			type: 'GET',
+			headers: CiiMSDashboard.getRequestHeaders(),
+			beforeSend: CiiMSDashboard.ajaxBeforeSend(),
+			success: function(data, textStatus, jqXHR) {
+				self.cards = data.response.cards;
+				self.cardData = data.response.cardData;
+				self.renderCards();
+			},
+			completed: CiiMSDashboard.ajaxCompleted()
+		});
+	},
+
+	/**
+	 * Success callback for the card-renderer
+	 */
+	renderCards: function() {
+		var self = this;
+
 		// Iterate through all the cards in the database, and populate them
 		$.each(self.cards, function(id, url) {
 			$.getJSON(url + "/card.json", function(data) {
@@ -13111,11 +13145,12 @@ Array.prototype.remove = function(from, to) {
 				// Set the card properties if they are provided
 				if (self.cardData[id] != null)
 				{
-					$.each(self.cardData[id], function(key, val) {
+					data.size = self.cardData[id].size;
+					$.each(self.cardData[id].properties, function(key, val) {
 						data.properties[key].value = val;
 					});
 				}
-
+				
 				// Add this card to the global cards object container
 				window.cards[id] = new Card(data);
 				window.cards[id].render();

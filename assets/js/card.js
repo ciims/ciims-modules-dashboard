@@ -54,6 +54,20 @@
 
 		// Set the next tile name then trigger a rebuild so the card's resize can take place
 		this.options.size = nextTileName;
+
+		// Save the resize data
+		$.ajax({
+			url: window.location.origin + '/api/card/details/id/'+this.id,
+			type: 'POST',
+			headers: CiiMSDashboard.getRequestHeaders(),
+			beforeSend: CiiMSDashboard.ajaxBeforeSend(),
+			data: {
+				"size": this.options.size,
+				"properties": this.options.properties
+			},
+			completed: CiiMSDashboard.ajaxCompleted()
+		});
+
 		this.rebuild();
 	}
 
