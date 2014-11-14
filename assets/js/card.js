@@ -299,7 +299,7 @@
 
 				if (typeof window.cardObjects[self.id] == "undefined")
 				{
-					var element = new window[jsCardClass]();
+					var element = window[jsCardClass];
 					window.cardObjects[self.id] = element;
 				}
 				else 
