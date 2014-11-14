@@ -11834,12 +11834,11 @@ Array.prototype.remove = function(from, to) {
 		var nextTileName = self.options.availableTileSizes[(currentTileIndex+1)];
 
 		// Add the colspan
-		if ($(el).hasClass("square") || $(el).hasClass("rectangle-tall"))
-			$(el).removeAttr("data-ss-colspan");
+		$(el).removeClass(currentTileName).addClass(nextTileName);
+		if (nextTileName == "square" || nextTileName == "rectangleTall")
+			$(el).attr("data-ss-colspan", "1");
 		else
 			$(el).attr("data-ss-colspan", "2");
-
-		$(el).removeClass(currentTileName).addClass(nextTileName);
 
 		// Set the next tile name then trigger a rebuild so the card's resize can take place
 		self.options.size = nextTileName;
