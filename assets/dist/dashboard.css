@@ -5759,8 +5759,10 @@ section#analytics-sidebar label {
 main .dashboard-cards {
     position: relative;
     max-width: 100%;
-    margin: 0 5%;
-    margin-top: 10px;
+    height: 100% !important;
+    margin-left: 3%;
+    margin-right: 3%;
+    margin-top: 1%;
 }
 
 main .dashboard-cards > div:not(.modal) {
@@ -5858,6 +5860,64 @@ main .shader {
     z-index: 1;
     background-color: rgba(0,0,0,0.5);
     display:none;
+}
+
+main .settings-sidebar {
+    width: 300px;
+    height: 100%;
+    right: -300px;
+    top: 39px;
+    overflow-y: hidden;
+    background: #fff;
+    border: 1px solid rgba(0,0,0, 0.1);
+    position: absolute;
+    box-shadow: rgba(0,0,0, 0.1) 0px 0px 5px;
+    -moz-box-shadow: rgba(0,0,0, 0.1) 0px 0px 5px;
+    -webkit-box-shadow: rgba(0,0,0, 0.1) 0px 0px 5px;
+    transition: .3s;
+    z-index: -10;
+}
+
+main .settings-sidebar.visible {
+    transition: .3s;
+    right: 0px;
+    z-index: 10;
+}
+
+main .settings-sidebar h2 {
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 25px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+main .settings-sidebar form {
+    margin-top: 15px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+main .settings-sidebar form div {
+    margin: 0 auto;
+    max-width: 215px;
+}
+
+main .settings-sidebar form label {
+    font-size: 12px;
+}
+
+main .settings-sidebar form input {
+    margin: 0;
+    width: 100%;
+}
+
+main .settings-sidebar a#submit-card-button {
+    margin-top: 15px;
+    display: block !important;
+    margin: 0 auto;
+    text-align: center;
+    width: 195px;
 }
 #content_form {
 	height: 100%;

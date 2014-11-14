@@ -11817,7 +11817,8 @@ Array.prototype.remove = function(from, to) {
 	Card.prototype.resize = function() {
 
 		// Retrieve information about the current tileset
-		var  el = "#"+this.id,
+		var self = this,
+		    el = "#"+this.id,
 			numberOfTiles = this.options.availableTileSizes.length,
 			currentTileName = this.options.size,
 			currentTileIndex = this.options.availableTileSizes.indexOf(currentTileName);
@@ -11830,7 +11831,7 @@ Array.prototype.remove = function(from, to) {
 		if (currentTileIndex+1 >= numberOfTiles)
 			currentTileIndex = -1;
 
-		var nextTileName = this.options.availableTileSizes[(currentTileIndex+1)];
+		var nextTileName = self.options.availableTileSizes[(currentTileIndex+1)];
 
 		// Add the colspan
 		if ($(el).hasClass("square") || $(el).hasClass("rectangle-tall"))
@@ -11841,22 +11842,22 @@ Array.prototype.remove = function(from, to) {
 		$(el).removeClass(currentTileName).addClass(nextTileName);
 
 		// Set the next tile name then trigger a rebuild so the card's resize can take place
-		this.options.size = nextTileName;
+		self.options.size = nextTileName;
 
 		// Save the resize data
 		$.ajax({
-			url: window.location.origin + '/api/card/details/id/'+this.id,
+			url: window.location.origin + '/api/card/details/id/'+self.id,
 			type: 'POST',
 			headers: CiiMSDashboard.getRequestHeaders(),
 			beforeSend: CiiMSDashboard.ajaxBeforeSend(),
 			data: {
-				"size": this.options.size,
-				"properties": this.options.properties
+				"size": self.options.size,
+				"properties": self.options.properties
 			},
 			completed: CiiMSDashboard.ajaxCompleted()
 		});
 
-		this.rebuild();
+		self.rebuild();
 	}
 
 	/**
@@ -11892,9 +11893,86 @@ Array.prototype.remove = function(from, to) {
 		if (bind.settings)
 		{
 			$("#" + id + " #card-settings-button").click(function() {
-				console.log("settings");
+				self.settings();
 			});
 		}
+	}
+
+	/**
+	 * Populates the settings container with the appropriate details
+	 */
+	Card.prototype.settings = function() {
+		var self = this,
+			element = $(".settings-sidebar"),
+			cCardID = $(element).attr("card-id");
+		
+		// If the sidebar is bound to the current card ID, then just toggle the visible class on and off for the sliding animation.
+		if (cCardID == self.options.id)
+		{
+			$(element).toggleClass("visible");
+			return;
+		}
+
+		// Hide the sidebar, empty it, and remove the card-id
+		$(element).removeClass("visible").empty().attr("card-id", self.options.id);
+
+		// Create some other variables
+		var settingsText = $("#settings-text").text()
+			h2 = $("<h2>").text(settingsText.replace("{cardname}", self.options.name)),
+			form = $("<form>").addClass("pure-form pure-form-stacked"),
+			submit = $("#submit-card-button").clone().show();
+
+		// Append the form
+		$.each(self.options.properties, function(name, opts) {
+			var label = $("<label>").attr("for", name).addClass("input-group").text(opts.name),
+				input = $("<input>").attr("type", opts.type).attr("value", opts.val).attr("name", name);
+				group = $("<div>").addClass("pure-control-group").append($(label)).append($(input));
+
+			$(form).append($(group));
+		});
+
+		// Append the elements to the sidebar, then display it.
+		$(element).append($(h2)).append($(form)).append($(submit)).addClass("visible");
+
+		// Bind the click behavior to the button
+		$(".settings-sidebar #submit-card-button").click(function() {
+			var formData = {},
+				hasErrors = false,
+				newProperties = self.options.properties;
+
+			$(".settings-sidebar form input").each(function() {
+				newProperties[$(this).attr("name")].val = $(this).val();
+				$(this).removeClass("error");
+				if (!$(this).context.validity.valid)
+				{
+					$(this).addClass("error");
+					hasErrors = true;
+				}
+			});
+
+			// Abort the submission if there are errors with this post
+			if (hasErrors)
+				return;
+
+			// Apply the changes locally
+			self.options.properties = newProperties;
+
+			// Save the resize data
+			$.ajax({
+				url: window.location.origin + '/api/card/details/id/'+self.id,
+				type: 'POST',
+				headers: CiiMSDashboard.getRequestHeaders(),
+				beforeSend: CiiMSDashboard.ajaxBeforeSend(),
+				data: {
+					"size": self.options.size,
+					"properties": self.options.properties
+				},
+				completed: CiiMSDashboard.ajaxCompleted()
+			});
+
+			self.registerScript('js', 'reload');
+
+		});
 	}
 
 	/**
@@ -13146,8 +13224,8 @@ Array.prototype.remove = function(from, to) {
 				if (self.cardData[id] != null)
 				{
 					data.size = self.cardData[id].size;
-					$.each(self.cardData[id].properties, function(key, val) {
-						data.properties[key].value = val;
+					$.each(self.cardData[id].properties, function(key, obj) {
+						data.properties[key].val = obj.val;
 					});
 				}
 				

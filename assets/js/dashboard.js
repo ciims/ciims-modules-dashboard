@@ -46,8 +46,8 @@ var Dashboard = {
 				if (self.cardData[id] != null)
 				{
 					data.size = self.cardData[id].size;
-					$.each(self.cardData[id].properties, function(key, val) {
-						data.properties[key].value = val;
+					$.each(self.cardData[id].properties, function(key, obj) {
+						data.properties[key].val = obj.val;
 					});
 				}
 				
