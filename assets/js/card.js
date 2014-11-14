@@ -105,9 +105,16 @@
 		if (bind.settings)
 		{
 			$("#" + id + " #card-settings-button").click(function() {
+				$(".shader").show();
 				self.settings();
 			});
 		}
+
+		// Hide the shader and dismiss the sidebar
+		$(".shader").click(function() {
+			$(this).hide();
+			$(".settings-sidebar").removeClass("visible");
+		});
 	}
 
 	/**
@@ -117,11 +124,16 @@
 		var self = this,
 			element = $(".settings-sidebar"),
 			cCardID = $(element).attr("card-id");
-		
+
 		// If the sidebar is bound to the current card ID, then just toggle the visible class on and off for the sliding animation.
 		if (cCardID == self.options.id)
 		{
 			$(element).toggleClass("visible");
+			if ($(element).hasClass("visible"))
+				$(".shader").show();
+			else
+				$(".shader").hide();
+
 			return;
 		}
 
@@ -179,10 +191,22 @@
 					"size": self.options.size,
 					"properties": self.options.properties
 				},
+				success: function() {
+					$(".shader").hide();
+					$(".settings-sidebar").removeClass("visible");
+					self.registerScript('js', 'reload');
+				},
+				error: function() {
+					// either the Ajax failed, or something broke in the script.
+					$(".settings-sidebar form input").each(function() {
+						$(this).addClass("error");
+					});
+
+					// Rebuild the dashboard
+					self.rebuild();
+				},
 				completed: CiiMSDashboard.ajaxCompleted()
 			});
-
-			self.registerScript('js', 'reload');
 
 		});
 	}

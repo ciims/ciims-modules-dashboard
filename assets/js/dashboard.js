@@ -28,6 +28,39 @@ var Dashboard = {
 			},
 			completed: CiiMSDashboard.ajaxCompleted()
 		});
+
+		self.rearrange();
+	},
+
+	/**
+	 * HAndles the re-arrangement
+	 */
+	rearrange: function() {
+		var self = this;
+
+		$(".dashboard-cards").on("ss-rearranged", function() {
+        	var cards = {};
+        	$(".dashboard-cards > .ss-active-child").each(function() {
+        		var id = $(this).attr("id");
+        		cards[id] = self.cards[id];
+        	});
+
+        	// Card re-arrangement didn't happen
+        	if (JSON.stringify(cards) == JSON.stringify(self.cards))
+        		return;
+
+        	$.ajax({
+				url: window.location.origin + '/api/card/rearrange',
+				type: 'POST',
+				data: { "cards": cards },
+				headers: CiiMSDashboard.getRequestHeaders(),
+				beforeSend: CiiMSDashboard.ajaxBeforeSend(),
+				success: function(data, textStatus, jqXHR) {
+					self.cards = cards
+				},
+				completed: CiiMSDashboard.ajaxCompleted()
+			});
+        })
 	},
 
 	/**

@@ -11893,9 +11893,16 @@ Array.prototype.remove = function(from, to) {
 		if (bind.settings)
 		{
 			$("#" + id + " #card-settings-button").click(function() {
+				$(".shader").show();
 				self.settings();
 			});
 		}
+
+		// Hide the shader and dismiss the sidebar
+		$(".shader").click(function() {
+			$(this).hide();
+			$(".settings-sidebar").removeClass("visible");
+		});
 	}
 
 	/**
@@ -11905,11 +11912,16 @@ Array.prototype.remove = function(from, to) {
 		var self = this,
 			element = $(".settings-sidebar"),
 			cCardID = $(element).attr("card-id");
-		
+
 		// If the sidebar is bound to the current card ID, then just toggle the visible class on and off for the sliding animation.
 		if (cCardID == self.options.id)
 		{
 			$(element).toggleClass("visible");
+			if ($(element).hasClass("visible"))
+				$(".shader").show();
+			else
+				$(".shader").hide();
+
 			return;
 		}
 
@@ -11967,10 +11979,22 @@ Array.prototype.remove = function(from, to) {
 					"size": self.options.size,
 					"properties": self.options.properties
 				},
+				success: function() {
+					$(".shader").hide();
+					$(".settings-sidebar").removeClass("visible");
+					self.registerScript('js', 'reload');
+				},
+				error: function() {
+					// either the Ajax failed, or something broke in the script.
+					$(".settings-sidebar form input").each(function() {
+						$(this).addClass("error");
+					});
+
+					// Rebuild the dashboard
+					self.rebuild();
+				},
 				completed: CiiMSDashboard.ajaxCompleted()
 			});
-
-			self.registerScript('js', 'reload');
 
 		});
 	}
@@ -13206,6 +13230,39 @@ Array.prototype.remove = function(from, to) {
 			},
 			completed: CiiMSDashboard.ajaxCompleted()
 		});
+
+		self.rearrange();
+	},
+
+	/**
+	 * HAndles the re-arrangement
+	 */
+	rearrange: function() {
+		var self = this;
+
+		$(".dashboard-cards").on("ss-rearranged", function() {
+        	var cards = {};
+        	$(".dashboard-cards > .ss-active-child").each(function() {
+        		var id = $(this).attr("id");
+        		cards[id] = self.cards[id];
+        	});
+
+        	// Card re-arrangement didn't happen
+        	if (JSON.stringify(cards) == JSON.stringify(self.cards))
+        		return;
+
+        	$.ajax({
+				url: window.location.origin + '/api/card/rearrange',
+				type: 'POST',
+				data: { "cards": cards },
+				headers: CiiMSDashboard.getRequestHeaders(),
+				beforeSend: CiiMSDashboard.ajaxBeforeSend(),
+				success: function(data, textStatus, jqXHR) {
+					self.cards = cards
+				},
+				completed: CiiMSDashboard.ajaxCompleted()
+			});
+        })
 	},
 
 	/**
