@@ -11890,7 +11890,8 @@ Array.prototype.remove = function(from, to) {
 		    el = "#"+this.id,
 			numberOfTiles = this.options.availableTileSizes.length,
 			currentTileName = this.options.size,
-			currentTileIndex = this.options.availableTileSizes.indexOf(currentTileName);
+			currentTileIndex = this.options.availableTileSizes.indexOf(currentTileName),
+			properties = {};
 
 		// Something went wrong - abort
 		if (currentTileIndex == -1)
@@ -11912,6 +11913,10 @@ Array.prototype.remove = function(from, to) {
 		// Set the next tile name then trigger a rebuild so the card's resize can take place
 		self.options.size = nextTileName;
 
+		$.each(self.options.properties, function(key, obj) {
+			properties[key] = obj.value;
+		});
+
 		// Save the resize data
 		$.ajax({
 			url: window.location.origin + '/api/card/details/id/'+self.id,
@@ -11920,7 +11925,7 @@ Array.prototype.remove = function(from, to) {
 			beforeSend: CiiMSDashboard.ajaxBeforeSend(),
 			data: {
 				"size": self.options.size,
-				"properties": self.options.properties
+				"properties": properties
 			},
 			completed: CiiMSDashboard.ajaxCompleted()
 		});
@@ -11979,7 +11984,8 @@ Array.prototype.remove = function(from, to) {
 	Card.prototype.settings = function() {
 		var self = this,
 			element = $(".settings-sidebar"),
-			cCardID = $(element).attr("card-id");
+			cCardID = $(element).attr("card-id"),
+			properties = {};
 
 		// If the sidebar is bound to the current card ID, then just toggle the visible class on and off for the sliding animation.
 		if (cCardID == self.options.id)
@@ -12005,7 +12011,7 @@ Array.prototype.remove = function(from, to) {
 		// Append the form
 		$.each(self.options.properties, function(name, opts) {
 			var label = $("<label>").attr("for", name).addClass("input-group").text(opts.name),
-				input = $("<input>").attr("type", opts.type).attr("value", opts.val).attr("name", name);
+				input = $("<input>").attr("type", opts.type).attr("value", opts.value).attr("name", name);
 				group = $("<div>").addClass("pure-control-group").append($(label)).append($(input));
 
 			$(form).append($(group));
@@ -12021,7 +12027,7 @@ Array.prototype.remove = function(from, to) {
 				newProperties = self.options.properties;
 
 			$(".settings-sidebar form input").each(function() {
-				newProperties[$(this).attr("name")].val = $(this).val();
+				newProperties[$(this).attr("name")].value = $(this).val();
 				$(this).removeClass("error");
 				if (!$(this).context.validity.valid)
 				{
@@ -12037,6 +12043,10 @@ Array.prototype.remove = function(from, to) {
 			// Apply the changes locally
 			self.options.properties = newProperties;
 
+			$.each(newProperties, function(key, obj) {
+				properties[key] = obj.value;
+			});
+
 			// Save the resize data
 			$.ajax({
 				url: window.location.origin + '/api/card/details/id/'+self.id,
@@ -12045,7 +12055,7 @@ Array.prototype.remove = function(from, to) {
 				beforeSend: CiiMSDashboard.ajaxBeforeSend(),
 				data: {
 					"size": self.options.size,
-					"properties": self.options.properties
+					"properties": properties
 				},
 				success: function() {
 					$(".shader").hide();
@@ -13341,7 +13351,9 @@ Array.prototype.remove = function(from, to) {
 
 		// Iterate through all the cards in the database, and populate them
 		$.each(self.cards, function(id, url) {
+			$.ajaxSetup({ cache: true });
 			$.getJSON(url + "/card.json", function(data) {
+				$.ajaxSetup({ cache: false });
 				data.basePath = url;
 				data.id = id;
 
@@ -13350,10 +13362,10 @@ Array.prototype.remove = function(from, to) {
 				{
 					data.size = self.cardData[id].size;
 					$.each(self.cardData[id].properties, function(key, obj) {
-						data.properties[key].val = obj.val;
+						data.properties[key].value = obj;
 					});
 				}
-				
+
 				// Add this card to the global cards object container
 				window.cards[id] = new Card(data);
 				window.cards[id].render();

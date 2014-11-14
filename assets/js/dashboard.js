@@ -71,7 +71,9 @@ var Dashboard = {
 
 		// Iterate through all the cards in the database, and populate them
 		$.each(self.cards, function(id, url) {
+			$.ajaxSetup({ cache: true });
 			$.getJSON(url + "/card.json", function(data) {
+				$.ajaxSetup({ cache: false });
 				data.basePath = url;
 				data.id = id;
 
@@ -80,10 +82,10 @@ var Dashboard = {
 				{
 					data.size = self.cardData[id].size;
 					$.each(self.cardData[id].properties, function(key, obj) {
-						data.properties[key].val = obj.val;
+						data.properties[key].value = obj;
 					});
 				}
-				
+
 				// Add this card to the global cards object container
 				window.cards[id] = new Card(data);
 				window.cards[id].render();

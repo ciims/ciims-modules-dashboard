@@ -33,7 +33,8 @@
 		    el = "#"+this.id,
 			numberOfTiles = this.options.availableTileSizes.length,
 			currentTileName = this.options.size,
-			currentTileIndex = this.options.availableTileSizes.indexOf(currentTileName);
+			currentTileIndex = this.options.availableTileSizes.indexOf(currentTileName),
+			properties = {};
 
 		// Something went wrong - abort
 		if (currentTileIndex == -1)
@@ -55,6 +56,10 @@
 		// Set the next tile name then trigger a rebuild so the card's resize can take place
 		self.options.size = nextTileName;
 
+		$.each(self.options.properties, function(key, obj) {
+			properties[key] = obj.value;
+		});
+
 		// Save the resize data
 		$.ajax({
 			url: window.location.origin + '/api/card/details/id/'+self.id,
@@ -63,7 +68,7 @@
 			beforeSend: CiiMSDashboard.ajaxBeforeSend(),
 			data: {
 				"size": self.options.size,
-				"properties": self.options.properties
+				"properties": properties
 			},
 			completed: CiiMSDashboard.ajaxCompleted()
 		});
@@ -122,7 +127,8 @@
 	Card.prototype.settings = function() {
 		var self = this,
 			element = $(".settings-sidebar"),
-			cCardID = $(element).attr("card-id");
+			cCardID = $(element).attr("card-id"),
+			properties = {};
 
 		// If the sidebar is bound to the current card ID, then just toggle the visible class on and off for the sliding animation.
 		if (cCardID == self.options.id)
@@ -148,7 +154,7 @@
 		// Append the form
 		$.each(self.options.properties, function(name, opts) {
 			var label = $("<label>").attr("for", name).addClass("input-group").text(opts.name),
-				input = $("<input>").attr("type", opts.type).attr("value", opts.val).attr("name", name);
+				input = $("<input>").attr("type", opts.type).attr("value", opts.value).attr("name", name);
 				group = $("<div>").addClass("pure-control-group").append($(label)).append($(input));
 
 			$(form).append($(group));
@@ -164,7 +170,7 @@
 				newProperties = self.options.properties;
 
 			$(".settings-sidebar form input").each(function() {
-				newProperties[$(this).attr("name")].val = $(this).val();
+				newProperties[$(this).attr("name")].value = $(this).val();
 				$(this).removeClass("error");
 				if (!$(this).context.validity.valid)
 				{
@@ -180,6 +186,10 @@
 			// Apply the changes locally
 			self.options.properties = newProperties;
 
+			$.each(newProperties, function(key, obj) {
+				properties[key] = obj.value;
+			});
+
 			// Save the resize data
 			$.ajax({
 				url: window.location.origin + '/api/card/details/id/'+self.id,
@@ -188,7 +198,7 @@
 				beforeSend: CiiMSDashboard.ajaxBeforeSend(),
 				data: {
 					"size": self.options.size,
-					"properties": self.options.properties
+					"properties": properties
 				},
 				success: function() {
 					$(".shader").hide();
