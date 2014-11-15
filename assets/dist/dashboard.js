@@ -11966,14 +11966,14 @@ Array.prototype.remove = function(from, to) {
 		if (bind.settings)
 		{
 			$("#" + id + " #card-settings-button").click(function() {
-				$(".shader").show();
+				$(".shader").addClass("visible");
 				self.settings();
 			});
 		}
 
 		// Hide the shader and dismiss the sidebar
 		$(".shader").click(function() {
-			$(this).hide();
+			$(this).removeClass("visible");
 			$(".settings-sidebar").removeClass("visible");
 		});
 	}
@@ -11992,9 +11992,9 @@ Array.prototype.remove = function(from, to) {
 		{
 			$(element).toggleClass("visible");
 			if ($(element).hasClass("visible"))
-				$(".shader").show();
+				$(".shader").addClass("visible");
 			else
-				$(".shader").hide();
+				$(".shader").removeClass("visible");
 
 			return;
 		}
@@ -12058,7 +12058,7 @@ Array.prototype.remove = function(from, to) {
 					"properties": properties
 				},
 				success: function() {
-					$(".shader").hide();
+					$(".shader").removeClass("visible");
 					$(".settings-sidebar").removeClass("visible");
 					self.registerScript('js', 'reload');
 				},
@@ -13351,26 +13351,81 @@ Array.prototype.remove = function(from, to) {
 
 		// Iterate through all the cards in the database, and populate them
 		$.each(self.cards, function(id, url) {
-			$.ajaxSetup({ cache: true });
-			$.getJSON(url + "/card.json", function(data) {
-				$.ajaxSetup({ cache: false });
-				data.basePath = url;
-				data.id = id;
-
-				// Set the card properties if they are provided
-				if (self.cardData[id] != null)
-				{
-					data.size = self.cardData[id].size;
-					$.each(self.cardData[id].properties, function(key, obj) {
-						data.properties[key].value = obj;
-					});
-				}
-
-				// Add this card to the global cards object container
-				window.cards[id] = new Card(data);
-				window.cards[id].render();
-			});
+			self.renderCard(id, url);
 		});
+	},
+
+	/**
+	 * Renders a single instance of a card
+	 * @param  string   id  The card ID
+	 * @param  string   url The URL of the card
+	 */
+	renderCard: function(id, url) {
+		var self = this;
+		$.ajaxSetup({ cache: true });
+		$.getJSON(url + "/card.json", function(data) {
+			$.ajaxSetup({ cache: false });
+			data.basePath = url;
+			data.id = id;
+
+			// Set the card properties if they are provided
+			if (self.cardData[id] != null)
+			{
+				data.size = self.cardData[id].size;
+				$.each(self.cardData[id].properties, function(key, obj) {
+					data.properties[key].value = obj;
+				});
+			}
+
+			// Add this card to the global cards object container
+			window.cards[id] = new Card(data);
+			window.cards[id].render();
+		});
+	},
+
+	/**
+	 * Installs a new card
+	 * @param  {[type]} url [description]
+	 * @return {[type]}     [description]
+	 */
+	installCard: function(url) {
+		var self = this,
+			id = self.generateUniqueID();
+
+		$.ajaxSetup({ cache: true });
+		$.getJSON(url + "/card.json", function(data) {
+			$.ajaxSetup({ cache: false });
+			var properties = {};
+
+			$.each(data.properties, function(key, obj) {
+				properties[key] = obj["value"];
+			});
+
+			var details = {
+				"size": data.availableTileSizes[0],
+				"properties": properties
+			}
+
+			$.ajax({
+				url: window.location.origin + '/api/card/index',
+				type: 'POST',
+				data: {
+					"id": id,
+					"url": url,
+					"details": details
+				},
+				headers: CiiMSDashboard.getRequestHeaders(),
+				beforeSend: CiiMSDashboard.ajaxBeforeSend(),
+				success: function(data, textStatus, jqXHR) {
+					self.cards[id] = url;
+					self.cardData[id] = details;
+					self.renderCard(id, url);
+				},
+				completed: CiiMSDashboard.ajaxCompleted()
+			});
+		}).fail(function() {
+			console.log("card installation failed");
+		})
 	},
 
 	/**

@@ -109,14 +109,14 @@
 		if (bind.settings)
 		{
 			$("#" + id + " #card-settings-button").click(function() {
-				$(".shader").show();
+				$(".shader").addClass("visible");
 				self.settings();
 			});
 		}
 
 		// Hide the shader and dismiss the sidebar
 		$(".shader").click(function() {
-			$(this).hide();
+			$(this).removeClass("visible");
 			$(".settings-sidebar").removeClass("visible");
 		});
 	}
@@ -135,9 +135,9 @@
 		{
 			$(element).toggleClass("visible");
 			if ($(element).hasClass("visible"))
-				$(".shader").show();
+				$(".shader").addClass("visible");
 			else
-				$(".shader").hide();
+				$(".shader").removeClass("visible");
 
 			return;
 		}
@@ -201,7 +201,7 @@
 					"properties": properties
 				},
 				success: function() {
-					$(".shader").hide();
+					$(".shader").removeClass("visible");
 					$(".settings-sidebar").removeClass("visible");
 					self.registerScript('js', 'reload');
 				},
