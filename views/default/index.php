@@ -15,5 +15,6 @@
 <span id="settings-text" style="display:none;"><?php echo Yii::t('Dashboard.main', '{cardname} Settings'); ?></span>
 <a href="#" id="submit-card-button" class="pure-button pure-button-primary pure-button-small" style="display:none;"><?php echo Yii::t('Dashboard.main', 'Submit Card Changes'); ?></a>
 <a href="#" id="card-install-button" class="pure-button pure-button-primary pure-button-small" style="float:right; display:none;"><?php echo Yii::t('Dashboard.main', 'Install Card'); ?></a>
+<a href="#" id="card-uninstall-button"  style="display:none;"><?php echo Yii::t('Dashboard.main', 'Uninstall Card'); ?></a>
 <?php Yii::app()->clientScript->registerScriptFile($this->asset .'/dist/jquery-ui.min.js'); ?>
 <?php Yii::app()->clientScript->registerScript('DashboardInit', 'Dashboard.init("'.Yii::app()->params['cards'].'");'); ?>

@@ -12006,7 +12006,8 @@ Array.prototype.remove = function(from, to) {
 		var settingsText = $("#settings-text").text()
 			h2 = $("<h2>").text(settingsText.replace("{cardname}", self.options.name)),
 			form = $("<form>").addClass("pure-form pure-form-stacked"),
-			submit = $("#submit-card-button").clone().show();
+			submit = $("#submit-card-button").clone().show(),
+			remove = $("#card-uninstall-button").clone().show();
 
 		// Append the form
 		$.each(self.options.properties, function(name, opts) {
@@ -12018,10 +12019,30 @@ Array.prototype.remove = function(from, to) {
 		});
 
 		// Append the elements to the sidebar, then display it.
-		$(element).append($(h2)).append($(form)).append($(submit)).addClass("visible");
+		$(element).append($(h2)).append($(form)).append($(submit)).append($(remove)).addClass("visible");
+
+		$(".settings-sidebar #card-uninstall-button").click(function(e) {
+			e.preventDefault();
+
+			// Delete the card
+			$.ajax({
+				url: window.location.origin + '/api/card/index/id/'+self.id,
+				type: 'DELETE',
+				headers: CiiMSDashboard.getRequestHeaders(),
+				beforeSend: CiiMSDashboard.ajaxBeforeSend(),
+				success: function() {
+					$(".shader").removeClass("visible");
+					$(".settings-sidebar").removeClass("visible");
+					$(".dashboard-cards div#"+self.id).remove();
+					self.rebuild();
+				},
+				completed: CiiMSDashboard.ajaxCompleted()
+			});
+		});
 
 		// Bind the click behavior to the button
-		$(".settings-sidebar #submit-card-button").click(function() {
+		$(".settings-sidebar #submit-card-button").click(function(e) {
+			e.preventDefault();
 			var formData = {},
 				hasErrors = false,
 				newProperties = self.options.properties;
@@ -13360,7 +13381,6 @@ Array.prototype.remove = function(from, to) {
 
 	/**
 	 * Specialized click behavior for the paginated_results list item
-	 * @return {[type]} [description]
 	 */
 	bindLiClickBehavior: function() {
 		var self = this,
@@ -13516,6 +13536,10 @@ Array.prototype.remove = function(from, to) {
 		})
 	},
 
+	uninstallCard: function() {
+
+	},
+
 	/**
 	 * Generates a unique ID for each card to use
 	 * @return string
@@ -13524,6 +13548,9 @@ Array.prototype.remove = function(from, to) {
 		return Math.random().toString(36).slice(2);
 	},
 
+	/**
+	 * Nanoscrollers function
+	 */
 	nanoscroller : function() {
 		return $(".nano").nanoScroller({ iOSNativeScrolling: true }); 
 	}

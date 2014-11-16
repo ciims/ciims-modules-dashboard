@@ -80,7 +80,6 @@ var Dashboard = {
 
 	/**
 	 * Specialized click behavior for the paginated_results list item
-	 * @return {[type]} [description]
 	 */
 	bindLiClickBehavior: function() {
 		var self = this,
@@ -236,6 +235,10 @@ var Dashboard = {
 		})
 	},
 
+	uninstallCard: function() {
+
+	},
+
 	/**
 	 * Generates a unique ID for each card to use
 	 * @return string
@@ -244,6 +247,9 @@ var Dashboard = {
 		return Math.random().toString(36).slice(2);
 	},
 
+	/**
+	 * Nanoscrollers function
+	 */
 	nanoscroller : function() {
 		return $(".nano").nanoScroller({ iOSNativeScrolling: true }); 
 	}

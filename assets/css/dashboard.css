@@ -170,6 +170,17 @@ main .settings-sidebar a#submit-card-button {
     width: 195px;
 }
 
+main .settings-sidebar a#card-uninstall-button {
+    display: block !important;
+    text-align: center;
+    margin: 0 auto;
+    text-decoration: none;
+    margin-top: 5px;
+    font-size: 12px;
+    font-style: italic;
+    color: #2d2d2d;
+}
+
 main .card-list {
     position: absolute;
     margin: 0 auto;
