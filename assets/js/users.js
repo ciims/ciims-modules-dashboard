@@ -133,7 +133,7 @@ var Users = {
 
 		// Bind behaviors
 		self.clickBehavior();
-		self.nanoscroller();
+		CiiMSDashboard.nanoscroller();
 	},
 
 	/**
@@ -346,23 +346,5 @@ var Users = {
 			},
 			completed: CiiMSDashboard.ajaxCompleted()
 		});
-	},
-
-	/**
-	 * Triggers the nanoscroller
-	 * @return nanoScroller
-	 */
-	nanoscroller : function() {
-		// Froce nanoscroller to rebuild itself
-		var self = this;
-		$(".paginated_results .nano").nanoScroller({ destroy: true });
-		$(".paginated_results .nano").nanoScroller({ iOSNativeScrolling: true }); 
-
-		// Rebind the scrollend behavior
-		$(".paginated_results .nano .nano-content").unbind("scroll");
-		$(".paginated_results .nano .nano-content").bind("scroll", function(e) {
-			if($(this).scrollTop() + $(this).innerHeight() >= this.scrollHeight - 1)
-		    	self.list(false, self.query, ++self.page);
-		});
-	},
+	}
 };

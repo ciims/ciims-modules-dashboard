@@ -169,3 +169,60 @@ main .settings-sidebar a#submit-card-button {
     text-align: center;
     width: 195px;
 }
+
+main .card-list {
+    position: absolute;
+    margin: 0 auto;
+    top: 7%;
+    left: 19%;
+    height: 51%;
+    width: 900px;
+    z-index: -5;
+    opacity: 0;
+    max-width: 900px;
+    background: #fff;
+    border: 1px solid rgba(0,0,0, 0.1);
+    box-shadow: rgba(0,0,0, 0.1) 0px 0px 5px;
+    -moz-box-shadow: rgba(0,0,0, 0.1) 0px 0px 5px;
+    -webkit-box-shadow: rgba(0,0,0, 0.1) 0px 0px 5px;
+    transition: .3s;
+}
+
+main .card-list.visible {
+    z-index: 10;
+    opacity: 100;
+    transition: .3s;
+}
+
+main .card-list .card-details {
+    width: 600px;
+    margin-left: 300px;
+    height: 100%;
+}
+
+main .card-list .card-details header {
+    border-bottom: 1px solid #eee;
+    min-height: 32px;
+    padding: 7px;
+}
+
+main .card-list .card-details header span {
+    margin-left: 5px;
+    position: relative;
+    top: 4px;
+    font-weight: bold;
+}
+
+@-webkit-keyframes pulse 
+{       
+    0% {}
+    50% {color: #f67d42;}
+    100% {}
+}
+
+@-moz-keyframes pulse 
+{       
+    0% {}
+    50% {color: #f67d42;}
+    100% {}
+}

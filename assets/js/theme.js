@@ -64,7 +64,7 @@ var Theme = {
 			$.ajax({
 				url: window.location.origin + '/api/theme/update/name/'+name,
 				type: 'GET',
-				hheaders: CiiMSDashboard.getRequestHeaders(),
+				headers: CiiMSDashboard.getRequestHeaders(),
 				beforeSend : function() {
 					$(btn).hide();
 					$(btn).parent().find('.updating').show();

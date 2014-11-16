@@ -6,11 +6,15 @@ var Dashboard = {
 	// The properties for each card, as loaded from the database
 	cardData: {},
 
+	// Card API endpoint
+	endpoint: null,
+
 	/**
 	 * Init method
 	 */
-	init: function() {
-		var self = this;
+	init: function(endpoint) {
+		this.endpoint = endpoint;
+		var self = this;			
 
 		// Create the global object if it hasn't been created yet
 		if (typeof window.cards == "undefined")
@@ -25,11 +29,91 @@ var Dashboard = {
 				self.cards = data.response.cards;
 				self.cardData = data.response.cardData;
 				self.renderCards();
+				// If no cards are installed, flash the add icon
+				if ($.isEmptyObject(self.cards) || self.cards.length == 0)
+					$("section#secondary-navigation ul#secondary-nav-items li a").addClass("pulse");
 			},
 			completed: CiiMSDashboard.ajaxCompleted()
 		});
 
 		self.rearrange();
+		self.addCard();
+	},
+
+	/**
+	 * Behavior for adding a new card
+	 */
+	addCard: function() {
+		var self = this;
+		$("a#installCardButton").click(function() {
+			$(".card-list section.card-details").empty();
+			$(".paginated_results ul li").unbind("click");
+
+			$.getJSON(self.endpoint+'/index.json', function(data) {
+				$(".paginated_results.contained ul").empty();
+				// Append the name to the list
+				$.each(data, function(name, obj) {
+					var li = $("<li>"),
+						info = $("<div>");
+
+					$(info).addClass("user-info");
+					$(info).append($("<h6>").text(name));
+					$(li).append($(info));
+					$(li).attr("name", name).attr("version", obj["version"]);
+					$(".paginated_results.contained ul").append($(li));
+				});
+
+				self.bindLiClickBehavior();
+
+				// Show the container
+				$(".card-list").toggleClass("visible");
+				$(".shader").toggleClass("visible");
+				self.nanoscroller();
+			});
+		});
+
+		$(".shader").click(function() {
+			$(this).removeClass("visible");
+			$(".card-list").removeClass("visible");
+		})
+	},
+
+	/**
+	 * Specialized click behavior for the paginated_results list item
+	 * @return {[type]} [description]
+	 */
+	bindLiClickBehavior: function() {
+		var self = this,
+			container = $(".card-list section.card-details");
+
+		$(".paginated_results ul li").click(function() {
+			// Remove the active class from the other attributes
+			$(".paginated_results ul li").removeClass("active");
+			$(this).addClass("active");
+			$(container).empty();
+
+			var url = self.endpoint + "/" + $(this).attr("name") + "/" + $(this).attr("version");
+
+			// Load the card.json data and render the details pane
+			$.ajaxSetup({ cache: true });
+			$.getJSON(url+"/card.json", function(data) {
+				$.ajaxSetup({ cache: true });
+
+				var header = $("<header>");
+					title = $("<span>").text(data.name),
+					btn = $("#card-install-button").clone().show().attr("url", url);
+
+				$(header).append($(title)).append($(btn));
+				$(container).append($(header));
+
+				// Bind the click behavior to install the card
+				$("#card-install-button").click(function(e) {
+					e.preventDefault();
+					var url = $(this).attr("url");
+					self.installCard(url);
+				})
+			});
+		});
 	},
 
 	/**
@@ -140,6 +224,10 @@ var Dashboard = {
 					self.cards[id] = url;
 					self.cardData[id] = details;
 					self.renderCard(id, url);
+					// Remove the flashing icon if the card installed
+					$("section#secondary-navigation ul#secondary-nav-items li a").removeClass("pulse");
+					$(".card-list").removeClass("visible");
+					$(".shader").removeClass("visible");
 				},
 				completed: CiiMSDashboard.ajaxCompleted()
 			});
@@ -154,5 +242,9 @@ var Dashboard = {
 	 */
 	generateUniqueID: function() {
 		return Math.random().toString(36).slice(2);
+	},
+
+	nanoscroller : function() {
+		return $(".nano").nanoScroller({ iOSNativeScrolling: true }); 
 	}
 };

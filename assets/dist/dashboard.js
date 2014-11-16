@@ -12356,7 +12356,7 @@ Array.prototype.remove = function(from, to) {
 
 		// Bind behaviors
 		self.clickBehavior();
-		self.nanoscroller();
+		CiiMSDashboard.nanoscroller();
 	},
 
 	/**
@@ -12573,26 +12573,7 @@ Array.prototype.remove = function(from, to) {
 			},
 			completed: CiiMSDashboard.ajaxCompleted()
 		});
-	},
-
-	/**
-	 * Triggers the nanoscroller
-	 * @return nanoScroller
-	 */
-	nanoscroller : function() {
-		// Froce nanoscroller to rebuild itself
-		var self = this;
-		
-		$(".paginated_results .nano").nanoScroller({ destroy: true });
-		$(".paginated_results .nano").nanoScroller({ iOSNativeScrolling: true }); 
-
-		// Rebind the scrollend behavior
-		$(".paginated_results .nano .nano-content").unbind("scroll");
-		$(".paginated_results .nano .nano-content").bind("scroll", function(e) {
-			if($(this).scrollTop() + $(this).innerHeight() >= this.scrollHeight - 1)
-		    	self.list(false, self.query, ++self.page);
-		});
-	},
+	}
 };;var CiiMSDashboard = {
 	
 	/**
@@ -12679,6 +12660,25 @@ Array.prototype.remove = function(from, to) {
 			$("#nav-icon").find("span").remove(); 
 		}, 500);
 	},
+
+	/**
+	 * Triggers the nanoscroller
+	 * @return nanoScroller
+	 */
+	nanoscroller : function() {
+		// Froce nanoscroller to rebuild itself
+		var self = this;
+		
+		$(".paginated_results .nano").nanoScroller({ destroy: true });
+		$(".paginated_results .nano").nanoScroller({ iOSNativeScrolling: true }); 
+
+		// Rebind the scrollend behavior
+		$(".paginated_results .nano .nano-content").unbind("scroll");
+		$(".paginated_results .nano .nano-content").bind("scroll", function(e) {
+			if($(this).scrollTop() + $(this).innerHeight() >= this.scrollHeight - 1)
+		    	self.list(false, self.query, ++self.page);
+		});
+	}
 };;var Content = {
 
 	/**
@@ -12758,7 +12758,7 @@ Array.prototype.remove = function(from, to) {
 
 		// Bind behaviors
 		self.clickBehavior();
-		self.nanoscroller();
+		CiiMSDashboard.nanoscroller();
 	},
 
 	/**
@@ -13286,11 +13286,15 @@ Array.prototype.remove = function(from, to) {
 	// The properties for each card, as loaded from the database
 	cardData: {},
 
+	// Card API endpoint
+	endpoint: null,
+
 	/**
 	 * Init method
 	 */
-	init: function() {
-		var self = this;
+	init: function(endpoint) {
+		this.endpoint = endpoint;
+		var self = this;			
 
 		// Create the global object if it hasn't been created yet
 		if (typeof window.cards == "undefined")
@@ -13305,11 +13309,91 @@ Array.prototype.remove = function(from, to) {
 				self.cards = data.response.cards;
 				self.cardData = data.response.cardData;
 				self.renderCards();
+				// If no cards are installed, flash the add icon
+				if ($.isEmptyObject(self.cards) || self.cards.length == 0)
+					$("section#secondary-navigation ul#secondary-nav-items li a").addClass("pulse");
 			},
 			completed: CiiMSDashboard.ajaxCompleted()
 		});
 
 		self.rearrange();
+		self.addCard();
+	},
+
+	/**
+	 * Behavior for adding a new card
+	 */
+	addCard: function() {
+		var self = this;
+		$("a#installCardButton").click(function() {
+			$(".card-list section.card-details").empty();
+			$(".paginated_results ul li").unbind("click");
+
+			$.getJSON(self.endpoint+'/index.json', function(data) {
+				$(".paginated_results.contained ul").empty();
+				// Append the name to the list
+				$.each(data, function(name, obj) {
+					var li = $("<li>"),
+						info = $("<div>");
+
+					$(info).addClass("user-info");
+					$(info).append($("<h6>").text(name));
+					$(li).append($(info));
+					$(li).attr("name", name).attr("version", obj["version"]);
+					$(".paginated_results.contained ul").append($(li));
+				});
+
+				self.bindLiClickBehavior();
+
+				// Show the container
+				$(".card-list").toggleClass("visible");
+				$(".shader").toggleClass("visible");
+				self.nanoscroller();
+			});
+		});
+
+		$(".shader").click(function() {
+			$(this).removeClass("visible");
+			$(".card-list").removeClass("visible");
+		})
+	},
+
+	/**
+	 * Specialized click behavior for the paginated_results list item
+	 * @return {[type]} [description]
+	 */
+	bindLiClickBehavior: function() {
+		var self = this,
+			container = $(".card-list section.card-details");
+
+		$(".paginated_results ul li").click(function() {
+			// Remove the active class from the other attributes
+			$(".paginated_results ul li").removeClass("active");
+			$(this).addClass("active");
+			$(container).empty();
+
+			var url = self.endpoint + "/" + $(this).attr("name") + "/" + $(this).attr("version");
+
+			// Load the card.json data and render the details pane
+			$.ajaxSetup({ cache: true });
+			$.getJSON(url+"/card.json", function(data) {
+				$.ajaxSetup({ cache: true });
+
+				var header = $("<header>");
+					title = $("<span>").text(data.name),
+					btn = $("#card-install-button").clone().show().attr("url", url);
+
+				$(header).append($(title)).append($(btn));
+				$(container).append($(header));
+
+				// Bind the click behavior to install the card
+				$("#card-install-button").click(function(e) {
+					e.preventDefault();
+					var url = $(this).attr("url");
+					self.installCard(url);
+				})
+			});
+		});
 	},
 
 	/**
@@ -13420,6 +13504,10 @@ Array.prototype.remove = function(from, to) {
 					self.cards[id] = url;
 					self.cardData[id] = details;
 					self.renderCard(id, url);
+					// Remove the flashing icon if the card installed
+					$("section#secondary-navigation ul#secondary-nav-items li a").removeClass("pulse");
+					$(".card-list").removeClass("visible");
+					$(".shader").removeClass("visible");
 				},
 				completed: CiiMSDashboard.ajaxCompleted()
 			});
@@ -13434,6 +13522,10 @@ Array.prototype.remove = function(from, to) {
 	 */
 	generateUniqueID: function() {
 		return Math.random().toString(36).slice(2);
+	},
+
+	nanoscroller : function() {
+		return $(".nano").nanoScroller({ iOSNativeScrolling: true }); 
 	}
 };;var ContentEditor = {
 
@@ -15130,7 +15222,7 @@ if (!String.prototype.ordinalize)
 			$.ajax({
 				url: window.location.origin + '/api/theme/update/name/'+name,
 				type: 'GET',
-				hheaders: CiiMSDashboard.getRequestHeaders(),
+				headers: CiiMSDashboard.getRequestHeaders(),
 				beforeSend : function() {
 					$(btn).hide();
 					$(btn).parent().find('.updating').show();
@@ -15308,7 +15400,7 @@ if (!String.prototype.ordinalize)
 
 		// Bind behaviors
 		self.clickBehavior();
-		self.nanoscroller();
+		CiiMSDashboard.nanoscroller();
 	},
 
 	/**
@@ -15521,23 +15613,5 @@ if (!String.prototype.ordinalize)
 			},
 			completed: CiiMSDashboard.ajaxCompleted()
 		});
-	},
-
-	/**
-	 * Triggers the nanoscroller
-	 * @return nanoScroller
-	 */
-	nanoscroller : function() {
-		// Froce nanoscroller to rebuild itself
-		var self = this;
-		$(".paginated_results .nano").nanoScroller({ destroy: true });
-		$(".paginated_results .nano").nanoScroller({ iOSNativeScrolling: true }); 
-
-		// Rebind the scrollend behavior
-		$(".paginated_results .nano .nano-content").unbind("scroll");
-		$(".paginated_results .nano .nano-content").bind("scroll", function(e) {
-			if($(this).scrollTop() + $(this).innerHeight() >= this.scrollHeight - 1)
-		    	self.list(false, self.query, ++self.page);
-		});
-	},
+	}
 };

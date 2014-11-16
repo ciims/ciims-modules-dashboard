@@ -171,3 +171,24 @@ section.paginated_results ul li div.icons .comment-container:after {
 	padding-right: 5px;
 	color: #A7CE44;
 }
+
+/*************************************/
+
+section.paginated_results.contained {
+	top: 0px;
+	height: 100%;
+}
+
+section.paginated_results.contained ul li {
+	min-height: 35px;
+	max-height: 35px;
+}
+
+section.paginated_results.contained ul li.active {
+	border-right: none;
+}
+
+section.paginated_results.contained .nano {
+	height: 100% !important;
+	max-height: 100% !important;
+}
