@@ -13399,12 +13399,29 @@ Array.prototype.remove = function(from, to) {
 			$.getJSON(url+"/card.json", function(data) {
 				$.ajaxSetup({ cache: true });
 
-				var header = $("<header>");
+				var nano = $("<div>").addClass("nano"),
+					nanoContent = $("<div>").addClass("nano-content"),
+					header = $("<header>"),
+					inner = $("<div>"),
+					img = $("<img>"),
 					title = $("<span>").text(data.name),
-					btn = $("#card-install-button").clone().show().attr("url", url);
+					btn = $("#card-install-button").clone().show().attr("url", url),
+					divider = $("<div>").addClass("divider"),
+					p = $("<p>").text(data.description);
 
 				$(header).append($(title)).append($(btn));
-				$(container).append($(header));
+				if (typeof data.image != "undefined")
+				{
+					$(img).attr("src", url+"/"+data.image);
+					$(inner).append($(img)).append($(divider));
+				}
+
+				$(inner).append($(p));
+
+				$(nanoContent).append($(inner));
+				$(nano).append($(nanoContent));
+				$(container).append($(header)).append($(nano));
+				self.nanoscroller();
 
 				// Bind the click behavior to install the card
 				$("#card-install-button").click(function(e) {

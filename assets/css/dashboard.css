@@ -224,6 +224,19 @@ main .card-list .card-details header span {
     font-weight: bold;
 }
 
+main .card-list .card-details img {
+   margin: 15px 25px;
+}
+
+main .card-list .card-details div.divider {
+    border-bottom: 1px solid #eee;
+}
+
+main .card-list .card-details p {
+   margin: 15px 25px;
+   font-size: 14px;
+}
+
 @-webkit-keyframes pulse 
 {       
     0% {}
