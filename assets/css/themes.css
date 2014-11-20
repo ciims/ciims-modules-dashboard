@@ -65,3 +65,9 @@ section#installed-themes .theme-details-container .readmore-js-toggle {
 	color: #2d2d2d;
 	text-transform: lowercase;
 }
+
+section #installed-themes #installThemeButton {
+	color: #2d2d2d;
+	float:right;
+	text-decoration: none;
+}

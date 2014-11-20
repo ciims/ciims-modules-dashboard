@@ -2,31 +2,37 @@
 		<div class="nano" id="main">
 			<div class="nano-content">
 				<fieldset>
-					<legend><?php echo Yii::t('Dashboard.main', 'Installed Themes'); ?></legend>
+					<legend>
+						<?php echo Yii::t('Dashboard.main', 'Installed Themes'); ?>
+						<?php if (!defined('CII_CONFIG')): ?>
+							<a href="#" id="installThemeButton" class="fa fa-plus"></a>
+						<?php endif; ?>
+					</legend>
 					<div class="pure-g">
 						<?php foreach ($model->getThemes() as $name=>$attributes): ?>
 							<div class="theme-details-container">
 								<div class="pure-u-1-2">
 									<header>
 										<h2><?php echo CiiInflector::titleize($name); ?></h2>
-										<span class="updater pure-button pure-button-xsmall pure-button-primary" data-attr-name="<?php echo $name; ?>">
-											<i class="fa fa-spinner fa-spin"></i>
-											<?php echo Yii::t('Dashboard.main', 'Checking for Updates...'); ?>
-										</span>
-										<span class="update-available pure-button pure-button-xsmall pure-button-warning-pulse" data-attr-name="<?php echo $name; ?>">
-											<?php echo Yii::t('Dashboard.main', 'Update Available!'); ?>
-										</span>
-										<span class="uptodate pure-button pure-button-xsmall pure-button-success">
-											<?php echo Yii::t('Dashboard.main', 'Up to Date!'); ?>
-										</span>
-										<span class="updating pure-button pure-button-xsmall pure-button-primary-pulse">
-											<i class="fa fa-spinner fa-spin"></i>
-											<?php echo Yii::t('Dashboard.main', 'Update in progress...'); ?>
-										</span>
-										<span class="updatefailed pure-button pure-button-xsmall pure-button-error-pulse">
-											<?php echo Yii::t('Dashboard.main', 'Update failed!'); ?>
-										</span>
-
+										<?php if (!defined('CII_CONFIG)')): ?>
+											<span class="updater pure-button pure-button-xsmall pure-button-primary" data-attr-name="<?php echo $name; ?>">
+												<i class="fa fa-spinner fa-spin"></i>
+												<?php echo Yii::t('Dashboard.main', 'Checking for Updates...'); ?>
+											</span>
+											<span class="update-available pure-button pure-button-xsmall pure-button-warning-pulse" data-attr-name="<?php echo $name; ?>">
+												<?php echo Yii::t('Dashboard.main', 'Update Available!'); ?>
+											</span>
+											<span class="uptodate pure-button pure-button-xsmall pure-button-success">
+												<?php echo Yii::t('Dashboard.main', 'Up to Date!'); ?>
+											</span>
+											<span class="updating pure-button pure-button-xsmall pure-button-primary-pulse">
+												<i class="fa fa-spinner fa-spin"></i>
+												<?php echo Yii::t('Dashboard.main', 'Update in progress...'); ?>
+											</span>
+											<span class="updatefailed pure-button pure-button-xsmall pure-button-error-pulse">
+												<?php echo Yii::t('Dashboard.main', 'Update failed!'); ?>
+											</span>
+										<?php endif; ?>
 										<?php if (Cii::getConfig('theme') == $name): ?>
 											<span class="activetheme pure-button pure-button-xsmall pure-button-primary">
 												<?php echo Yii::t('Dashboard.main', 'Current Theme'); ?>
@@ -66,5 +72,19 @@
 			</div>
 		</div>
 </section>
+
+<div class="theme-list">
+	<section class="paginated_results contained">
+		<div class="nano">
+			<div class="nano-content">
+				<ul></ul>
+			</div>
+		</div>
+	</section>
+	<section class="theme-details"></section>
+</div>
+<div class="shader"></div>
+
+<a href="#" id="theme-install-button" class="pure-button pure-button-primary pure-button-small" style="float:right; display:none;"><?php echo Yii::t('Dashboard.main', 'Install Theme'); ?></a>
 
 <?php Yii::app()->clientScript->registerScript('ThemesLoader', 'Theme.init();'); ?>

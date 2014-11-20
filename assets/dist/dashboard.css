@@ -5939,11 +5939,11 @@ main .settings-sidebar a#card-uninstall-button {
     color: #2d2d2d;
 }
 
-main .card-list {
+main .card-list,
+main .theme-list {
     position: absolute;
     margin: 0 auto;
     top: 7%;
-    left: 19%;
     height: 51%;
     width: 900px;
     z-index: -5;
@@ -5955,42 +5955,64 @@ main .card-list {
     -moz-box-shadow: rgba(0,0,0, 0.1) 0px 0px 5px;
     -webkit-box-shadow: rgba(0,0,0, 0.1) 0px 0px 5px;
     transition: .3s;
+    position:absolute;
+    left:0;
+    right:0;
+    margin-left:auto;
+    margin-right:auto;
 }
 
-main .card-list.visible {
+main .theme-list {
+    top: 5%;
+    height: 90%;
+}
+
+main .card-list.visible,
+main .theme-list.visible {
     z-index: 10;
     opacity: 100;
     transition: .3s;
 }
 
-main .card-list .card-details {
+main .card-list .card-details,
+main .theme-list .theme-details {
     width: 600px;
     margin-left: 300px;
     height: 100%;
 }
 
-main .card-list .card-details header {
+main .card-list .card-details header,
+main .theme-list .theme-details header {
     border-bottom: 1px solid #eee;
     min-height: 32px;
     padding: 7px;
 }
 
-main .card-list .card-details header span {
+main .card-list .card-details header span,
+main .theme-list .theme-details header span {
     margin-left: 5px;
     position: relative;
     top: 4px;
     font-weight: bold;
 }
 
-main .card-list .card-details img {
+main .card-list .card-details .nano,
+main .theme-list .theme-details .nano {
+   height: 87% !important;
+}
+
+main .card-list .card-details img,
+main .theme-list .theme-details img {
    margin: 15px 25px;
 }
 
-main .card-list .card-details div.divider {
+main .card-list .card-details div.divider,
+main .theme-list .theme-details div.divider {
     border-bottom: 1px solid #eee;
 }
 
-main .card-list .card-details p {
+main .card-list .card-details p,
+main .theme-list .theme-details p {
    margin: 15px 25px;
    font-size: 14px;
 }
@@ -7457,6 +7479,12 @@ section#installed-themes .theme-details-container .readmore-js-toggle {
 	text-decoration: none;
 	color: #2d2d2d;
 	text-transform: lowercase;
+}
+
+section #installed-themes #installThemeButton {
+	color: #2d2d2d;
+	float:right;
+	text-decoration: none;
 }
 @media only screen {
 	.switch-candy a {
