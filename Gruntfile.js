@@ -147,18 +147,13 @@ module.exports = function(grunt) {
                 files: {
                     '<%= paths.dist %>/dashboard.min.js' : ['<%= paths.dist %>/dashboard.js']
                 }
-            },
-            jqui: {
-                files: {
-                    '<%= paths.dist %>/jquery-ui.min.js' : ['<%= paths.lib %>/jquery-ui/jquery-ui.js']
-                }
             }
         },
 
         run_grunt: {
             options: {
                 minimumFiles: 1,
-                task : ['transport']
+                task : ['build']
             },
             lepture_editor: {
                 options: {
