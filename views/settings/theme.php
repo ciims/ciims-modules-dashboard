@@ -14,7 +14,7 @@
 								<div class="pure-u-1-2">
 									<header>
 										<h2><?php echo CiiInflector::titleize($name); ?></h2>
-										<?php if (!defined('CII_CONFIG)')): ?>
+										<?php if (!defined('CII_CONFIG')): ?>
 											<span class="updater pure-button pure-button-xsmall pure-button-primary" data-attr-name="<?php echo $name; ?>">
 												<i class="fa fa-spinner fa-spin"></i>
 												<?php echo Yii::t('Dashboard.main', 'Checking for Updates...'); ?>
