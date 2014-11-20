@@ -17,7 +17,7 @@ var Theme = {
 
 		hljs.initHighlightingOnLoad();
 
-		if (this.ciims.hsoted === false)
+		if (this.ciims.hosted === false)
 			this.checkforUpdates();
 		this.update();
 		this.changeTheme();
@@ -82,7 +82,6 @@ var Theme = {
 			$(".paginated_results ul li").removeClass("active");
 			$(this).addClass("active");
 			$(container).empty();
-			console.log(name);
 
 			var url = self.endpoint + "/" + $(this).attr("name") + "/" + $(this).attr("version");
 
@@ -94,8 +93,11 @@ var Theme = {
 				headers: CiiMSDashboard.getRequestHeaders(),
 				success: function(data) {
 					data = data.response;
+					var baseUrl = 'https://cdn.rawgit.com'+data["repository"].replace('https://github.com', '') + "/" + data["latest-version"],
+						name = data["name"].replace("ciims-themes/", "");
+
 					// Get the README file from Github
-					$.get('https://cdn.rawgit.com'+data["repository"].replace('https://github.com', '') + "/" + data["latest-version"] + '/README.md', function(res) {
+					$.get(baseUrl + '/README.md', function(res) {
 						var nano = $("<div>").addClass("nano"),
 							nanoContent = $("<div>").addClass("nano-content"),
 							header = $("<header>"),
@@ -103,11 +105,49 @@ var Theme = {
 							img = $("<img>"),
 							title = $("<span>").text(data.name),
 							btn = $("#theme-install-button").clone().show(),
+							installedBtn = $("#theme-installed-button").clone().show(),
 							divider = $("<div>").addClass("divider"),
 							p = $("<p>").html(marked(res));
 
-						$(header).append($(title)).append($(btn));
-						$(img).attr("src", 'https://cdn.rawgit.com'+data["repository"].replace('https://github.com', '') + "/" + data["latest-version"] + '/default.png');
+						$(header).append($(title));
+
+						// Only show this button if the theme is not installed
+						$.ajax({
+							url: window.location.origin+'/api/theme/isInstalled/name/'+name,
+							type: 'GET',
+							dataType: 'json',
+							headers: CiiMSDashboard.getRequestHeaders(),
+							success: function(d2) {
+								if (!d2.response)
+									$(header).append($(btn));
+								else
+									$(header).append($(installedBtn));
+
+								$("#theme-installed-button").click(function(e) {
+									e.preventDefault();
+									return false;
+								});
+
+								$("#theme-install-button").click(function(e) {
+									e.preventDefault();
+									$.ajax({
+										url: window.location.origin+'/api/theme/install/name/'+name,
+										type: 'GET',
+										dataType: 'json',
+										headers: CiiMSDashboard.getRequestHeaders(),
+										beforeSend: function() {
+											var spinner = $("<i>").addClass("fa fa-spinner fa-spin");
+											$("#theme-install-button").append($(spinner));
+										},
+										success: function(response) {
+											window.location.reload();
+										}
+									});
+								});
+							}
+						});
+
+						$(img).attr("src", baseUrl + '/default.png');
 						$(inner).append($(img)).append($(divider));
 
 						$(inner).append($(p));
@@ -116,17 +156,7 @@ var Theme = {
 						$(nano).append($(nanoContent));
 						$(container).append($(header)).append($(nano));
 						self.nanoscroller();
-
 					});
-
-					/*
-					// Bind the click behavior to install the card
-				$("#card-install-button").click(function(e) {
-					e.preventDefault();
-					var url = $(this).attr("url");
-					self.installCard(url);
-				})
-*/
 				}
 			});
 		});

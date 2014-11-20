@@ -185,8 +185,8 @@ main .card-list,
 main .theme-list {
     position: absolute;
     margin: 0 auto;
-    top: 7%;
-    height: 51%;
+    top: 5%;
+    height: 90%;
     width: 900px;
     z-index: -5;
     opacity: 0;
@@ -202,11 +202,6 @@ main .theme-list {
     right:0;
     margin-left:auto;
     margin-right:auto;
-}
-
-main .theme-list {
-    top: 5%;
-    height: 90%;
 }
 
 main .card-list.visible,

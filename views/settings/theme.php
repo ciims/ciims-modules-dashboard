@@ -86,5 +86,6 @@
 <div class="shader"></div>
 
 <a href="#" id="theme-install-button" class="pure-button pure-button-primary pure-button-small" style="float:right; display:none;"><?php echo Yii::t('Dashboard.main', 'Install Theme'); ?></a>
+<a href="#" id="theme-installed-button" class="pure-button pure-button-success pure-button-small" style="float:right; display:none;"><?php echo Yii::t('Dashboard.main', 'Installed'); ?></a>
 
 <?php Yii::app()->clientScript->registerScript('ThemesLoader', 'Theme.init();'); ?>
