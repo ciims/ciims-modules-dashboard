@@ -81,12 +81,18 @@
 	 */
 	Card.prototype.rebuild = function() {
 		$(".dashboard-cards").trigger("ss-destroy").trigger("ss-rearrange").shapeshift({
-	        minColumns: 3,
+			align: "left",
+	        minColumns: 1,
+	        maxColumns: 2,
 	        gutterX: 20,
 	        gutterY: 20,
 	        paddingX: 0,
 	        paddingY: 0,
-	        enableDrag : true
+	        enableResize: true,
+	        enableDrag : true,
+	        animated: true,
+		    animationSpeed: 225,
+		    animationThreshold: 100,
         });
 	}
 
