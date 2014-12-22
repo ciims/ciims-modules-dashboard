@@ -7275,7 +7275,7 @@ section.paginated_results ul li img.user-image {
 
 section.paginated_results ul li div.user-info {
 	float:left;
-	max-width: 200px;
+	max-width: 185px;
 	margin-left: 15px;
 	overflow-x: hidden;
 	text-overflow:ellipsis;
