@@ -181,6 +181,10 @@ section.settings_container#content_container .main-preview {
 	font-size: 14px;
 }
 
+section.settings_container#content_container .main-preview img {
+	width: 100%;
+}
+
 section.settings_container#content_container .nano {
 	height: 88% !important;
 	top: -13px;
