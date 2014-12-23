@@ -128,7 +128,7 @@ var Categories = {
 
 		// Bind behaviors
 		self.clickBehavior();
-		CiiMSDashboard.nanoscroller();
+		CiiMSDashboard.nanoscroller('Categories');
 	},
 
 	/**

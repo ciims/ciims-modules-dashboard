@@ -77,7 +77,7 @@ var Content = {
 
 		// Bind behaviors
 		self.clickBehavior();
-		CiiMSDashboard.nanoscroller();
+		CiiMSDashboard.nanoscroller('Content');
 	},
 
 	/**

@@ -89,9 +89,13 @@ var CiiMSDashboard = {
 	 * Triggers the nanoscroller
 	 * @return nanoScroller
 	 */
-	nanoscroller : function() {
+	nanoscroller : function(element) {
 		// Froce nanoscroller to rebuild itself
 		var self = this;
+		if (typeof element == "undefined")
+			selfi = self;
+		else
+			selfi = window[element];
 		
 		$(".paginated_results .nano").nanoScroller({ destroy: true });
 		$(".paginated_results .nano").nanoScroller({ iOSNativeScrolling: true }); 
@@ -100,7 +104,7 @@ var CiiMSDashboard = {
 		$(".paginated_results .nano .nano-content").unbind("scroll");
 		$(".paginated_results .nano .nano-content").bind("scroll", function(e) {
 			if($(this).scrollTop() + $(this).innerHeight() >= this.scrollHeight - 1)
-		    	self.list(false, self.query, ++self.page);
+		    	selfi.list(false, selfi.query, ++selfi.page);
 		});
 	}
 };

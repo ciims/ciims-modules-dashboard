@@ -133,7 +133,7 @@ var Users = {
 
 		// Bind behaviors
 		self.clickBehavior();
-		CiiMSDashboard.nanoscroller();
+		CiiMSDashboard.nanoscroller('Users');
 	},
 
 	/**
