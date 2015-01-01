@@ -319,7 +319,7 @@
 	Card.prototype.registerScript = function(type, e)
 	{
 		var self = this,
-			e = typeof e == "undefined" ? null : e,
+			e = (typeof e == "undefined") ? null : e,
 			jsCardClass = self.options.name;
 
 		if (type == "js")
@@ -342,6 +342,9 @@
 				else 
 					var element = window.cardObjects[self.id];
 
+				if (e == "init")
+					event2 = "preload";
+				
 				element[e]();
 				
 			});

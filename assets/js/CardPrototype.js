@@ -5,12 +5,24 @@
 	// Prototype options
 	CardPrototype.prototype.options = {};
 
+	CardPrototype.prototype.id = null;
+
+	CardPrototype.prototype.properties = {};
+
+	/**
+	 * Preload function, populates some internal data for the card
+	 * @param  The ID of the card
+	 */
+	CardPrototype.prototype.preload = function(id) {
+		this.id = id;
+	}
+
 	/**
 	 * Prototype init method
 	 */
 	CardPrototype.prototype.init = function() {
 		if (typeof(this.options.init) == "function")
-	    	this.options.init();
+	    	this.options.init(this.id);
 	}
 
 	/**
@@ -37,7 +49,6 @@
 	 * ;(function() {
 	 * 		var CardName = new CardPrototype({
 	 *			name: "CardName",
-	 *			constructor: function() {},
 	 *			init: function() {},
 	 *			reload:function() {},
 	 *			render: function() {}
