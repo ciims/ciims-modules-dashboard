@@ -4,3 +4,5 @@ assets/lib/*
 nohup.out
 vendor/*
 *~
+npm-debug.log
+*.log

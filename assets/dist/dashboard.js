@@ -12019,7 +12019,10 @@ Array.prototype.remove = function(from, to) {
 					var element = window.cardObjects[self.id];
 
 				if (e == "init")
+				{
 					event2 = "preload";
+					element[event2](self.id);
+				}
 				
 				element[e]();
 				
