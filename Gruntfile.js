@@ -24,7 +24,7 @@ module.exports = function(grunt) {
         'concat:css',
         'concat:js',
         'cssmin:css',
-        //'uglify:js'
+        'uglify:js'
     ]);
 
     grunt.initConfig({
@@ -126,7 +126,7 @@ module.exports = function(grunt) {
                     '<%= paths.bower %>/jquery-timeago/jquery.timeago.js',
                     '<%= paths.bower %>/lepture-editor/build/editor.js',
                     '<%= paths.bower %>/dropzone/downloads/dropzone.min.js',
-                    '<%= paths.lib %>/readmore/readmore.js',
+                    '<%= paths.lib %>/readmore/readmore.min.js',
                     '<%= paths.lib %>/jquery.tagsinput/jquery.tagsinput.min.js',
                     '<%= paths.lib %>/datetimepicker/jquery.datetimepicker.js',
                     '<%= paths.lib %>/shapeshift/core/jquery.shapeshift.min.js',
