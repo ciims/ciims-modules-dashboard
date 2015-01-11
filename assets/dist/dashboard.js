@@ -12679,7 +12679,8 @@ Array.prototype.remove = function(from, to) {
 	 * @param boolean prepend
 	 */
 	renderLi: function(data, ul, prepend) {
-		var self = this;
+		var self = this,
+			id = data.id;
 		self.content[data.id] = data;
 
 		if (prepend == undefined)
@@ -12700,6 +12701,24 @@ Array.prototype.remove = function(from, to) {
 			$(li).addClass("draft");
 			var text = $(".draft-text").text();
 			$(info).append($("<span>").addClass("draft").text(text).attr('title', text));
+
+			// If the VID is 1, then we need to fetch the autosave data to display it appropriatly
+			if (data.vid == 1)
+			{
+				var url = window.location.origin + '/api/content/autosave/id/' + id;
+
+				$.ajax({
+					url: url,
+					type: 'GET',
+					headers: CiiMSDashboard.getRequestHeaders(),
+					beforeSend: CiiMSDashboard.ajaxBeforeSend(),
+					completed: CiiMSDashboard.ajaxCompleted(),
+					success: function(asData, asTextStatus, asJqXHR) {
+						$(info).find("h6").text(asData.response.title);
+					}
+				});
+			}
+
 		}
 		else if (data.status == 1)
 		{
@@ -13484,16 +13503,15 @@ Array.prototype.remove = function(from, to) {
 	 * Init method for tags
 	 */
 	initTags : function() {
+		var self = this;
+		
 		$("#tags").tagsInput({
 			onRemoveTag: function(e) {
 				var tag = e.replace('/', '');
 				$.ajax({
 					url: window.location.origin + '/api/content/tag/id/' + $("#Content_id").val() + "/tag/" + tag,
 					type: 'DELETE',
-					headers: {
-						'X-Auth-Email': self.ciims.email,
-						'X-Auth-Token': self.ciims.token
-					},
+					headers: CiiMSDashboard.getRequestHeaders(),
 					beforeSend: CiiMSDashboard.ajaxBeforeSend(),
 					completed: CiiMSDashboard.ajaxCompleted()
 				});
@@ -13503,10 +13521,7 @@ Array.prototype.remove = function(from, to) {
 				$.ajax({
 					url: window.location.origin + '/api/content/tag/id/' + $("#Content_id").val(),
 					type: 'POST',
-					headers: {
-						'X-Auth-Email': self.ciims.email,
-						'X-Auth-Token': self.ciims.token
-					},
+					headers: CiiMSDashboard.getRequestHeaders(),
 					data:  { 
 						"tag" : e
 					},

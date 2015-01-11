@@ -132,7 +132,8 @@ var Content = {
 	 * @param boolean prepend
 	 */
 	renderLi: function(data, ul, prepend) {
-		var self = this;
+		var self = this,
+			id = data.id;
 		self.content[data.id] = data;
 
 		if (prepend == undefined)
@@ -153,6 +154,24 @@ var Content = {
 			$(li).addClass("draft");
 			var text = $(".draft-text").text();
 			$(info).append($("<span>").addClass("draft").text(text).attr('title', text));
+
+			// If the VID is 1, then we need to fetch the autosave data to display it appropriatly
+			if (data.vid == 1)
+			{
+				var url = window.location.origin + '/api/content/autosave/id/' + id;
+
+				$.ajax({
+					url: url,
+					type: 'GET',
+					headers: CiiMSDashboard.getRequestHeaders(),
+					beforeSend: CiiMSDashboard.ajaxBeforeSend(),
+					completed: CiiMSDashboard.ajaxCompleted(),
+					success: function(asData, asTextStatus, asJqXHR) {
+						$(info).find("h6").text(asData.response.title);
+					}
+				});
+			}
+
 		}
 		else if (data.status == 1)
 		{

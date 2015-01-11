@@ -66,16 +66,15 @@ var ContentEditor = {
 	 * Init method for tags
 	 */
 	initTags : function() {
+		var self = this;
+		
 		$("#tags").tagsInput({
 			onRemoveTag: function(e) {
 				var tag = e.replace('/', '');
 				$.ajax({
 					url: window.location.origin + '/api/content/tag/id/' + $("#Content_id").val() + "/tag/" + tag,
 					type: 'DELETE',
-					headers: {
-						'X-Auth-Email': self.ciims.email,
-						'X-Auth-Token': self.ciims.token
-					},
+					headers: CiiMSDashboard.getRequestHeaders(),
 					beforeSend: CiiMSDashboard.ajaxBeforeSend(),
 					completed: CiiMSDashboard.ajaxCompleted()
 				});
@@ -85,10 +84,7 @@ var ContentEditor = {
 				$.ajax({
 					url: window.location.origin + '/api/content/tag/id/' + $("#Content_id").val(),
 					type: 'POST',
-					headers: {
-						'X-Auth-Email': self.ciims.email,
-						'X-Auth-Token': self.ciims.token
-					},
+					headers: CiiMSDashboard.getRequestHeaders(),
 					data:  { 
 						"tag" : e
 					},
