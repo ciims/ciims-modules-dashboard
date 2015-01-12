@@ -16,5 +16,5 @@ This module utilizes nodejs, npm, bower, and grunt. Before hacking you'll need t
 ```
 npm install
 bower install
-gr`
+grunt
 ``
