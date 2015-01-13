@@ -11742,9 +11742,12 @@ Array.prototype.remove = function(from, to) {
 		// Set the next tile name then trigger a rebuild so the card's resize can take place
 		self.options.size = nextTileName;
 
-		$.each(self.options.properties, function(key, obj) {
-			properties[key] = obj.value;
-		});
+		if (!$.isEmptyObject(self.options.properties))
+		{
+			$.each(self.options.properties, function(key, obj) {
+				properties[key] = obj.value;
+			});
+		}
 
 		// Save the resize data
 		$.ajax({
@@ -13357,9 +13360,12 @@ Array.prototype.remove = function(from, to) {
 			if (self.cardData[id] != null)
 			{
 				data.size = self.cardData[id].size;
-				$.each(self.cardData[id].properties, function(key, obj) {
-					data.properties[key].value = obj;
-				});
+				if (!$.isEmptyObject(self.cardData[id].properties))
+				{
+					$.each(self.cardData[id].properties, function(key, obj) {
+						data.properties[key].value = obj;
+					});
+				}
 			}
 
 			// Add this card to the global cards object container
@@ -13382,9 +13388,12 @@ Array.prototype.remove = function(from, to) {
 			$.ajaxSetup({ cache: false });
 			var properties = {};
 
-			$.each(data.properties, function(key, obj) {
-				properties[key] = obj["value"];
-			});
+			if (!$.isEmptyObject(data.properties))
+			{
+				$.each(data.properties, function(key, obj) {
+					properties[key] = obj["value"];
+				});
+			}
 
 			var details = {
 				"size": data.availableTileSizes[0],

@@ -192,9 +192,12 @@ var Dashboard = {
 			if (self.cardData[id] != null)
 			{
 				data.size = self.cardData[id].size;
-				$.each(self.cardData[id].properties, function(key, obj) {
-					data.properties[key].value = obj;
-				});
+				if (!$.isEmptyObject(self.cardData[id].properties))
+				{
+					$.each(self.cardData[id].properties, function(key, obj) {
+						data.properties[key].value = obj;
+					});
+				}
 			}
 
 			// Add this card to the global cards object container
@@ -217,9 +220,12 @@ var Dashboard = {
 			$.ajaxSetup({ cache: false });
 			var properties = {};
 
-			$.each(data.properties, function(key, obj) {
-				properties[key] = obj["value"];
-			});
+			if (!$.isEmptyObject(data.properties))
+			{
+				$.each(data.properties, function(key, obj) {
+					properties[key] = obj["value"];
+				});
+			}
 
 			var details = {
 				"size": data.availableTileSizes[0],

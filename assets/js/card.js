@@ -56,9 +56,12 @@
 		// Set the next tile name then trigger a rebuild so the card's resize can take place
 		self.options.size = nextTileName;
 
-		$.each(self.options.properties, function(key, obj) {
-			properties[key] = obj.value;
-		});
+		if (!$.isEmptyObject(self.options.properties))
+		{
+			$.each(self.options.properties, function(key, obj) {
+				properties[key] = obj.value;
+			});
+		}
 
 		// Save the resize data
 		$.ajax({
