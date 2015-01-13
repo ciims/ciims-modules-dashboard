@@ -351,7 +351,7 @@
 					element[event2](self.id);
 				}
 				
-				element[e]();
+				element[e](self.id);
 				
 			});
 		}

@@ -12037,7 +12037,7 @@ Array.prototype.remove = function(from, to) {
 					element[event2](self.id);
 				}
 				
-				element[e]();
+				element[e](self.id);
 				
 			});
 		}
