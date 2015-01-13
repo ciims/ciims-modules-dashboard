@@ -9,6 +9,24 @@
 
 	CardPrototype.prototype.properties = {};
 
+	CardPrototype.prototype.getId = function(object) {
+		return object.id;
+	}
+
+	CardPrototype.prototype.getObject = function(object) {
+		return cards[CardPrototype.prototype.getId(object)].options;
+	}
+
+	CardPrototype.prototype.getProperty = function(object, property) {
+		var data = CardPrototype.prototype.getObject(object);
+
+		if (data[property] !== "undefined")
+			return data[property];
+
+		console.log(property + " is undefined");
+		return null;
+	}
+
 	/**
 	 * Preload function, populates some internal data for the card
 	 * @param  The ID of the card
