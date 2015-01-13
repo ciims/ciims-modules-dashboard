@@ -11496,6 +11496,7 @@ Date.parseFunctions={count:0};Date.parseRegexes=[];Date.formatFunctions={count:0
 	 */
 	CardPrototype.prototype.preload = function(id) {
 		this.id = id;
+		this.options.id = this.id;
 	}
 
 	/**
@@ -12028,16 +12029,14 @@ Array.prototype.remove = function(from, to) {
 					var element = window[jsCardClass];
 					window.cardObjects[self.id] = element;
 				}
-				else 
-					var element = window.cardObjects[self.id];
 
 				if (e == "init")
 				{
 					event2 = "preload";
-					element[event2](self.id);
+					window.cardObjects[self.id][event2](self.id);
 				}
 				
-				element[e](self.id);
+				window.cardObjects[self.id][e]();
 				
 			});
 		}

@@ -15,6 +15,7 @@
 	 */
 	CardPrototype.prototype.preload = function(id) {
 		this.id = id;
+		this.options.id = this.id;
 	}
 
 	/**

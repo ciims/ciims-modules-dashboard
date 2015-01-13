@@ -342,16 +342,14 @@
 					var element = window[jsCardClass];
 					window.cardObjects[self.id] = element;
 				}
-				else 
-					var element = window.cardObjects[self.id];
 
 				if (e == "init")
 				{
 					event2 = "preload";
-					element[event2](self.id);
+					window.cardObjects[self.id][event2](self.id);
 				}
 				
-				element[e](self.id);
+				window.cardObjects[self.id][e]();
 				
 			});
 		}
