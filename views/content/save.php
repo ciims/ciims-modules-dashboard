@@ -18,7 +18,7 @@
 									if ($model->status == 0)
 										echo  Yii::t('Dashboard.views', 'Draft');
 									else if ($model->status == 1 && time() <= $model->published)
-										echo Yii::t('Dashboard.view', 'Scheduled');
+										echo Yii::t('Dashboard.views', 'Scheduled');
 									else if ($model->status == 1)
 										 echo Yii::t('Dashboard.views', 'Published');
 									else if ($model->status == 2)
@@ -111,7 +111,7 @@
 	<section class="content_inner_container settings_container_inner">
 
 		<div id="title-container">
-			<?php echo $form->textField($model, 'title', array('placeholder' => Yii::t('ciims.models.Content', 'Title'),)); ?>
+			<?php echo $form->textField($model, 'title', array('placeholder' => Yii::t('Dashboard.views', 'Title'),)); ?>
 		</div>
 
 		<section class="editor">
