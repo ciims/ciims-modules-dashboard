@@ -142,7 +142,7 @@ section.settings_container#comment_container header h1 {
 
 section.settings_container#content_container header div,
 section.settings_container#comment_container header div {
-	float:right;
+	float: left;
 	min-height: 45px;
 	padding-top: 3px;
 }
@@ -165,14 +165,17 @@ section.settings_container#comment_container a:hover {
 	transition: all .5s ease-in-out;
 }
 
-section.settings_container#content_container header div a:first-of-type,
-section.settings_container#comment_container header div a:first-of-type {
-	border-left: 1px solid #eee;
+section.settings_container#content_container header div a:last-of-type,
+section.settings_container#comment_container header div a:last-of-type {
+	border-right: 1px solid #eee;
+	padding-right: 15px;
 }
 
-section.settings_container#content_container header div span.label,
-section.settings_container#comment_container header div span.label {
+section.settings_container#content_container header span.label,
+section.settings_container#comment_container header span.label {
 	padding-right: 7px;
+	padding-top: 5px;
+	float: right;
 }
 
 section.settings_container#content_container .main-preview {

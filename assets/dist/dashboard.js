@@ -12723,22 +12723,19 @@ Array.prototype.remove = function(from, to) {
 			$(info).append($("<span>").addClass("draft").text(text).attr('title', text));
 
 			// If the VID is 1, then we need to fetch the autosave data to display it appropriatly
-			if (data.vid == 1)
-			{
-				var url = window.location.origin + '/api/content/autosave/id/' + id;
+			var url = window.location.origin + '/api/content/autosave/id/' + id;
 
-				$.ajax({
-					url: url,
-					type: 'GET',
-					headers: CiiMSDashboard.getRequestHeaders(),
-					beforeSend: CiiMSDashboard.ajaxBeforeSend(),
-					completed: CiiMSDashboard.ajaxCompleted(),
-					success: function(asData, asTextStatus, asJqXHR) {
-						$(info).find("h6").text(asData.response.title);
-					}
-				});
-			}
-
+			$.ajax({
+				url: url,
+				type: 'GET',
+				headers: CiiMSDashboard.getRequestHeaders(),
+				beforeSend: CiiMSDashboard.ajaxBeforeSend(),
+				completed: CiiMSDashboard.ajaxCompleted(),
+				success: function(asData, asTextStatus, asJqXHR) {
+					$(info).find("h6").text(asData.response.title);
+					self.content[asData.response.id] = asData.response;
+				}
+			});
 		}
 		else if (data.status == 1)
 		{
@@ -12826,15 +12823,17 @@ Array.prototype.remove = function(from, to) {
 		}
 
 		// Create the default icon set
-		$(icons).append($(status));
-		$(icons).append($("<a>").append($("<span>").addClass("fa fa-eye")).attr("href", $("#endpoint").attr("data-attr-endpoint") + "/" + data.slug));
 		if (data.status != 0)
+		{
+			$(icons).append($("<a>").append($("<span>").addClass("fa fa-eye")).attr("href", $("#endpoint").attr("data-attr-endpoint") + "/" + data.slug));
 			$(icons).append($("<a>").append($("<span>").addClass("fa fa-comments")).attr("id", "comment_action").attr("href", "#comments"));
+		}
+		
 		$(icons).append($("<a>").append($("<span>").addClass("fa fa-edit")).attr("href", $("#endpoint").attr("data-attr-endpoint")+"/dashboard/content/save/id/"+data.id));
 		$(icons).append($("<a>").append($("<span>").addClass("fa fa-trash-o")).attr("data-attr-id", data.id).attr("id", "delete-entry-btn"));
 
 		// Build the header
-		$(header).append($(title)).append($(icons));
+		$(header).append($(icons)).append($(title)).append($(status));
 
 		// Build the main content
 		$(nanocontent).append($("<div>").addClass("main-preview").html(self.marked(data.content)));
