@@ -28,10 +28,11 @@ var Dashboard = {
 			success: function(data, textStatus, jqXHR) {
 				self.cards = data.response.cards;
 				self.cardData = data.response.cardData;
-				self.renderCards();
 				// If no cards are installed, flash the add icon
 				if ($.isEmptyObject(self.cards) || self.cards.length == 0)
 					$("section#secondary-navigation ul#secondary-nav-items li a").addClass("pulse");
+				else
+					self.renderCards();
 			},
 			completed: CiiMSDashboard.ajaxCompleted()
 		});
