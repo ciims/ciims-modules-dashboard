@@ -42,6 +42,7 @@ return array (
   'Update Available!' => '',
   'Update failed!' => '',
   'Update in progress...' => '',
+  'Upgrade Card' => '',
   'Use This Theme' => '',
   '{cardname} Settings' => '',
   '{{group}} Settings' => '',

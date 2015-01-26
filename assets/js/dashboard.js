@@ -50,7 +50,9 @@ var Dashboard = {
 			$(".card-list section.card-details").empty();
 			$(".paginated_results ul li").unbind("click");
 
+			$.ajaxSetup({ cache: true });
 			$.getJSON(self.endpoint+'/index.json', function(data) {
+				$.ajaxSetup({ cache: false });
 				$(".paginated_results.contained ul").empty();
 				// Append the name to the list
 				$.each(data, function(name, obj) {
@@ -172,7 +174,7 @@ var Dashboard = {
 
 		// Iterate through all the cards in the database, and populate them
 		$.each(self.cards, function(id, url) {
-			self.renderCard(id, url);
+			self.renderCard(id, url, false);
 		});
 	},
 
@@ -181,7 +183,7 @@ var Dashboard = {
 	 * @param  string   id  The card ID
 	 * @param  string   url The URL of the card
 	 */
-	renderCard: function(id, url) {
+	renderCard: function(id, url, reload) {
 		var self = this;
 		$.ajaxSetup({ cache: true });
 		$.getJSON(url + "/card.json", function(data) {
@@ -203,7 +205,7 @@ var Dashboard = {
 
 			// Add this card to the global cards object container
 			window.cards[id] = new Card(data);
-			window.cards[id].render();
+			window.cards[id].render(reload);
 		});
 	},
 
@@ -212,9 +214,14 @@ var Dashboard = {
 	 * @param  {[type]} url [description]
 	 * @return {[type]}     [description]
 	 */
-	installCard: function(url) {
+	installCard: function(url, id) {
 		var self = this,
+			reload = false;
+
+		if (typeof id == "undefined")
 			id = self.generateUniqueID();
+		else
+			reload = true;
 
 		$.ajaxSetup({ cache: true });
 		$.getJSON(url + "/card.json", function(data) {
@@ -246,7 +253,7 @@ var Dashboard = {
 				success: function(data, textStatus, jqXHR) {
 					self.cards[id] = url;
 					self.cardData[id] = details;
-					self.renderCard(id, url);
+					self.renderCard(id, url, reload);
 					// Remove the flashing icon if the card installed
 					$("section#secondary-navigation ul#secondary-nav-items li a").removeClass("pulse");
 					$(".card-list").removeClass("visible");
@@ -259,8 +266,16 @@ var Dashboard = {
 		})
 	},
 
-	uninstallCard: function() {
+	/**
+	 * Performs an in place upgrade of a card
+	 * @param string id
+	 */
+	upgrade: function(id) {
+		var card = window.cards[id],
+			newBasePath = this.endpoint + "/" + card.options.name + "/" + card.upgradeVersion;
 
+		// Run the install script with this card ID as the base ID
+		this.installCard(newBasePath, id);
 	},
 
 	/**

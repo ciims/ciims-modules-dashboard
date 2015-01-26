@@ -107,6 +107,10 @@
 	Card.prototype.bindEventListeners = function(id, bind) {
 		var self = this;
 
+		// Remove the previous event bindings
+		$("#" + id + " #card-resize-button").unbind('click');
+		$("#" + id + " #card-settings-button").unbind('click');
+
 		// Only bind the event listener if the object has it
 		if (bind.resize)
 		{
@@ -136,20 +140,7 @@
 	Card.prototype.settings = function() {
 		var self = this,
 			element = $(".settings-sidebar"),
-			cCardID = $(element).attr("card-id"),
 			properties = {};
-
-		// If the sidebar is bound to the current card ID, then just toggle the visible class on and off for the sliding animation.
-		if (cCardID == self.options.id)
-		{
-			$(element).toggleClass("visible");
-			if ($(element).hasClass("visible"))
-				$(".shader").addClass("visible");
-			else
-				$(".shader").removeClass("visible");
-
-			return;
-		}
 
 		// Hide the sidebar, empty it, and remove the card-id
 		$(element).removeClass("visible").empty().attr("card-id", self.options.id);
@@ -159,6 +150,7 @@
 			h2 = $("<h2>").text(settingsText.replace("{cardname}", self.options.name)),
 			form = $("<form>").addClass("pure-form pure-form-stacked"),
 			submit = $("#submit-card-button").clone().show(),
+			upgrade = $("#card-upgrade-button").clone().show().addClass("fa-pulse"),
 			remove = $("#card-uninstall-button").clone().show();
 
 		// Append the form
@@ -176,7 +168,12 @@
 		if (!$.isEmptyObject(this.options.properties))
 			$(element).append($(form)).append($(submit));
 
-		$(element).append($(remove)).addClass("visible");
+		$(element).append($(remove));
+
+		if (window.cards[self.id].upgradeAvailable == true)
+			$(element).append($(upgrade));
+
+		$(element).addClass("visible");
 
 		$(".settings-sidebar #card-uninstall-button").click(function(e) {
 			e.preventDefault();
@@ -195,6 +192,11 @@
 				},
 				completed: CiiMSDashboard.ajaxCompleted()
 			});
+		});
+
+		$(".settings-sidebar #card-upgrade-button").click(function(e) {
+			Dashboard.upgrade(self.id);
+			$(".shader").click();
 		});
 
 		// Bind the click behavior to the button
@@ -258,13 +260,15 @@
 	/**
 	 * Renders a new card instance
 	 */
-	Card.prototype.render = function() {
+	Card.prototype.render = function(reload) {
 		// Prevent the same card from being rendered more than once
-		if ($(".dashboard-cards #"+ this.id).length == 1)
+		if ($(".dashboard-cards #"+ this.id).length == 1 && reload == false)
 		{
 			console.log("Card instance already in DOM! Card will not be rendered");
 			return;
 		}
+
+		this.checkForUpgrade();
 
 		// Register the CSS to be applied to the card
 		this.registerScript('css');
@@ -282,12 +286,9 @@
 		$(footer).append($(footerText));
 
 		// If this card has properties, add a settings button
-		//if (!$.isEmptyObject(this.options.properties))
-		//{
 		var settingsIcon = $("<span>").addClass("fa fa-gear").attr("id", "card-settings-button");
 		$(footer).append($(settingsIcon));
 		bindSettings = true;
-		//}
 
 		// If this card has multiple sizes, show a resize button
 		if (this.options.availableTileSizes.length > 1)
@@ -307,7 +308,11 @@
 			$(markup).append($(body)).append($(footer));
 
 			// Apply it to the dashboard, then trigger a dashboard rebuild
-			$(".dashboard-cards").append($(markup));
+			if (!reload)
+				$(".dashboard-cards").append($(markup));
+			else
+				$(".dashboard-cards #" + self.id).replaceWith($(markup));
+
 			self.rebuild();
 			self.bindEventListeners(self.id, { "resize": bindResize, "settings": bindSettings });
 			// Bind the JS
@@ -318,6 +323,33 @@
 			console.log("Card markup failed to load, aborting rendering");
 			return;
 		});
+	};
+
+	/**
+	 * Checks the card if an upgrade is available
+	 */
+	Card.prototype.checkForUpgrade = function() {
+		var self = this,
+			id = this.id,
+			name = this.options.name,
+			version = parseInt(this.options.version.split('.').join(''));
+
+		$.ajaxSetup({ cache: true });
+		$.getJSON(Dashboard.endpoint + "/index.json", function(data) {
+			$.ajaxSetup({ cache: false });
+			var obj = data[name],
+				objVersion = parseInt(obj.version.split('.').join(''));
+
+			if (objVersion > version)
+			{
+				setTimeout(function() {
+					$("#" + id + " #card-settings-button").addClass("fa-pulse");
+				}, 500);
+				window.cards[id].upgradeAvailable = true;
+				window.cards[id].upgradeVersion = data[name].version;
+			}
+		});
+
 	};
 
 	/**
@@ -385,13 +417,6 @@
 		if (this.id == null)
 		{
 			console.log("Card initialized without ID! Card will not be rendered.");
-			return;
-		}
-
-		// Prevent the same card from being rendered more than once
-		if ($(".dashboard-cards #"+ this.id).length == 1)
-		{
-			console.log("Card instance already in DOM! Card will not be rendered");
 			return;
 		}
 

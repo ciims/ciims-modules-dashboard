@@ -176,7 +176,8 @@ main .settings-sidebar a#submit-card-button {
     width: 195px;
 }
 
-main .settings-sidebar a#card-uninstall-button {
+main .settings-sidebar a#card-uninstall-button,
+main .settings-sidebar a#card-upgrade-button {
     display: block !important;
     text-align: center;
     margin: 0 auto;
