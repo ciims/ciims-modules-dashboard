@@ -171,7 +171,12 @@
 		});
 
 		// Append the elements to the sidebar, then display it.
-		$(element).append($(h2)).append($(form)).append($(submit)).append($(remove)).addClass("visible");
+		$(element).append($(h2))
+
+		if (!$.isEmptyObject(this.options.properties))
+			$(element).append($(form)).append($(submit));
+
+		$(element).append($(remove)).addClass("visible");
 
 		$(".settings-sidebar #card-uninstall-button").click(function(e) {
 			e.preventDefault();
@@ -277,12 +282,12 @@
 		$(footer).append($(footerText));
 
 		// If this card has properties, add a settings button
-		if (!$.isEmptyObject(this.options.properties))
-		{
-			var settingsIcon = $("<span>").addClass("fa fa-gear").attr("id", "card-settings-button");
-			$(footer).append($(settingsIcon));
-			bindSettings = true;
-		}
+		//if (!$.isEmptyObject(this.options.properties))
+		//{
+		var settingsIcon = $("<span>").addClass("fa fa-gear").attr("id", "card-settings-button");
+		$(footer).append($(settingsIcon));
+		bindSettings = true;
+		//}
 
 		// If this card has multiple sizes, show a resize button
 		if (this.options.availableTileSizes.length > 1)
