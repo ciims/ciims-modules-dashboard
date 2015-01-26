@@ -17,7 +17,7 @@
 								<div class="top-status"><?php
 									if ($model->status == 0)
 										echo  Yii::t('Dashboard.views', 'Draft');
-									else if ($model->status == 1 && time() <= $model->published)
+									else if ($model->isScheduled())
 										echo Yii::t('Dashboard.views', 'Scheduled');
 									else if ($model->status == 1)
 										 echo Yii::t('Dashboard.views', 'Published');
@@ -76,17 +76,27 @@
 							<div class="pure-control-group">
 								<?php echo $form->dropDownListRow($model, 'commentable', array('1' => Yii::t('Dashboard.views', 'Allow Comments'), '0' => Yii::t('Dashboard.views', 'Disable Comments'))); ?>
 							</div>
-
 							<div class="pure-control-group">
 								<?php echo $form->dropDownListRow($model, 'type_id', CHtml::listData(ContentTypes::model()->findAll(), 'id', 'name')); ?>
 							</div>
 							<div class="pure-control-group">
-								<?php echo $form->dropDownListRow($model, 'view', $model->getViewFiles()); ?>
+								<?php 
+									$viewFiles = $model->getViewFiles();
+									if (count($viewFiles) == 1)
+										echo $form->hiddenField($model, 'view', array('value' => array_values($viewFiles)[0]));
+									else
+										echo $form->dropDownListRow($model, 'view', $viewFiles); 
+								?>
 							</div>
 							<div class="pure-control-group">
-								<?php echo $form->dropDownListRow($model, 'layout', $model->getLayoutFiles()); ?>
+								<?php 
+									$layoutFiles = $model->getLayoutFiles();
+									if (count($layoutFiles) == 1)
+										echo $form->hiddenField($model, 'view', array('value' => array_values($layoutFiles)[0]));
+									else
+										echo $form->dropDownListRow($model, 'view', $layoutFiles); 
+								?>
 							</div>
-
 						</div>
 					</div>
 				</div>
