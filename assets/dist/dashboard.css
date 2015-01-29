@@ -6573,6 +6573,11 @@ html, body {
 	overflow-y: hidden;
 }
 
+
+#yii2-debug-toolbar {
+	left: 50px !important;
+}
+
 section#body {
 	display: table;
 	table-layout: fixed;
@@ -6636,6 +6641,7 @@ main .error-module {
 main .error-module h1 {
 	margin: 0px;
 }
+
 .nano > .nano-pane {
 	width: 6px !important;
 }

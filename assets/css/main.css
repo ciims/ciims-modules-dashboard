@@ -7,6 +7,11 @@ html, body {
 	overflow-y: hidden;
 }
 
+
+#yii2-debug-toolbar {
+	left: 50px !important;
+}
+
 section#body {
 	display: table;
 	table-layout: fixed;
