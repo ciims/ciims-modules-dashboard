@@ -48,7 +48,7 @@
 <section id="comment_container" class="settings_container">
 	<div class="nano">
 		<div class="nano-content">
-			<?php $this->widget('ext.cii.widgets.comments.CiiCommentWidget'); ?>
+			<?php $this->widget('cii.widgets.comments.CiiCommentWidget'); ?>
 		</div>
 	</div>
 </section>
@@ -60,7 +60,7 @@
 <?php echo CHtml::tag('span', array('id' => 'reject-btn-label', 'style' => 'display: none'), Yii::t('Dashboard.views', 'No I don\'t. Leave it be.')); ?>
 <?php echo CHtml::tag('span', array('id' => 'delete-confirm-message', 'style' => 'display: none'), Yii::t('Dashboard.views', 'Do you want to permanently delete "{{entry}}"?')); ?>
 
-<?php $this->widget('ext.cii.widgets.comments.CiiCommentMaster', array(
+<?php $this->widget('cii.widgets.comments.CiiCommentMaster', array(
 	'type' => Cii::getCommentProvider(), 
 	'content' => false
 )); ?>

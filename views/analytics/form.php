@@ -21,7 +21,7 @@
 		<div class="nano-content">
 			<fieldset>
 				<?php $htmlOptions = array('class' => 'pure-input-2-3'); ?>
-				<?php $form = $this->beginWidget('ext.cii.widgets.CiiActiveForm', array(
+				<?php $form = $this->beginWidget('cii.widgets.CiiActiveForm', array(
 				    'id'=>get_class($model),
 				    'htmlOptions' => array(
 				    	'class' => 'pure-form pure-form-aligned'
