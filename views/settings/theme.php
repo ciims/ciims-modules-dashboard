@@ -10,6 +10,7 @@
 					</legend>
 					<div class="pure-g">
 						<?php foreach ($model->getThemes() as $name=>$attributes): ?>
+							<?php if ($attributes['hidden'] === true && Yii::app()->theme->name != $name) continue; ?>
 							<div class="theme-details-container">
 								<div class="pure-u-1-2">
 									<header>
