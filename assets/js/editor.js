@@ -51,6 +51,7 @@ var ContentEditor = {
 		self.nanoscroller(".preview.nano", false);
 		self.nanoscroller("#editor-sidebar .nano", false);
 
+
 		// lepture/editor doesn't support onLoad callback
 		setTimeout(function() {
 			// Nanoscrollerize the editor window
@@ -141,13 +142,16 @@ var ContentEditor = {
 
 		$(".rollback-revision").click(function() {
 			var vid = $(this).attr("vid");
-			var text = $(".rollback-text").text().replace("{id}", vid);
-			alertify.confirm(text, function (e) {
-				if (e)
-				{
-					self.setForm(self.revisions[vid]);
-					self.autosave();
-					$("a.details-back-button").click();
+			vex.dialog.confirm({
+				message: $(".rollback-text").text().replace("{id}", vid),
+				className: 'vex-theme-default',
+				callback: function(e) {
+					if (e)
+					{
+						self.setForm(self.revisions[vid]);
+						self.autosave();
+						$("a.details-back-button").click();
+					}
 				}
 			});
 		});
@@ -269,6 +273,18 @@ var ContentEditor = {
 						if (d.response[name] != null)
 							$(this).val(d.response[name]);
 					});
+
+					var time = Math.floor(new Date().getTime() / 1000);
+
+					if (d.response.status == 0)
+						$("#top-status").text($("#draft-text-editor").text());
+					else if (d.response.status == 1 && d.response.published < time)
+						$("#top-status").text($("#published-text-editor").text());
+					else if (d.response.status == 1 && d.response.published >= time)
+						$("#top-status").text($("#scheduled-text-editor").text());
+					else
+						$("#top-status").text($("#scheduled-text-editor").text());
+
 
 					$("a#revisions-link").text(d.response["vid"]);
 

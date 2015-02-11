@@ -301,45 +301,42 @@ var Content = {
 		$("a#delete-entry-btn").click(function() {
 			var id = $(this).attr("data-attr-id");
 
-			alertify.set({ 
-				labels: {
-				    ok     : $("#accept-btn-label").text(),
-				    cancel : $("#reject-btn-label").text()
+			vex.dialog.confirm({
+				message: $("#delete-confirm-message").text().replace('{{entry}}', self.content[id].title),
+				className: 'vex-theme-default',
+				callback: function(e) {
+					if (e)
+				    {
+				        // Send a DELETE request to the API to purge it.
+				        $.ajax({
+							url: window.location.origin + '/api/content/' + id,
+							type: 'DELETE',
+							headers: CiiMSDashboard.getRequestHeaders(),
+							beforeSend: function() {
+								CiiMSDashboard.ajaxBeforeSend();
+							},
+							error: function(data) {
+								var json = $.parseJSON(data.responseText),
+									message = json.message,
+									alert = $("<div>").addClass("alert alert-error");
+
+								$("#content_container").prepend($(alert));
+							},
+							success: function(data, textStatus, jqXHR) {
+								self.ajaxSuccess(data.success);
+										
+						    	// Delete the element from the internal reference array
+						        delete self.content[id];
+
+						        // Delete it from the sidebar and main view
+						        $("li[content_id="+id+"]").remove();
+						        $("#content_container").empty().hide();
+						        $("#comment_container").hide();
+							},
+							completed: CiiMSDashboard.ajaxCompleted()
+						});
+				    }
 				}
-			});
-			var message = $("#delete-confirm-message").text().replace('{{entry}}', self.content[id].title);
-			alertify.confirm(message, function (e) {
-			    if (e)
-			    {
-			        // Send a DELETE request to the API to purge it.
-			        $.ajax({
-						url: window.location.origin + '/api/content/' + id,
-						type: 'DELETE',
-						headers: CiiMSDashboard.getRequestHeaders(),
-						beforeSend: function() {
-							CiiMSDashboard.ajaxBeforeSend();
-						},
-						error: function(data) {
-							var json = $.parseJSON(data.responseText),
-								message = json.message,
-								alert = $("<div>").addClass("alert alert-error");
-
-							$("#content_container").prepend($(alert));
-						},
-						success: function(data, textStatus, jqXHR) {
-							self.ajaxSuccess(data.success);
-									
-					    	// Delete the element from the internal reference array
-					        delete self.content[id];
-
-					        // Delete it from the sidebar and main view
-					        $("li[content_id="+id+"]").remove();
-					        $("#content_container").empty().hide();
-					        $("#comment_container").hide();
-						},
-						completed: CiiMSDashboard.ajaxCompleted()
-					});
-			    }
 			});
 
 		});

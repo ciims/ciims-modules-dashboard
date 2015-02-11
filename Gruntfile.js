@@ -102,7 +102,7 @@ module.exports = function(grunt) {
         concat: {
             css: {
                 src: [
-                    '<%= paths.bower %>/alertify.js/themes/alertify.core.css',
+                    '<%= paths.bower %>/vex/css/*',
                     '<%= paths.bower %>/lepture-editor/build/editor.css',
                     '<%= paths.bower %>/dropzone/downloads/css/basic.css',
                     '<%= paths.bower %>/dropzone/downloads/css/dropzne.css',
@@ -120,7 +120,7 @@ module.exports = function(grunt) {
                     '<%= paths.lib %>/pace/pace.min.js',
                     '<%= paths.lib %>/shapeshift/core/jquery.shapeshift.min.js',
                     '<%= paths.lib %>/nanoscroller/jquery.nanoscroller.js',
-                    '<%= paths.lib %>/alertify.js/alertify.js',
+                    '<%= paths.bower %>/vex/js/vex.combined.min.js',
                     '<%= paths.bower %>/highlight.min/index.js',
                     '<%= paths.bower %>/reMarked/reMarked.js',
                     '<%= paths.bower %>/jquery-timeago/jquery.timeago.js',
