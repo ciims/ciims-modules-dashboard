@@ -9,7 +9,7 @@ class CiiDashboardController extends CiiController
 	 * Retrieve assetManager from anywhere without having to instatiate this code
 	 * @return CAssetManager
 	 */
-	public function getAsset()
+	public function getAsset($dist=false)
 	{
 		return Yii::app()->assetManager->publish(YiiBase::getPathOfAlias('application.modules.dashboard.assets'), true, -1, YII_DEBUG);
 	}
