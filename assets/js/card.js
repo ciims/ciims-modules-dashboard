@@ -337,9 +337,13 @@
 		$.ajaxSetup({ cache: true });
 		$.getJSON(Dashboard.endpoint + "/index.json", function(data) {
 			$.ajaxSetup({ cache: false });
-			var obj = data[name],
-				objVersion = parseInt(obj.version.split('.').join(''));
+			var obj = data[name];
 
+			if (typeof obj == "undefined")
+				return;
+
+			var	objVersion = parseInt(obj.version.split('.').join(''));
+			
 			if (objVersion > version)
 			{
 				setTimeout(function() {

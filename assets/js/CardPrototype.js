@@ -20,10 +20,13 @@
 	CardPrototype.prototype.getProperty = function(object, property) {
 		var data = CardPrototype.prototype.getObject(object);
 
-		if (data[property] !== "undefined")
-			return data[property];
+		try {
+			if (data.properties[property] !== "undefined")
+				return data.properties[property].value;
+		} catch (e) {
+			console.log(property + " is undefined");
+		}
 
-		console.log(property + " is undefined");
 		return null;
 	}
 
