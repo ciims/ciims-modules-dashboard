@@ -5,6 +5,22 @@ class SettingsController extends CiiDashboardController
 	public $layout = 'settings';
 
 	/**
+     * Specifies the access control rules.
+     * @return array
+     */
+    public function accessRules()
+    {   
+        return array(
+            array('allow',
+            	'actions' => array('index'),
+            	'users' => array('@'),
+            	'expression' => 'UserRoles::model()->hasPermission("manage", Yii::app()->user->role)'
+            ),
+            array('deny') 
+        );  
+    }
+
+	/**
 	 * Provides "general" settings control
 	 * @class GeneralSettings
 	 */
