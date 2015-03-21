@@ -18,7 +18,8 @@ class UsersController extends CiiDashboardController
             array('allow',
             	'actions' => array('index'),
             	'users' => array('@'),
-            	'expression' => 'UserRoles::model()->hasPermission("manage", Yii::app()->user->role)'
+            	'expression' => 'UserRoles::model()->hasPermission("manage", Yii::app()->user->role)',
+                'deniedCallback' => array($this, 'error')
             ),
             array('deny') 
         );  

@@ -10,9 +10,10 @@ class DefaultController extends CiiDashboardController
     {   
         return array(
             array('allow',
-            	'actions' => array('index'),
+            	'actions' => array('index', 'error'),
             	'users' => array('@'),
-            	'expression' => 'UserRoles::model()->hasPermission("manage", Yii::app()->user->role)'
+            	'expression' => 'UserRoles::model()->hasPermission("manage", Yii::app()->user->role)',
+                'deniedCallback' => array($this, 'error')
             ),
             array('deny') 
         );  
