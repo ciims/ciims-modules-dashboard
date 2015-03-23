@@ -1,9 +1,9 @@
 # CiiMS Dashboard Module
 
-[![Latest Version](http://img.shields.io/packagist/v/ciims-modules/dashboard.svg?style=flat)]()
-[![Downloads](http://img.shields.io/packagist/dt/ciims-modules/dashboard.svg?style=flat)]()
-[![Gittip](http://img.shields.io/gittip/charlesportwoodii.svg?style=flat "Gittip")](https://www.gittip.com/charlesportwoodii/)
-[![License](http://img.shields.io/badge/license-MIT-orange.svg?style=flat "License")](https://github.com/charlesportwoodii/ciims-modules-dashboard/blob/master/LICENSE.md)
+[![Latest Version](https://img.shields.io/packagist/v/ciims-modules/dashboard.svg?style=flat)]()
+[![Downloads](https://img.shields.io/packagist/dt/ciims-modules/dashboard.svg?style=flat)]()
+[![Gittip](https://img.shields.io/gittip/charlesportwoodii.svg?style=flat "Gittip")](https://www.gittip.com/charlesportwoodii/)
+[![License](https://img.shields.io/badge/license-MIT-orange.svg?style=flat "License")](https://github.com/charlesportwoodii/ciims-modules-dashboard/blob/master/LICENSE.md)
 
 --------------
 
