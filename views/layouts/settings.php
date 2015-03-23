@@ -35,7 +35,7 @@
 				array(
 					'url' => $this->createUrl('/dashboard/settings/email'), 
 					'label' => NULL,
-					'linkOptions' => array('class' => 'fa fa-envelope-o', 'title' => Yii::t('Dashboard.views', 'Email Settings')),
+					'linkOptions' => array('class' => 'fa fa-envelope-o', 'title' => Yii::t('Dashboard.views', 'Email Settings'), 'style' => (defined('CIIMS_ENV') ? 'display:none':null)),
 					'active' => ($this->id == 'settings' && $this->action->id == 'email' ? true : false)
 				),
 				array(

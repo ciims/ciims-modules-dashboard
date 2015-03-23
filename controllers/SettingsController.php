@@ -38,6 +38,8 @@ class SettingsController extends CiiDashboardController
 	 */
 	public function actionEmail()
 	{
+		if (defined('CIIMS_ENV'))
+			throw new CHttpException(401, Yii::t('Dashboard.main', 'This setting is currently not available.'));
 		$this->render('email', array(
 			'model' => new EmailSettings
 		));
