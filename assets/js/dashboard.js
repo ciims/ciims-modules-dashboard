@@ -170,11 +170,15 @@ var Dashboard = {
 	 * Success callback for the card-renderer
 	 */
 	renderCards: function() {
-		var self = this;
+		var self = this,
+			i=0;
 
 		// Iterate through all the cards in the database, and populate them
 		$.each(self.cards, function(id, url) {
-			self.renderCard(id, url, false);
+			i++;
+			setTimeout(function() {
+					self.renderCard(id, url, false);
+			}, 100*i);
 		});
 	},
 
