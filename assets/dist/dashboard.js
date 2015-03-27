@@ -12772,7 +12772,7 @@ Array.prototype.remove = function(from, to) {
 			i++;
 			setTimeout(function() {
 					self.renderCard(id, url, false);
-			}, 100 *i);
+			}, 100*i);
 		});
 	},
 
