@@ -20,6 +20,6 @@
     "strip-ansi": "^0.3.0"
   },
   "scripts": {
-    "postinstall": "bower install && cd bower_components/lepture-editor && npm install && grunt transport && cd ../.. && grunt"
+    "postinstall": "bower install && cd bower_components/lepture-editor && npm install && grunt build && cd ../.. && grunt"
   }
 }
