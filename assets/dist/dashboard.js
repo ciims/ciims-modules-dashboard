@@ -11042,7 +11042,17 @@ Date.parseFunctions={count:0};Date.parseRegexes=[];Date.formatFunctions={count:0
 	submitAjaxChangeRequest : function() {
 
 		var self = this,
-			data = $("form").serialize();
+			data = {};
+
+		$("form :input").each(function() {
+			var val = "";
+			if ($(this).attr("type") == "checkbox")
+				val = + $(this).prop('checked');
+			else
+				val = $(this).val();
+			
+			data[$(this).attr("name")] = val;
+		});
 
 		$.ajax({
 			url: window.location.origin + '/api/setting/analytics',
@@ -11066,7 +11076,8 @@ Date.parseFunctions={count:0};Date.parseRegexes=[];Date.formatFunctions={count:0
 	nanoscroller : function() {
 		return $(".nano").nanoScroller({ iOSNativeScrolling: true }); 
 	},
-};;// Array Remove - By John Resig (MIT Licensed)
+};
+;// Array Remove - By John Resig (MIT Licensed)
 Array.prototype.remove = function(from, to) {
   var rest = this.slice((to || from) + 1 || this.length);
   this.length = from < 0 ? this.length + from : from;

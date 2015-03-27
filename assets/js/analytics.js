@@ -94,7 +94,17 @@ var Analytics = {
 	submitAjaxChangeRequest : function() {
 
 		var self = this,
-			data = $("form").serialize();
+			data = {};
+
+		$("form :input").each(function() {
+			var val = "";
+			if ($(this).attr("type") == "checkbox")
+				val = + $(this).prop('checked');
+			else
+				val = $(this).val();
+			
+			data[$(this).attr("name")] = val;
+		});
 
 		$.ajax({
 			url: window.location.origin + '/api/setting/analytics',
