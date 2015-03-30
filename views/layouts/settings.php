@@ -33,11 +33,12 @@
 					'active' => ($this->id == 'settings' && $this->action->id == 'appearance' ? true : false)
 				),
 				array(
-					'url' => $this->createUrl('/dashboard/settings/email'), 
-					'label' => NULL,
-					'linkOptions' => array('class' => 'fa fa-envelope-o', 'title' => Yii::t('Dashboard.views', 'Email Settings'), 'style' => (defined('CIIMS_ENV') ? 'display:none':null)),
-					'active' => ($this->id == 'settings' && $this->action->id == 'email' ? true : false)
-				),
+                    'url' => $this->createUrl('/dashboard/settings/email'),
+                    'label' => NULL,
+                    'linkOptions' => array('class' => 'fa fa-envelope-o', 'title' => Yii::t('Dashboard.views', 'Email Settings')),
+                    'active' => ($this->id == 'settings' && $this->action->id == 'email' ? true : false),
+                    'itemOptions' => array('style' => (defined('CII_CONFIG') ? 'display:none':null))
+                ),
 				array(
 					'url' => $this->createUrl('/dashboard/settings/social'),
 					'label' => NULL,
