@@ -177,8 +177,8 @@ var Dashboard = {
 		$.each(self.cards, function(id, url) {
 			i++;
 			setTimeout(function() {
-					self.renderCard(id, url, false);
-			}, 100*i);
+				self.renderCard(id, url, false);
+			}, 250*i);
 		});
 	},
 

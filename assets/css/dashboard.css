@@ -80,9 +80,8 @@ main .dashboard-cards .footer .footer-text {
     float: left;
 }
 
-main .dashboard-cards .footer .fa {
+main .dashboard-cards .footer .fa  {
     color: #999;
-    border-left: 1px solid #eee;
     position: relative;
     float: right;
 }
