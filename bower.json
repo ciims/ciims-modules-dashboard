@@ -16,7 +16,7 @@
     "lepture-editor": "https://github.com/lepture/editor.git#0.1.0",
     "markdown-mark": "git://github.com/james2doyle/markdown-mark#icon-font",
     "dropzone": "~3.10.2",
-    "jquery.tagsinput": "~1.3.2",
+    "jquery.tagsinput": "~1.3.3",
     "datetimepicker": "2.3.7",
     "jquery-getCSS": "https://raw.githubusercontent.com/intesso/jquery-getCSS/master/jquery.getCSS.js",
     "vex": "~2.3.0"
