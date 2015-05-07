@@ -9175,7 +9175,382 @@ global.Editor = Editor;
  *
  * Debounce function from http://davidwalsh.name/javascript-debounce-function
  */
-!function(e){"use strict";function t(e,t,a){var i;return function(){var n=this,o=arguments,r=function(){i=null,a||e.apply(n,o)},s=a&&!i;clearTimeout(i),i=setTimeout(r,t),s&&e.apply(n,o)}}function a(e){var t=++h;return String(null==e?"rmjs-":e)+t}function i(e){var t=e.clone().css({height:"auto",width:e.width(),maxHeight:"none",overflow:"hidden"}).insertAfter(e),a=t.outerHeight(),i=parseInt(t.css({maxHeight:""}).css("max-height").replace(/[^-\d\.]/g,""),10),n=e.data("defaultHeight");t.remove();var o=i||e.data("collapsedHeight")||n;e.data({expandedHeight:a,maxHeight:i,collapsedHeight:o}).css({maxHeight:"none"})}function n(e){if(!d[e.selector]){var t=" ";e.embedCSS&&""!==e.blockCSS&&(t+=e.selector+" + [data-readmore-toggle], "+e.selector+"[data-readmore]{"+e.blockCSS+"}"),t+=e.selector+"[data-readmore]{transition: height "+e.speed+"ms;overflow: hidden;}",function(e,t){var a=e.createElement("style");a.type="text/css",a.styleSheet?a.styleSheet.cssText=t:a.appendChild(e.createTextNode(t)),e.getElementsByTagName("head")[0].appendChild(a)}(document,t),d[e.selector]=!0}}function o(t,a){this.element=t,this.options=e.extend({},s,a),n(this.options),this._defaults=s,this._name=r,this.init(),window.addEventListener?(window.addEventListener("load",l),window.addEventListener("resize",l)):(window.attachEvent("load",l),window.attachEvent("resize",l))}var r="readmore",s={speed:100,collapsedHeight:200,heightMargin:16,moreLink:'<a href="#">Read More</a>',lessLink:'<a href="#">Close</a>',embedCSS:!0,blockCSS:"display: block; width: 100%;",startOpen:!1,beforeToggle:function(){},afterToggle:function(){}},d={},h=0,l=t(function(){e("[data-readmore]").each(function(){var t=e(this),a="true"===t.attr("aria-expanded");i(t),t.css({height:t.data(a?"expandedHeight":"collapsedHeight")})})},100);o.prototype={init:function(){var t=this,n=e(this.element);n.data({defaultHeight:this.options.collapsedHeight,heightMargin:this.options.heightMargin}),i(n);var o=n.data("collapsedHeight"),r=n.data("heightMargin");if(n.outerHeight(!0)<=o+r)return!0;var s=n.attr("id")||a(),d=t.options.startOpen?t.options.lessLink:t.options.moreLink;n.attr({"data-readmore":"","aria-expanded":!1,id:s}),n.after(e(d).on("click",function(e){t.toggle(this,n[0],e)}).attr({"data-readmore-toggle":"","aria-controls":s})),t.options.startOpen||n.css({height:o})},toggle:function(t,a,i){i&&i.preventDefault(),t||(t=e('[aria-controls="'+this.element.id+'"]')[0]),a||(a=this.element);var n=this,o=e(a),r="",s="",d=!1,h=o.data("collapsedHeight");o.height()<=h?(r=o.data("expandedHeight")+"px",s="lessLink",d=!0):(r=h,s="moreLink"),n.options.beforeToggle(t,a,!d),o.css({height:r}),o.on("transitionend",function(){n.options.afterToggle(t,a,d),e(this).attr({"aria-expanded":d}).off("transitionend")}),e(t).replaceWith(e(n.options[s]).on("click",function(e){n.toggle(this,a,e)}).attr({"data-readmore-toggle":"","aria-controls":o.attr("id")}))},destroy:function(){e(this.element).each(function(){var t=e(this);t.attr({"data-readmore":null,"aria-expanded":null}).css({maxHeight:"",height:""}).next("[data-readmore-toggle]").remove(),t.removeData()})}},e.fn.readmore=function(t){var a=arguments,i=this.selector;return t=t||{},"object"==typeof t?this.each(function(){if(e.data(this,"plugin_"+r)){var a=e.data(this,"plugin_"+r);a.destroy.apply(a)}t.selector=i,e.data(this,"plugin_"+r,new o(this,t))}):"string"==typeof t&&"_"!==t[0]&&"init"!==t?this.each(function(){var i=e.data(this,"plugin_"+r);i instanceof o&&"function"==typeof i[t]&&i[t].apply(i,Array.prototype.slice.call(a,1))}):void 0}}(jQuery);;/**
+!function(e){"use strict";function t(e,t,a){var i;return function(){var n=this,o=arguments,r=function(){i=null,a||e.apply(n,o)},s=a&&!i;clearTimeout(i),i=setTimeout(r,t),s&&e.apply(n,o)}}function a(e){var t=++h;return String(null==e?"rmjs-":e)+t}function i(e){var t=e.clone().css({height:"auto",width:e.width(),maxHeight:"none",overflow:"hidden"}).insertAfter(e),a=t.outerHeight(),i=parseInt(t.css({maxHeight:""}).css("max-height").replace(/[^-\d\.]/g,""),10),n=e.data("defaultHeight");t.remove();var o=i||e.data("collapsedHeight")||n;e.data({expandedHeight:a,maxHeight:i,collapsedHeight:o}).css({maxHeight:"none"})}function n(e){if(!d[e.selector]){var t=" ";e.embedCSS&&""!==e.blockCSS&&(t+=e.selector+" + [data-readmore-toggle], "+e.selector+"[data-readmore]{"+e.blockCSS+"}"),t+=e.selector+"[data-readmore]{transition: height "+e.speed+"ms;overflow: hidden;}",function(e,t){var a=e.createElement("style");a.type="text/css",a.styleSheet?a.styleSheet.cssText=t:a.appendChild(e.createTextNode(t)),e.getElementsByTagName("head")[0].appendChild(a)}(document,t),d[e.selector]=!0}}function o(t,a){this.element=t,this.options=e.extend({},s,a),n(this.options),this._defaults=s,this._name=r,this.init(),window.addEventListener?(window.addEventListener("load",l),window.addEventListener("resize",l)):(window.attachEvent("load",l),window.attachEvent("resize",l))}var r="readmore",s={speed:100,collapsedHeight:200,heightMargin:16,moreLink:'<a href="#">Read More</a>',lessLink:'<a href="#">Close</a>',embedCSS:!0,blockCSS:"display: block; width: 100%;",startOpen:!1,beforeToggle:function(){},afterToggle:function(){}},d={},h=0,l=t(function(){e("[data-readmore]").each(function(){var t=e(this),a="true"===t.attr("aria-expanded");i(t),t.css({height:t.data(a?"expandedHeight":"collapsedHeight")})})},100);o.prototype={init:function(){var t=this,n=e(this.element);n.data({defaultHeight:this.options.collapsedHeight,heightMargin:this.options.heightMargin}),i(n);var o=n.data("collapsedHeight"),r=n.data("heightMargin");if(n.outerHeight(!0)<=o+r)return!0;var s=n.attr("id")||a(),d=t.options.startOpen?t.options.lessLink:t.options.moreLink;n.attr({"data-readmore":"","aria-expanded":!1,id:s}),n.after(e(d).on("click",function(e){t.toggle(this,n[0],e)}).attr({"data-readmore-toggle":"","aria-controls":s})),t.options.startOpen||n.css({height:o})},toggle:function(t,a,i){i&&i.preventDefault(),t||(t=e('[aria-controls="'+this.element.id+'"]')[0]),a||(a=this.element);var n=this,o=e(a),r="",s="",d=!1,h=o.data("collapsedHeight");o.height()<=h?(r=o.data("expandedHeight")+"px",s="lessLink",d=!0):(r=h,s="moreLink"),n.options.beforeToggle(t,a,!d),o.css({height:r}),o.on("transitionend",function(){n.options.afterToggle(t,a,d),e(this).attr({"aria-expanded":d}).off("transitionend")}),e(t).replaceWith(e(n.options[s]).on("click",function(e){n.toggle(this,a,e)}).attr({"data-readmore-toggle":"","aria-controls":o.attr("id")}))},destroy:function(){e(this.element).each(function(){var t=e(this);t.attr({"data-readmore":null,"aria-expanded":null}).css({maxHeight:"",height:""}).next("[data-readmore-toggle]").remove(),t.removeData()})}},e.fn.readmore=function(t){var a=arguments,i=this.selector;return t=t||{},"object"==typeof t?this.each(function(){if(e.data(this,"plugin_"+r)){var a=e.data(this,"plugin_"+r);a.destroy.apply(a)}t.selector=i,e.data(this,"plugin_"+r,new o(this,t))}):"string"==typeof t&&"_"!==t[0]&&"init"!==t?this.each(function(){var i=e.data(this,"plugin_"+r);i instanceof o&&"function"==typeof i[t]&&i[t].apply(i,Array.prototype.slice.call(a,1))}):void 0}}(jQuery);;/*
+
+	jQuery Tags Input Plugin 1.3.3
+
+	Copyright (c) 2011 XOXCO, Inc
+
+	Documentation for this plugin lives here:
+	http://xoxco.com/clickable/jquery-tags-input
+
+	Licensed under the MIT license:
+	http://www.opensource.org/licenses/mit-license.php
+
+	ben@xoxco.com
+
+*/
+
+(function($) {
+
+	var delimiter = new Array();
+	var tags_callbacks = new Array();
+	$.fn.doAutosize = function(o){
+	    var minWidth = $(this).data('minwidth'),
+	        maxWidth = $(this).data('maxwidth'),
+	        val = '',
+	        input = $(this),
+	        testSubject = $('#'+$(this).data('tester_id'));
+
+	    if (val === (val = input.val())) {return;}
+
+	    // Enter new content into testSubject
+	    var escaped = val.replace(/&/g, '&amp;').replace(/\s/g,' ').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+	    testSubject.html(escaped);
+	    // Calculate new width + whether to change
+	    var testerWidth = testSubject.width(),
+	        newWidth = (testerWidth + o.comfortZone) >= minWidth ? testerWidth + o.comfortZone : minWidth,
+	        currentWidth = input.width(),
+	        isValidWidthChange = (newWidth < currentWidth && newWidth >= minWidth)
+	                             || (newWidth > minWidth && newWidth < maxWidth);
+
+	    // Animate width
+	    if (isValidWidthChange) {
+	        input.width(newWidth);
+	    }
+
+
+  };
+  $.fn.resetAutosize = function(options){
+    // alert(JSON.stringify(options));
+    var minWidth =  $(this).data('minwidth') || options.minInputWidth || $(this).width(),
+        maxWidth = $(this).data('maxwidth') || options.maxInputWidth || ($(this).closest('.tagsinput').width() - options.inputPadding),
+        val = '',
+        input = $(this),
+        testSubject = $('<tester/>').css({
+            position: 'absolute',
+            top: -9999,
+            left: -9999,
+            width: 'auto',
+            fontSize: input.css('fontSize'),
+            fontFamily: input.css('fontFamily'),
+            fontWeight: input.css('fontWeight'),
+            letterSpacing: input.css('letterSpacing'),
+            whiteSpace: 'nowrap'
+        }),
+        testerId = $(this).attr('id')+'_autosize_tester';
+    if(! $('#'+testerId).length > 0){
+      testSubject.attr('id', testerId);
+      testSubject.appendTo('body');
+    }
+
+    input.data('minwidth', minWidth);
+    input.data('maxwidth', maxWidth);
+    input.data('tester_id', testerId);
+    input.css('width', minWidth);
+  };
+
+	$.fn.addTag = function(value,options) {
+			options = jQuery.extend({focus:false,callback:true},options);
+			this.each(function() {
+				var id = $(this).attr('id');
+
+				var tagslist = $(this).val().split(delimiter[id]);
+				if (tagslist[0] == '') {
+					tagslist = new Array();
+				}
+
+				value = jQuery.trim(value);
+
+				if (options.unique) {
+					var skipTag = $(this).tagExist(value);
+					if(skipTag == true) {
+					    //Marks fake input as not_valid to let styling it
+    				    $('#'+id+'_tag').addClass('not_valid');
+    				}
+				} else {
+					var skipTag = false;
+				}
+
+				if (value !='' && skipTag != true) {
+                    $('<span>').addClass('tag').append(
+                        $('<span>').text(value).append('&nbsp;&nbsp;'),
+                        $('<a>', {
+                            href  : '#',
+                            title : 'Removing tag',
+                            text  : 'x'
+                        }).click(function () {
+                            return $('#' + id).removeTag(escape(value));
+                        })
+                    ).insertBefore('#' + id + '_addTag');
+
+					tagslist.push(value);
+
+					$('#'+id+'_tag').val('');
+					if (options.focus) {
+						$('#'+id+'_tag').focus();
+					} else {
+						$('#'+id+'_tag').blur();
+					}
+
+					$.fn.tagsInput.updateTagsField(this,tagslist);
+
+					if (options.callback && tags_callbacks[id] && tags_callbacks[id]['onAddTag']) {
+						var f = tags_callbacks[id]['onAddTag'];
+						f.call(this, value);
+					}
+					if(tags_callbacks[id] && tags_callbacks[id]['onChange'])
+					{
+						var i = tagslist.length;
+						var f = tags_callbacks[id]['onChange'];
+						f.call(this, $(this), tagslist[i-1]);
+					}
+				}
+
+			});
+
+			return false;
+		};
+
+	$.fn.removeTag = function(value) {
+			value = unescape(value);
+			this.each(function() {
+				var id = $(this).attr('id');
+
+				var old = $(this).val().split(delimiter[id]);
+
+				$('#'+id+'_tagsinput .tag').remove();
+				str = '';
+				for (i=0; i< old.length; i++) {
+					if (old[i]!=value) {
+						str = str + delimiter[id] +old[i];
+					}
+				}
+
+				$.fn.tagsInput.importTags(this,str);
+
+				if (tags_callbacks[id] && tags_callbacks[id]['onRemoveTag']) {
+					var f = tags_callbacks[id]['onRemoveTag'];
+					f.call(this, value);
+				}
+			});
+
+			return false;
+		};
+
+	$.fn.tagExist = function(val) {
+		var id = $(this).attr('id');
+		var tagslist = $(this).val().split(delimiter[id]);
+		return (jQuery.inArray(val, tagslist) >= 0); //true when tag exists, false when not
+	};
+
+	// clear all existing tags and import new ones from a string
+	$.fn.importTags = function(str) {
+                id = $(this).attr('id');
+		$('#'+id+'_tagsinput .tag').remove();
+		$.fn.tagsInput.importTags(this,str);
+	}
+
+	$.fn.tagsInput = function(options) {
+    var settings = jQuery.extend({
+      interactive:true,
+      defaultText:'add a tag',
+      minChars:0,
+      width:'300px',
+      height:'100px',
+      autocomplete: {selectFirst: false },
+      hide:true,
+      delimiter: ',',
+      unique:true,
+      removeWithBackspace:true,
+      placeholderColor:'#666666',
+      autosize: true,
+      comfortZone: 20,
+      inputPadding: 6*2
+    },options);
+
+		this.each(function() {
+			if (settings.hide) {
+				$(this).hide();
+			}
+			var id = $(this).attr('id');
+			if (!id || delimiter[$(this).attr('id')]) {
+				id = $(this).attr('id', 'tags' + new Date().getTime()).attr('id');
+			}
+
+			var data = jQuery.extend({
+				pid:id,
+				real_input: '#'+id,
+				holder: '#'+id+'_tagsinput',
+				input_wrapper: '#'+id+'_addTag',
+				fake_input: '#'+id+'_tag'
+			},settings);
+
+			delimiter[id] = data.delimiter;
+
+			if (settings.onAddTag || settings.onRemoveTag || settings.onChange) {
+				tags_callbacks[id] = new Array();
+				tags_callbacks[id]['onAddTag'] = settings.onAddTag;
+				tags_callbacks[id]['onRemoveTag'] = settings.onRemoveTag;
+				tags_callbacks[id]['onChange'] = settings.onChange;
+			}
+
+			var markup = '<div id="'+id+'_tagsinput" class="tagsinput"><div id="'+id+'_addTag">';
+
+			if (settings.interactive) {
+				markup = markup + '<input id="'+id+'_tag" value="" data-default="'+settings.defaultText+'" />';
+			}
+
+			markup = markup + '</div><div class="tags_clear"></div></div>';
+
+			$(markup).insertAfter(this);
+
+			$(data.holder).css('width',settings.width);
+			$(data.holder).css('min-height',settings.height);
+			$(data.holder).css('height',settings.height);
+
+			if ($(data.real_input).val()!='') {
+				$.fn.tagsInput.importTags($(data.real_input),$(data.real_input).val());
+			}
+			if (settings.interactive) {
+				$(data.fake_input).val($(data.fake_input).attr('data-default'));
+				$(data.fake_input).css('color',settings.placeholderColor);
+		        $(data.fake_input).resetAutosize(settings);
+
+				$(data.holder).bind('click',data,function(event) {
+					$(event.data.fake_input).focus();
+				});
+
+				$(data.fake_input).bind('focus',data,function(event) {
+					if ($(event.data.fake_input).val()==$(event.data.fake_input).attr('data-default')) {
+						$(event.data.fake_input).val('');
+					}
+					$(event.data.fake_input).css('color','#000000');
+				});
+
+				if (settings.autocomplete_url != undefined) {
+					autocomplete_options = {source: settings.autocomplete_url};
+					for (attrname in settings.autocomplete) {
+						autocomplete_options[attrname] = settings.autocomplete[attrname];
+					}
+
+					if (jQuery.Autocompleter !== undefined) {
+						$(data.fake_input).autocomplete(settings.autocomplete_url, settings.autocomplete);
+						$(data.fake_input).bind('result',data,function(event,data,formatted) {
+							if (data) {
+								$('#'+id).addTag(data[0] + "",{focus:true,unique:(settings.unique)});
+							}
+					  	});
+					} else if (jQuery.ui.autocomplete !== undefined) {
+						$(data.fake_input).autocomplete(autocomplete_options);
+						$(data.fake_input).bind('autocompleteselect',data,function(event,ui) {
+							$(event.data.real_input).addTag(ui.item.value,{focus:true,unique:(settings.unique)});
+							return false;
+						});
+					}
+
+
+				} else {
+						// if a user tabs out of the field, create a new tag
+						// this is only available if autocomplete is not used.
+						$(data.fake_input).bind('blur',data,function(event) {
+							var d = $(this).attr('data-default');
+							if ($(event.data.fake_input).val()!='' && $(event.data.fake_input).val()!=d) {
+								if( (event.data.minChars <= $(event.data.fake_input).val().length) && (!event.data.maxChars || (event.data.maxChars >= $(event.data.fake_input).val().length)) )
+									$(event.data.real_input).addTag($(event.data.fake_input).val(),{focus:true,unique:(settings.unique)});
+							} else {
+								$(event.data.fake_input).val($(event.data.fake_input).attr('data-default'));
+								$(event.data.fake_input).css('color',settings.placeholderColor);
+							}
+							return false;
+						});
+
+				}
+				// if user types a default delimiter like comma,semicolon and then create a new tag
+				$(data.fake_input).bind('keypress',data,function(event) {
+					if (_checkDelimiter(event)) {
+					    event.preventDefault();
+						if( (event.data.minChars <= $(event.data.fake_input).val().length) && (!event.data.maxChars || (event.data.maxChars >= $(event.data.fake_input).val().length)) )
+							$(event.data.real_input).addTag($(event.data.fake_input).val(),{focus:true,unique:(settings.unique)});
+					  	$(event.data.fake_input).resetAutosize(settings);
+						return false;
+					} else if (event.data.autosize) {
+			            $(event.data.fake_input).doAutosize(settings);
+
+          			}
+				});
+				//Delete last tag on backspace
+				data.removeWithBackspace && $(data.fake_input).bind('keydown', function(event)
+				{
+					if(event.keyCode == 8 && $(this).val() == '')
+					{
+						 event.preventDefault();
+						 var last_tag = $(this).closest('.tagsinput').find('.tag:last').text();
+						 var id = $(this).attr('id').replace(/_tag$/, '');
+						 last_tag = last_tag.replace(/[\s]+x$/, '');
+						 $('#' + id).removeTag(escape(last_tag));
+						 $(this).trigger('focus');
+					}
+				});
+				$(data.fake_input).blur();
+
+				//Removes the not_valid class when user changes the value of the fake input
+				if(data.unique) {
+				    $(data.fake_input).keydown(function(event){
+				        if(event.keyCode == 8 || String.fromCharCode(event.which).match(/\w+|[áéíóúÁÉÍÓÚñÑ,/]+/)) {
+				            $(this).removeClass('not_valid');
+				        }
+				    });
+				}
+			} // if settings.interactive
+		});
+
+		return this;
+
+	};
+
+	$.fn.tagsInput.updateTagsField = function(obj,tagslist) {
+		var id = $(obj).attr('id');
+		$(obj).val(tagslist.join(delimiter[id]));
+	};
+
+	$.fn.tagsInput.importTags = function(obj,val) {
+		$(obj).val('');
+		var id = $(obj).attr('id');
+		var tags = val.split(delimiter[id]);
+		for (i=0; i<tags.length; i++) {
+			$(obj).addTag(tags[i],{focus:false,callback:false});
+		}
+		if(tags_callbacks[id] && tags_callbacks[id]['onChange'])
+		{
+			var f = tags_callbacks[id]['onChange'];
+			f.call(obj, obj, tags[i]);
+		}
+	};
+
+    /**
+     * check delimiter Array
+     * @param event
+     * @returns {boolean}
+     * @private
+     */
+    var _checkDelimiter = function(event){
+        var flag = false;// defalut no match
+
+        if(event.which == 13){// Enter
+            flag = true;
+        }
+
+        $.each(event.data.delimiter ,function(index, value){
+            if(event.which == value.charCodeAt(0)){
+                flag = true;
+            }
+        });
+
+        return flag;
+    }
+})(jQuery);
+;/**
  * @preserve jQuery DateTimePicker plugin v2.3.7
  * @homepage http://xdsoft.net/jqplugins/datetimepicker/
  * (c) 2014, Chupurnov Valeriy.
@@ -13685,7 +14060,8 @@ Array.prototype.remove = function(from, to) {
 			return ret;
 		}
 	}
-};;/*
+};
+;/*
 Copyright (c) 2010 Ryan Schuft (ryan.schuft@gmail.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
