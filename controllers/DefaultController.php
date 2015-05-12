@@ -3,6 +3,11 @@
 class DefaultController extends CiiDashboardController
 {
 	/**
+ 	 * @var string pageTitle
+	 */
+	public $pageTitle = "Dashboard";
+
+	/**
      * Specifies the access control rules.
      * @return array
      */
@@ -19,6 +24,9 @@ class DefaultController extends CiiDashboardController
         );  
     }
     
+	/**
+ 	 * Renders the dashboard view
+	 */
     public function actionIndex()
     {
     	$this->layout = 'dashboard';

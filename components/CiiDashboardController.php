@@ -39,6 +39,16 @@ class CiiDashboardController extends CiiController
 		);
 	}
 
+	/**
+	 * Fix for getPageTitle() displaying the wrong data
+	 * @todo: Find where this method is being overwritten. vendor/charlesportwoodii/cii (???) is where I'd expect, but it's not there
+	 * Otherwise it defaults to Yii::app()->name | {{something}} (???)
+	 */
+	public function getPageTitle()
+	{
+		return CiiInflector::titleize($this->id);
+	}
+
     /**
      * Handles errors
      */
