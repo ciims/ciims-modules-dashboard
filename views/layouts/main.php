@@ -9,7 +9,6 @@
         <?php Yii::app()->clientScript->registerCssFile($this->asset .'/dist/'. (YII_DEBUG ? 'dashboard.css' : 'dashboard.min.css')); ?>
         <?php Yii::app()->clientScript->registerScriptFile($this->asset .'/dist/'. (YII_DEBUG ? 'dashboard.js' : 'dashboard.min.js')); ?>
         <?php Yii::app()->clientScript->registerCssFile('https://fonts.googleapis.com/css?family=Open+Sans:400,600'); ?>
-	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
     </head>
     <body>
     	<section id="body">
