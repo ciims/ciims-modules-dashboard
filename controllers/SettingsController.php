@@ -87,10 +87,10 @@ class SettingsController extends CiiDashboardController
 	{
 		$theme = Cii::getConfig('theme', 'default');
 
-		if (!file_exists(Yii::getPathOfAlias('webroot.themes.' . $theme) . DIRECTORY_SEPARATOR . 'Theme.php'))
+		if (!file_exists(Yii::getPathOfAlias('base.themes.' . $theme) . DS . 'Theme.php'))
 			throw new CHttpException(400, Yii::t('Dashboard.main',  'The requested theme type is not set. Please set a theme before attempting to change theme settings'));
 
-		Yii::import('webroot.themes.' . $theme . '.Theme');
+		Yii::import('base.themes.' . $theme . '.Theme');
 
 		try {
 			$model = new Theme();

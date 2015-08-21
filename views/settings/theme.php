@@ -63,7 +63,7 @@
 
 								</div>
 								<div class="pure-u-11-24 badge">
-									<?php $badge = Yii::app()->assetManager->publish(YiiBase::getPathOfAlias('webroot.themes') .'/'. $name . '/default.png', true, -1, YII_DEBUG); ?>
+									<?php $badge = Yii::app()->assetManager->publish(YiiBase::getPathOfAlias('base.themes') .'/'. $name . '/default.png', true, -1, YII_DEBUG); ?>
 									<?php echo CHtml::image($badge); ?>
 								</div>
 							</div>
