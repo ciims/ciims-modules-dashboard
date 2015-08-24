@@ -6,3 +6,7 @@ vendor/*
 *~
 npm-debug.log
 *.log
+tests/_data/*
+tests/_output/*
+
+tests/_output/*
