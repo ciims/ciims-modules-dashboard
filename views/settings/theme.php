@@ -5,7 +5,7 @@
 					<legend>
 						<?php echo Yii::t('Dashboard.main', 'Installed Themes'); ?>
 						<?php if (!defined('CII_CONFIG')): ?>
-							<a href="#" id="installThemeButton" class="fa fa-plus"></a>
+							<a href="#" id="installThemeButton" class="fa"><?php echo Yii::t('Api.theme', 'Get more themes'); ?></a>
 						<?php endif; ?>
 					</legend>
 					<div class="pure-g">

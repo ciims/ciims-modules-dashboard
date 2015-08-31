@@ -58,7 +58,7 @@ var Theme = {
 					$(".theme-list").toggleClass("visible");
 					$(".shader").toggleClass("visible");
 					self.nanoscroller();
-
+					$(".theme-list  .paginated_results li").first().click();
 				}
 			});
 		});
@@ -107,7 +107,7 @@ var Theme = {
 							btn = $("#theme-install-button").clone().show(),
 							installedBtn = $("#theme-installed-button").clone().show(),
 							divider = $("<div>").addClass("divider"),
-							p = $("<div>").html(marked(res));
+							p = $("<div>").addClass("theme-details-list").html(marked(res));
 
 						$(header).append($(title));
 
