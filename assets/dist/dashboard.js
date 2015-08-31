@@ -1621,7 +1621,7 @@ reMarked = function(opts) {
  * updating fuzzy timestamps (e.g. "4 minutes ago" or "about 1 day ago").
  *
  * @name timeago
- * @version 1.4.1
+ * @version 1.4.2
  * @requires jQuery v1.2.3+
  * @author Ryan McGeary
  * @license MIT License - http://www.opensource.org/licenses/mit-license.php
@@ -1629,13 +1629,15 @@ reMarked = function(opts) {
  * For usage and examples, visit:
  * http://timeago.yarp.com/
  *
- * Copyright (c) 2008-2013, Ryan McGeary (ryan -[at]- mcgeary [*dot*] org)
+ * Copyright (c) 2008-2015, Ryan McGeary (ryan -[at]- mcgeary [*dot*] org)
  */
 
 (function (factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
     define(['jquery'], factory);
+  } if (typeof module === 'object' && typeof module.exports === 'object') {
+    factory(require('jquery'));
   } else {
     // Browser globals
     factory(jQuery);
@@ -1793,6 +1795,13 @@ reMarked = function(opts) {
   };
 
   function refresh() {
+    //check if it's still visible
+    if(!$.contains(document.documentElement,this)){
+      //stop if it has been removed
+      $(this).timeago("dispose");
+      return this;
+    }
+
     var data = prepareData(this);
     var $s = $t.settings;
 
@@ -14966,7 +14975,7 @@ if (!String.prototype.ordinalize)
 				success : function(data) {
 					$(".paginated_results.contained ul").empty();
 					// Append the name to the list
-					$.each(data.response, function(name, obj) {
+					$.each(JSON.parse(data.response), function(name, obj) {
 						var li = $("<li>"),
 							info = $("<div>");
 
@@ -15032,7 +15041,7 @@ if (!String.prototype.ordinalize)
 							btn = $("#theme-install-button").clone().show(),
 							installedBtn = $("#theme-installed-button").clone().show(),
 							divider = $("<div>").addClass("divider"),
-							p = $("<p>").html(marked(res));
+							p = $("<div>").html(marked(res));
 
 						$(header).append($(title));
 
@@ -15179,7 +15188,8 @@ if (!String.prototype.ordinalize)
 	nanoscroller : function() {
 		return $(".theme-list .nano").nanoScroller({ iOSNativeScrolling: true }); 
 	}
-};;var Users = {
+};
+;var Users = {
 
 	/**
 	 * CiiMS data from localStorage

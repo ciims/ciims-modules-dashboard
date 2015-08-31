@@ -41,7 +41,7 @@ var Theme = {
 				success : function(data) {
 					$(".paginated_results.contained ul").empty();
 					// Append the name to the list
-					$.each(data.response, function(name, obj) {
+					$.each(JSON.parse(data.response), function(name, obj) {
 						var li = $("<li>"),
 							info = $("<div>");
 
@@ -107,7 +107,7 @@ var Theme = {
 							btn = $("#theme-install-button").clone().show(),
 							installedBtn = $("#theme-installed-button").clone().show(),
 							divider = $("<div>").addClass("divider"),
-							p = $("<p>").html(marked(res));
+							p = $("<div>").html(marked(res));
 
 						$(header).append($(title));
 
